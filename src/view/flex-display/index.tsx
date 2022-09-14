@@ -1,21 +1,17 @@
-import { useEffect } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useReducer, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { compressToBase64, decompressFromBase64 } from 'lz-string'
 
-import { StateFlexContainerAttr, StateFlexItemAttr, CONSTANTS } from './store'
+import { StateContext, StateReducer, initialState, CONSTANTS, InitialState } from './store'
+
 import FlexMDX from './flex.mdx'
 import './index.css'
 
-const { STYLE_SHEET_ID, FLEX_CONTAINER_ID } = CONSTANTS
+const { STYLE_SHEET_ID } = CONSTANTS
 
-const ObjectToStr = (style: Record<string, any>, splitFlag: string = ';') =>
-  Object.entries(style)
-    .map(([k, v]) => `${k}:${v || ''}`)
-    .join(splitFlag)
+const ObjectToStr = (style: Record<string, any>) => Object.entries(style).reduce((str, [k, v]) => (str += `#${k}{${Object.entries(v).reduce((s, [k, v]) => (s += `${k}:${v};`), '')}}`), '')
 
-const useLinkStyleSheet = () => {
-  const style = useRecoilValue(StateFlexContainerAttr)
-  const styleItem = useRecoilValue(StateFlexItemAttr)
-
+const useLinkStyleSheet = (state: InitialState) => {
   useEffect(() => {
     const styleSheet = document.getElementById(STYLE_SHEET_ID)
 
@@ -26,21 +22,51 @@ const useLinkStyleSheet = () => {
     }
     const a = document.getElementById(STYLE_SHEET_ID)
 
-    const flexStyle = ObjectToStr(style)
-
-    const itemStyle = Object.entries(styleItem)
-      .map(([k, v]) => [k, ObjectToStr(v)])
-      .reduce((str, [k, v]) => (str += `#${FLEX_CONTAINER_ID} #${k}{${v}}`), '')
-
-    a!.innerText = `#${FLEX_CONTAINER_ID}{${flexStyle}}${itemStyle}`
-  }, [style, styleItem])
+    a!.innerText = ObjectToStr(state.style)
+  }, [state])
 }
 
+// const useSearchParamsState = () => {
+//   const splitFlag = '@@@'
+//   const [style, setStyle] = useRecoilState(StateFlexAttr)
+
+//   let [searchParams, setSearchParams] = useSearchParams()
+//   useEffect(() => {
+//     const code = searchParams.get('code')
+//     if (!code) return
+//     if (decompressFromBase64(code)) {
+//       const _style = decompressFromBase64(code)!
+//         .split('@@@')
+//         .map((i) => JSON.parse(i))
+
+//       console.log('_style, _styleItem', _style)
+
+//       setStyle(_style)
+//     }
+//   }, [searchParams])
+
+//   useEffect(() => {
+//     const code = `${JSON.stringify(style)}`
+//     setSearchParams({
+//       code: compressToBase64(code),
+//     })
+//   }, [style])
+// }
+
 export default function () {
-  useLinkStyleSheet()
+  const [state, dispatch] = useReducer(StateReducer, initialState)
+
+  useLinkStyleSheet(state)
+  // useSearchParamsState()
+
+  useEffect(() => {
+    console.log('%cstyle:', 'background: #ff0099;color: white;padding: 0 3px;border-radius: 3px;', state)
+  }, [state])
   return (
     <>
-      <FlexMDX />
+      <StateContext.Provider value={{ state, dispatch }}>
+        <FlexMDX />
+      </StateContext.Provider>
     </>
   )
 }

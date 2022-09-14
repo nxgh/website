@@ -35,6 +35,7 @@
     "@unocss/preset-wind": "^0.45.15",
     "@vitejs/plugin-react": "^2.0.1",
     "less": "^4.1.3",
+    "rollup-plugin-visualizer": "^5.8.1",
     "typescript": "^4.6.4",
     "unocss": "^0.45.15",
     "vite": "^3.0.7",

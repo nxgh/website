@@ -25,7 +25,7 @@ export interface InitialState {
   style: Record<string, Record<string, string | number>>
 }
 
-type ActionType =
+export type ActionType =
   | {
       type: 'flex-container'
       payload: Record<string, string>
@@ -42,12 +42,20 @@ type ActionType =
       type: 'update-id'
       payload: number
     }
+  | {
+      type: 'update-style'
+      payload: Pick<InitialState, 'style'>
+    }
+
+export type DispatchType = React.Dispatch<ActionType>
+
 export const initialState: InitialState = {
   count: 30,
   id: 1,
   style: {
     [CONSTANTS.FLEX_CONTAINER_ID]: {
       display: 'flex',
+      'flex-flow': 'row wrap',
       'flex-direction': 'row',
       'flex-wrap': 'wrap',
       'justify-content': 'flex-start',
@@ -57,15 +65,22 @@ export const initialState: InitialState = {
   },
 }
 
-export const StateContext = createContext<{ state: InitialState; dispatch: React.Dispatch<ActionType> }>({ state: initialState, dispatch: () => {} })
+export const StateContext = createContext<{ state: InitialState; dispatch: DispatchType }>({ state: initialState, dispatch: () => {} })
 
 export const getStateStyleItem = (state: InitialState) => state.style[CONSTANTS.FLEX_CONTAINER_ITEM(state.id)]
 
 export const StateReducer = produce((state: any, { type, payload }: ActionType) => {
   switch (type) {
     case 'flex-container':
+      let ID = state.style[CONSTANTS.FLEX_CONTAINER_ID]
       Object.entries(payload).forEach(([k, v]) => {
-        state.style[CONSTANTS.FLEX_CONTAINER_ID][k] = v
+        if ('flex-direction' === k) {
+          ID['flex-flow'] = `${v} ${ID['flex-wrap']}`
+        }
+        if ('flex-wrap' === k) {
+          ID['flex-flow'] = `${ID['flex-direction']} ${v}`
+        }
+        ID[k] = v
       })
       return state
     case 'flex-items':
@@ -92,6 +107,9 @@ export const StateReducer = produce((state: any, { type, payload }: ActionType) 
       return state
     case 'update-id':
       state.id = payload
+      return state
+    case 'update-style':
+      state.style = payload
       return state
     default:
       return state

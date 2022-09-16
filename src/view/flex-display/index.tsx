@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { compressToBase64, decompressFromBase64 } from 'lz-string'
 
 import { StateContext, StateReducer, initialState, CONSTANTS, InitialState } from './store'
+import type { DispatchType } from './store'
 
 import FlexMDX from './flex.mdx'
 import './index.css'
@@ -26,42 +27,37 @@ const useLinkStyleSheet = (state: InitialState) => {
   }, [state])
 }
 
-// const useSearchParamsState = () => {
-//   const splitFlag = '@@@'
-//   const [style, setStyle] = useRecoilState(StateFlexAttr)
+const useSearchParamsState = (state: InitialState, dispatch: DispatchType) => {
+  let [searchParams, setSearchParams] = useSearchParams()
 
-//   let [searchParams, setSearchParams] = useSearchParams()
-//   useEffect(() => {
-//     const code = searchParams.get('code')
-//     if (!code) return
-//     if (decompressFromBase64(code)) {
-//       const _style = decompressFromBase64(code)!
-//         .split('@@@')
-//         .map((i) => JSON.parse(i))
+  useEffect(() => {
+    const code = searchParams.get('code')
+    if (!code) return
+    try {
+      const decompressCode = decompressFromBase64(code)
+      if (decompressCode) {
+        dispatch({
+          type: 'update-style',
+          payload: JSON.parse(decompressCode),
+        })
+      }
+    } catch (error) {}
+  }, [])
 
-//       console.log('_style, _styleItem', _style)
-
-//       setStyle(_style)
-//     }
-//   }, [searchParams])
-
-//   useEffect(() => {
-//     const code = `${JSON.stringify(style)}`
-//     setSearchParams({
-//       code: compressToBase64(code),
-//     })
-//   }, [style])
-// }
+  useEffect(() => {
+    const code = `${JSON.stringify(state.style)}`
+    setSearchParams({
+      code: compressToBase64(code),
+    })
+  }, [state.style])
+}
 
 export default function () {
   const [state, dispatch] = useReducer(StateReducer, initialState)
 
   useLinkStyleSheet(state)
-  // useSearchParamsState()
+  useSearchParamsState(state, dispatch)
 
-  useEffect(() => {
-    console.log('%cstyle:', 'background: #ff0099;color: white;padding: 0 3px;border-radius: 3px;', state)
-  }, [state])
   return (
     <>
       <StateContext.Provider value={{ state, dispatch }}>

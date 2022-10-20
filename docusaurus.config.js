@@ -18,6 +18,7 @@ const config = {
 
   organizationName: 'nxgh', // Usually your GitHub org/user name.
   projectName: 'nxgh.github.io', // Usually your repo name.
+  deploymentBranch: 'gh-pages',
 
 
 

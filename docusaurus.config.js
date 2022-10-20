@@ -10,14 +10,14 @@ const theme = require('shiki/themes/nord.json')
 const config = {
   title: 'Nxgh',
   tagline: 'Dinosaurs are cool',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://nxgh.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
 
   organizationName: 'nxgh', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  projectName: 'nxgh.github.io', // Usually your repo name.
 
 
 

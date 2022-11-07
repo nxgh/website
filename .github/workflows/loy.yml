@@ -22,7 +22,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build website
         run: yarn build
-      - run: yarn export
+      - run: yarn start
       - run: touch out/.nojekyll
 
       # Popular action to deploy to GitHub Pages:

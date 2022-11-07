@@ -1,0 +1,17 @@
+.link {
+  font-size: large;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.link:hover {
+  color: var(--ant-primary-color-hover);
+}
+
+.link_select {
+  background-color: var(--ant-primary-color-active);
+  border-radius: 5px;
+  color: white;
+}
+.link_select :hover {
+  color: white;
+}

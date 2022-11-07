@@ -1,0 +1,46 @@
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item:hover::after,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu:hover::after,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-active::after,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-active::after,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-open::after,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-open::after,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-selected::after {
+  border-bottom: 0;
+}
+header.ant-layout-header {
+  padding: 0;
+}
+
+header.ant-layout-header .link-group {
+  display: flex;
+  /* background-color: red; */
+  height: 100%;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+header.ant-layout-header .link-group .ant-btn {
+  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-menu {
+  background-color: #f0f2f5;
+}
+
+.ant-menu-inline > .ant-menu-item,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical-left > .ant-menu-item,
+.ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical-right > .ant-menu-item,
+.ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-vertical > .ant-menu-item,
+.ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 30px;
+  line-height: 30px;
+  margin: 0 10px;
+  border-radius: 5px;
+}

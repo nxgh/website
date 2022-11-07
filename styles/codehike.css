@@ -1,0 +1,19 @@
+.ch-scrollycoding.ch-scrollycoding-with-preview {
+  --ch-scrollycoding-sticker-width: 45vw;
+  --ch-scrollycoding-code-min-height: 40vh;
+}
+
+.ch-scrollycoding.ch-scrollycoding-with-preview .ch-scrollycoding-sticker {
+  top: 2vh;
+  height: 90vh;
+  max-height: 90vh;
+}
+
+.ch-scrollycoding.ch-scrollycoding-with-preview .ch-codegroup.not-prose {
+  height: 40vh;
+  flex: auto;
+}
+
+.ch-scrollycoding-with-preview .ch-scrollycoding-sticker .ch-preview.ch-scrollycoding-preview {
+  height: 45vh;
+}

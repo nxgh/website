@@ -1,0 +1,36 @@
+.mdxRender :global h1 {
+  font-size: 24px;
+}
+.mdxRender :global h2 {
+  font-size: 22px;
+}
+.mdxRender :global h3 {
+  font-size: 20px;
+}
+.mdxRender :global h4 {
+  font-size: 18px;
+}
+.mdxRender :global h1::before,
+.mdxRender :global h2::before,
+.mdxRender :global h3::before,
+.mdxRender :global h4::before {
+  content: '$';
+  margin-right: 10px;
+  color: #40ad41;
+  font-weight: 300;
+}
+.mdxRender :global .toc {
+  position: fixed;
+  right: 2vw;
+  top: 10vh;
+  z-index: 10;
+}
+.mdxRender :global .toc > ol,
+.mdxRender :global li,
+.mdxRender :global menu {
+  padding-left: 10px;
+}
+.mdxRender :global .toc-link-active {
+  border-bottom: 1px solid #40ad41;
+  color: #40ad41;
+}

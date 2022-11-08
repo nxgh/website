@@ -1,76 +1,75 @@
-# Hello Three.js
+## Hello Three.js
+
+这是 Three.js 系列文章的第一篇, 原文主要来自
+https://threejs.org/manual/#zh/fundamentals, 这个系列会用交互式代码来学习
+Three.js
+
+人们在学习大多数编程语言的时候第一件事就是让电脑打印个"Hello World!"。 对于三维
+来说第一件事往往是创建一个三维的立方体。 所以我们从"Hello Cube!"开始。
+
+在我们开始前，让我们试着让你了解一下一个 three.js 应用的整体结构。一个 three.js
+应用需要创建很多对象，并且将他们关联在一起。下图是一个基础的 three.js 应用结构。
+
+![Three.js应用结构](https://threejs.org/manual/resources/images/threejs-structure.svg)
 
 <CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
-人们在学习大多数编程语言的时候第一件事就是让电脑打印个"Hello World!"。 对于三维
-来说第一件事往往是创建一个三维的立方体。所以我们从"Hello Cube!"开始。
 
-- 渲染场景与物体
-  - 场景、摄像机、灯光、立方体与纹理
-- 应用 requestAnimationFrame
-- 轨道控制器查看物体
-- 添加坐标轴辅助
-- 应用图形用户界面控制变量
-- 设置物体移动、缩放与反转
-- 处理动画
-- Gsap 动画库的使用
-- 监听页面尺寸变化实现自适应
-- 控制画布全屏
-
-```js src/index.js
-const app = document.querySelector('#app')
-```
-
----
-
-## 1. Renderer、Scence 与 Camera
-
-- Renderer
-
-  渲染器是 three.js 的主要对象
-
-  传入一个场景(Scene)和一个摄像机(Camera)到渲染器(Renderer)中，然后它会将摄像机
-  视椎体中的三维场景渲染成一个二维图片显示在画布上
-
-- Scene 场景
-
-  场景是 three.js 的基本的组成部分。需要 three.js 绘制的东西都需要加入到 scene
-  中一个场景(Scene)对象定义了场景图最基本的要素，并包了含背景色和雾等属性
-
-- Camera
-
-  摄像机(Camera)是一半在场景图中，一半在场景图外的 在 three.js 中，摄像机
-  (Camera)和其他对象不同的是，它不一定要在场景图中才能起作用
-
-```js src/index.js focus=5:12,19
-import * as THREE from 'three'
-
-const app = document.querySelector('#app')
-
-const renderer = new THREE.WebGLRenderer({ antialias: true })
-const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-)
-renderer.setSize(window.innerWidth, window.innerHeight)
-
-camera.position.z = 5
-
-app.appendChild(renderer.domElement)
-
-renderer.render(scene, camera)
-```
-
----
-
-## 创建一个立方体和网格对象
-
-创建一个包含盒子信息的立方几何体(BoxGeometry)。几乎所有希望在 three.js 中显示的
-物体都需要一个包含了组成三维物体的顶点信息的几何体。
+## Renderer、Scene、Camera
 
 <CH.Section>
+
+首先有一个渲染器(Renderer)。这可以说是 three.js 的主要对象。渲染器负责将你提供的
+所有数据渲染绘制到 canvas 上,目前的话是 WebGL 渲染器(WebGLRenderer)，它通过
+WebGL 将三维空间渲染到 canvas 上
+
+```js
+renderer = new THREE.WebGLRenderer({ antialias: true })
+```
+
+你传入一个场景 (Scene)和一个摄像机(Camera)到渲染器(Renderer)中，然后它会将摄像机
+视椎体中的三维场景渲染成一个二维图片显示在画布上。
+
+</CH.Section>
+
+<CH.Section>
+
+接下来我们需要一个透视摄像机(PerspectiveCamera)。
+
+```js
+const fov = 75 // 视野范围
+const aspect = 2 // 画布的宽高比
+const near = 0.1 // 近平面
+const far = 5 // 远平面
+const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
+
+camera.position.z = 2
+```
+
+摄像机默认指向 Z 轴负方向，上方向朝向 Y 轴正方向。我们将会把立方体放置在坐标原点
+，所以我们需要往后移一下摄像机才能显示出物体。
+
+之后会在摄像机一节详细讲解
+
+</CH.Section>
+
+<CH.Section>
+
+然后我们创建一个场景(Scene)。场景(Scene)是 three.js 的基本的组成部分。需要
+three.js 绘制的东西都需要加入到 scene 中。
+
+```js
+scene = new THREE.Scene()
+```
+
+</CH.Section>
+```js src/index.js
+// from ../../data/three/hello-three/1-renderer.js
+```
+
+---
+
+<CH.Section>
+然后创建一个包含盒子信息的立方几何体(BoxGeometry)。几乎所有希望在three.js中显示的物体都需要一个包含了组成三维物体的顶点信息的几何体。
 
 ```js
 const boxWidth = 1
@@ -80,157 +79,146 @@ const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
 ```
 
 </CH.Section>
-
-然后创建一个基本的材质并设置它的颜色. 颜色的值可以用 css 方式和十六进制来表示。
-
 <CH.Section>
+
+然后创建一个基本的材质并设置它的颜色. 颜色的值可以用 css 方式和十六进制来表示
 
 ```js
 const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
 ```
 
 </CH.Section>
+<CH.Section>
 
 再创建一个网格(Mesh)对象，它包含了：
 
-- 几何体(Geometry)(物体的形状)
-- 材质(Material)(如何绘制物体，光滑还是平整，什么颜色，什么贴图等等)
-- 对象在场景中相对于他父对象的位置、朝向、和缩放。下面的代码中父对象即为场景对象
+1. 几何体(Geometry)(物体的形状)
+2. 材质(Material)(如何绘制物体，光滑还是平整，什么颜色，什么贴图等等)
+3. 对象在场景中相对于他父对象的位置、朝向、和缩放。下面的代码中父对象即为场景对
+   象。
 
-最后我们将网格添加到场景中。
-
-<CH.Section>
+最后我们将网格添加到场景中。之后将场景和摄像机传递给渲染器来渲染出整个场景。
 
 ```js
 const cube = new THREE.Mesh(geometry, material)
-
 scene.add(cube)
+renderer.render(scene, camera)
 ```
 
 </CH.Section>
 
-```js src/index.js focus=15:21
-import * as THREE from 'three'
-
-const app = document.querySelector('#app')
-
-const renderer = new THREE.WebGLRenderer({ antialias: true })
-const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-)
-renderer.setSize(window.innerWidth, window.innerHeight)
-
-const boxWidth = 1
-const boxHeight = 1
-const boxDepth = 1
-const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
-const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
-
-camera.position.z = 5
-
-app.appendChild(renderer.domElement)
-
-renderer.render(scene, camera)
+```js src/index.js
+// from ../../data/three/hello-three/2-add-box.js
 ```
 
 ---
-
-## 添加一个轨道控制器
 
 <CH.Section>
 
 很难看出来这是一个三维的立方体，因为我们直视 Z 轴的负方向并且立方体和坐标轴是对
 齐的，所以我们只能看到一个面。
 
-现在我们添加一个轨道控制器 Orbit Controls 可以使得相机围绕目标进行轨道运动
-
-```js
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-const controls = new OrbitControls(camera, renderer.domElement)
-```
-
-</CH.Section>
-
-<CH.Section>
-
-为了让它动起来我们需要用到一个渲染循环函数 requestAnimationFrame
+我们来让立方体旋转起来，以便更好的在三维环境中显示。为了让它动起来我们需要用到一
+个渲染循环函数 `requestAnimationFrame`.
 
 ```js
 function render(time) {
-  controls.update()
+  time *= 0.001 // 将时间单位变为秒
+  cube.rotation.x = time
+  cube.rotation.y = time
   renderer.render(scene, camera)
   requestAnimationFrame(render)
 }
 requestAnimationFrame(render)
 ```
 
-`requestAnimationFrame` 函数会告诉浏览器你需要显示动画。传入一个函数作为回调函数
+requestAnimationFrame 函数会告诉浏览器你需要显示动画。传入一个函数作为回调函数。
+本例中的函数是 render 函数。如果你更新了跟页面显示有关的任何东西，浏览器会调用你
+传入的函数来重新渲染页面。我们这里是调用 three.js 的 renderer.render 函数来绘制
+我们的场景。
 
-本例中的函数是 `render` 函数。 如果你更新了跟页面显示有关的任何东西，浏览器会调
-用你传入的函数来重新渲染页面。
+requestAnimationFrame 会将页面开始加载到函数运行所经历的时间当作入参传给回调函数
+，单位是毫秒数。但我觉得用秒会更简单所以我将它转换成了秒。
 
-我们这里是调用 three.js 的 `renderer.render` 函数来绘制我们的场景。并且调用控制
-器的 `update` 方法
+然后我们把立方体的 X 轴和 Y 轴方向的旋转角度设置成这个时间。这些旋转角度是弧度制
+。一圈的弧度为 2Π 所以我们的立方体在每个方向旋转一周的时间为 6.28 秒。
+
+最后渲染我们的场景并调用另一个帧动画函数来继续我们的循环。
+
+回调函数之外在主进程中我们调用一次 requestAnimationFrame 来开始整个渲染循环。
 
 </CH.Section>
 
-```js src/index.js focus=2,14,30:35
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-
-const app = document.querySelector('#app')
-
-const renderer = new THREE.WebGLRenderer({ antialias: true })
-const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-)
-const controls = new OrbitControls(camera, renderer.domElement)
-
-renderer.setSize(window.innerWidth, window.innerHeight)
-
-const boxWidth = 1
-const boxHeight = 1
-const boxDepth = 1
-const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
-const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
-
-camera.position.z = 5
-
-app.appendChild(renderer.domElement)
-
-function render(time) {
-  controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(render)
-}
-requestAnimationFrame(render)
+```js src/index.js
+// from ../../data/three/hello-three/2.2-box-rotation.js
 ```
 
 ---
 
-## 添加坐标轴辅助与坐标格辅助对象
+<CH.Section>
 
-我们在这里添加一个坐标辅助 AxesHelper
+效果好了一些但还是很难看出是三维的。我们来添加些光照效果，应该会有点帮助
+。three.js 中有很多种类型的灯光，我们将在后期文章中详细讨论。现在我们先创建一盏
+平行光。
 
-用于简单模拟 3 个坐标轴的对象.
+```js
+{
+  const color = 0xffffff
+  const intensity = 1
+  const light = new THREE.DirectionalLight(color, intensity)
+  light.position.set(-1, 2, 4)
+  scene.add(light)
+}
+```
 
-红色代表 <span style={{color: 'red'}}>X</span> 轴. 绿色代表 <span
-style={{ color: 'green'}}>Y</span> 轴. 蓝色代表 <span
-style={{ color: 'blue'}}>Z</span> 轴.
+平行光有一个位置和目标点。默认值都为(0, 0, 0)。我们这里 将灯光的位置设为(-1,
+2, 4)，让它位于摄像机前面稍微左上方一点的地方。目标点还是(0, 0, 0)，让它朝向坐标
+原点方向。
+
+</CH.Section>
 
 <CH.Section>
+我们还需要改变下立方体的材质。MeshBasicMaterial材质不会受到灯光的影响。我们将他改成会受灯光影响的MeshPhongMaterial材质。
+
+```diff
+- const material = new THREE.MeshBasicMaterial({color: 0x44aa88});  // 绿蓝色
++ const material = new THREE.MeshPhongMaterial({color: 0x44aa88});  // 绿蓝色
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/hello-three/2.3-box-light-mesh.js
+```
+
+---
+
+# Helper
+
+接下来我们添加一些辅助功能
+
+<CH.Section>
+
+添加一个轨道控制器(Orbit controls)可以使得相机围绕目标进行轨道运动
+
+```js
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
+controls = new OrbitControls(camera, renderer.domElement)
+controls.update()
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/hello-three/3-add-helper-orbit.js
+```
+
+---
+
+<CH.Section>
+使用 `AxesHelper` 简单模拟3个坐标轴的对象
+红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
 
 ```js
 const axesHelper = new THREE.AxesHelper(5)
@@ -239,68 +227,35 @@ scene.add(axesHelper)
 
 </CH.Section>
 
-<CH.Section>
+```js src/index.js
+// from ../../data/three/hello-three/3.1-add-helper-axes.js
+```
 
-GridHelper 坐标格辅助对象. 坐标格实际上是 2 维线数组.
+---
+
+<CH.Section>
+使用 `GridHelper` 添加坐标格辅助对象. 坐标格实际上是2维线数组.
 
 ```js
-const gridHelper = new THREE.GridHelper(10, 10)
+const size = 10
+const divisions = 10
+
+const gridHelper = new THREE.GridHelper(size, divisions)
 scene.add(gridHelper)
 ```
 
 </CH.Section>
 
-```js src/index.js focus=16,19
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-
-const app = document.querySelector('#app')
-
-const renderer = new THREE.WebGLRenderer({ antialias: true })
-const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-)
-const controls = new OrbitControls(camera, renderer.domElement)
-
-const axesHelper = new THREE.AxesHelper(5)
-scene.add(axesHelper)
-const gridHelper = new THREE.GridHelper(10, 10)
-scene.add(gridHelper)
-
-renderer.setSize(window.innerWidth, window.innerHeight)
-
-const boxWidth = 1
-const boxHeight = 1
-const boxDepth = 1
-const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
-const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
-
-camera.position.z = 5
-
-app.appendChild(renderer.domElement)
-
-function render(time) {
-  controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(render)
-}
-requestAnimationFrame(render)
+```js src/index.js
+// from ../../data/three/hello-three/3.2-add-helper-grid.js
 ```
 
 ---
 
-## 添加图形界面工具控制变量
-
 <CH.Section>
 
-three.js 自带了 [lil-gui.js](https://lil-gui.georgealways.com/), 一个简单的 GUI
-工具
+添加图形界面工具控制变量 three.js 自带了
+[lil-gui.js](https://lil-gui.georgealways.com/), 一个简单的 GUI 工具
 
 ```js
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
@@ -329,17 +284,6 @@ gui.add(obj, 'boolean') // 单选
 
 <CH.Section>
 
-使用 addFolder ()在可折叠组中组织控制器
-
-```js
-const folder = gui.addFolder('Position')
-folder.add(obj, 'x')
-```
-
-</CH.Section>
-
-<CH.Section>
-
 使用 onChange 在值改变时更新
 
 ```js
@@ -347,24 +291,7 @@ folder.add(obj, 'y', 0, 100).onChange((v) => console.log('y', v))
 ```
 
 </CH.Section>
-<CH.Section>
 
-GUI 还提供了一个 onChange 处理程序，该处理程序在对其任何子级进行更改后触发
-
-GUI.onFinishChange 的工作原理与 GUI.onChange 类似，但它只在更改事件结束时触发
-
-```js
-gui.onChange((event) => {
-  console.log(
-    event.object, // object that was modified
-    event.property, // string, name of property
-    event.value, // new value of controller
-    event.controller // controller that was modified
-  )
-})
-```
-
-</CH.Section>
 <CH.Section>
 
 如果 GUI 控制的值在 GUI 之外的任何地方的代码中被更改，那么控制器的显示将不会反映
@@ -380,49 +307,14 @@ function animate() {
 
 </CH.Section>
 
-<CH.Section>
-
-保存和加载预设
-
-</CH.Section>
-
 ```js src/index.js
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
-
-const obj = {
-  boolean: true,
-  string: 'lil-gui',
-  number: 1,
-  slider: 1,
-  func: function () {
-    alert('hi')
-  },
-  select: ['Medium'],
-  color: '#AA00FF',
-  x: 0,
-  y: 0,
-  z: 0,
-}
-
-const gui = new GUI()
-gui.add(obj, 'boolean') // 单选
-gui.add(obj, 'string') // 文本
-gui.add(obj, 'number') // 数字
-gui.add(obj, 'func') // 按钮
-gui.add(obj, 'mySlider', 0, 10, 1) // 滑块， min, max, step
-gui.add(obj, 'select', ['Small', 'Medium', 'Large']) // 选择器
-// 可以是 rgb 对象('rgb(170, 0, 255)')，十六进制字符串('#AA00FF' 或 '#a0f)，十六进制整数(0xaa00ff)
-gui.addColor(obj, 'color') // 颜色值，
-
-const folder = gui.addFolder('Position')
-folder.add(obj, 'x')
-
-folder.add(obj, 'y', 0, 100).onChange((v) => console.log('y', v))
+// from ../../data/three/hello-three/lil-gui.js
 ```
 
 ---
 
-## 使用 GUI 控制几何体的缩放、移动、旋转
+使用 GUI 控制几何体的缩放、移动、旋转
+
 
 <CH.Section>
 
@@ -434,176 +326,37 @@ const settings = {
   boxPositionX: 0,
   boxRotationX: 0,
 }
-folderBox.add(settings, 'boxWidth', 1, 10).onChange((v) => (cube.scale.x = v))
-folderBox
-  .add(settings, 'boxPositionX', -5, 5, 0.1)
-  .onChange((v) => (cube.position.x = v))
-folderBox
-  .add(settings, 'boxRotationX', -5, 5, 0.1)
-  .onChange((v) => (cube.rotation.x = v))
+folderBox.add(settings, 'boxWidth', 1, 10).onChange(v => (cube.scale.x = v))
+folderBox.add(settings, 'boxPositionX', -5, 5, 0.1).onChange(v => (cube.position.x = v))
+folderBox.add(settings, 'boxRotationX', -5, 5, 0.1).onChange(v => (cube.rotation.x = v))
 ```
 
 </CH.Section>
 
-```js src/index.js focus=7:15
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
-
-const app = document.querySelector('#app')
-
-const gui = new GUI()
-const folderBox = gui.addFolder('helper')
-const settings = {
-  boxWidth: 1,
-  boxDepth: 1,
-  boxHeight: 1,
-  boxPositionX: 0,
-  boxPositionY: 0,
-  boxPositionZ: 0,
-  boxRotationX: 0,
-  boxRotationY: 0,
-  boxRotationZ: 0,
-}
-
-folderBox.add(settings, 'boxWidth', 1, 10).onChange((v) => (cube.scale.x = v)) // 具有最小值和最大值的数字控制器自动成为滑块
-folderBox
-  .add(settings, 'boxHeight', 1, 10, 1)
-  .onChange((v) => (cube.scale.y = v)) // min, max, step
-folderBox
-  .add(settings, 'boxDepth', 1, 10, 1)
-  .onChange((v) => (cube.scale.z = v))
-folderBox
-  .add(settings, 'boxPositionX', -5, 5, 0.1)
-  .onChange((v) => (cube.position.x = v))
-folderBox
-  .add(settings, 'boxPositionY', -5, 5, 0.1)
-  .onChange((v) => (cube.position.y = v))
-folderBox
-  .add(settings, 'boxPositionZ', -5, 5, 0.1)
-  .onChange((v) => (cube.position.z = v))
-folderBox
-  .add(settings, 'boxRotationX', -5, 5, 0.1)
-  .onChange((v) => (cube.rotation.x = v))
-folderBox
-  .add(settings, 'boxRotationY', -5, 5, 0.1)
-  .onChange((v) => (cube.rotation.y = v))
-folderBox
-  .add(settings, 'boxRotationZ', -5, 5, 0.1)
-  .onChange((v) => (cube.rotation.z = v))
-
-const renderer = new THREE.WebGLRenderer({ antialias: true })
-const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-)
-const controls = new OrbitControls(camera, renderer.domElement)
-
-const axesHelper = new THREE.AxesHelper(5)
-scene.add(axesHelper)
-const gridHelper = new THREE.GridHelper(10, 10)
-scene.add(gridHelper)
-
-renderer.setSize(window.innerWidth, window.innerHeight)
-
-const boxWidth = 1
-const boxHeight = 1
-const boxDepth = 1
-const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
-const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
-
-camera.position.z = 5
-
-app.appendChild(renderer.domElement)
-
-function render(time) {
-  controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(render)
-}
-requestAnimationFrame(render)
+```js src/index.js
+// from ../../data/three/hello-three/4-add-gui.js
 ```
 
 ---
+
 
 ## 处理动画
 
 <CH.Section>
 
-在上边我们让 box 动起来使用了一个
+在上边我们让 box 动起来使用了
 [`requestAnimationFrame`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)
-函数，它会告诉浏览器你需要显示动画，并且要求浏览器在下次重绘之前调用指定的回调函
-数更新动画。该方法需要传入一个回调函数作为参数，该回调函数会在浏览器下一次重绘之
-前执行
-
-`requestAnimationFrame` 会将页面开始加载到函数运行所经历的时间当作入参传给回调函
-数，单位是毫秒数。
+函数,现在我们使用 [`gsap`](https://github.com/greensock/GSAP) 库辅助编写动画
 
 ```js
-function render(time) {
-  controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(render)
-}
-requestAnimationFrame(render)
-```
-
-</CH.Section>
-
-<CH.Section>
-我们还可以使用 [`gsap`](https://github.com/greensock/GSAP) 库辅助编写动画
-
-```js
-
-```
-
-</CH.Section>
-
-```js src/index.js focus=32,33
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
-import gsap from 'gsap'
-
-const app = document.querySelector('#app')
-
-const gui = new GUI()
-const settings = {}
-
-const renderer = new THREE.WebGLRenderer({ antialias: true })
-const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000)
-const controls = new OrbitControls(camera, renderer.domElement)
-
-const axesHelper = new THREE.AxesHelper(5)
-scene.add(axesHelper)
-const gridHelper = new THREE.GridHelper(10, 10)
-scene.add(gridHelper)
-
-renderer.setSize(window.innerWidth, window.innerHeight)
-
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
-
-camera.position.z = 5
-
-app.appendChild(renderer.domElement)
-
-gsap.to(cube.position, { x: 5, duration: 5, ease: 'power1.inOut', repeat: 1 })
+gsap.to(cube.position, { x: 5, duration: 5, ease: 'power1.inOut', repeat: -1, yoyo: true })
 gsap.to(cube.rotation, { x: 2 * Math.PI, duration: 5, ease: 'power1.inOut' })
-
-function render(time) {
-  controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(render)
-}
-requestAnimationFrame(render)
 ```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/hello-three/5-add-animation.js
+```
+
 </CH.Scrollycoding>

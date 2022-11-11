@@ -1,28 +1,14 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
-import gsap from 'gsap'
 
 let renderer, scene, camera
 let cube
 let controls
 
-let type = 'scale'
-const gui = new GUI()
-const settings = {
-    type: type,
-    X: 1,
-    Y: 1,
-    Z: 1,
-}
-gui.add(settings, 'type', ['scale', 'position', 'rotation']).onChange(v => (type = v))
-gui.add(settings, 'X', -5, 10, 1).onChange(v => (cube[type].y = v)) // min, max, step
-gui.add(settings, 'Y', -5, 10, 1).onChange(v => (cube[type].z = v))
-gui.add(settings, 'Z', -5, 5, 0.1).onChange(v => (cube[type].x = v))
-
 function init() {
     scene = new THREE.Scene()
-    camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000)
+    const cameraAspect = window.innerWidth / window.innerHeight
+    camera = new THREE.PerspectiveCamera(75, cameraAspect, 0.1, 1000)
     camera.position.z = 5
     renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -58,21 +44,37 @@ function addHelper() {
     const gridHelper = new THREE.GridHelper(10, 10)
     scene.add(gridHelper)
 }
-// focus(1:4)
-function animate() {
-    gsap.to(cube.position, { x: 5, duration: 5, ease: 'power1.inOut', repeat: -1, yoyo: true })
-    gsap.to(cube.rotation, { x: 2 * Math.PI, duration: 5, ease: 'power1.inOut' })
-}
 
 init()
 createBox()
 createLight()
 addHelper()
-animate()
+
+// focus(1:21)
+const raycaster = new THREE.Raycaster()
+const pointer = new THREE.Vector3()
+
+function setPointer(event) {
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+}
+function onPointerDown(event) {
+    setPointer(event)
+
+    raycaster.setFromCamera(pointer, camera)
+    const intersectedObjects = raycaster.intersectObjects(scene.children)
+    if (intersectedObjects.length) {
+        intersectedObjects.forEach(item => {
+            if (item.object.uuid === cube.uuid)
+                item.object.material.color.set(`#${Math.floor(Math.random() * 16777215).toString(16)}`)
+        })
+    }
+}
+
+document.addEventListener('pointerdown', onPointerDown)
 
 function render(time) {
     requestAnimationFrame(render)
     renderer.render(scene, camera)
-    controls.update();
 }
 requestAnimationFrame(render)

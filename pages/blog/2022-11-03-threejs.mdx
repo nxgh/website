@@ -1,5 +1,9 @@
 ## Hello Three.js
 
+
+
+<CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
+
 这是 Three.js 系列文章的第一篇, 原文主要来自
 https://threejs.org/manual/#zh/fundamentals, 这个系列会用交互式代码来学习
 Three.js
@@ -12,7 +16,13 @@ Three.js
 
 ![Three.js应用结构](https://threejs.org/manual/resources/images/threejs-structure.svg)
 
-<CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
+
+```js src/index.js
+import * as Three from 'three'
+
+```
+
+---
 
 ## Renderer、Scene、Camera
 
@@ -69,7 +79,8 @@ scene = new THREE.Scene()
 ---
 
 <CH.Section>
-然后创建一个包含盒子信息的立方几何体(BoxGeometry)。几乎所有希望在three.js中显示的物体都需要一个包含了组成三维物体的顶点信息的几何体。
+
+创建一个包含盒子信息的立方几何体(BoxGeometry)。几乎所有希望在three.js中显示的物体都需要一个包含了组成三维物体的顶点信息的几何体。
 
 ```js
 const boxWidth = 1
@@ -315,7 +326,6 @@ function animate() {
 
 使用 GUI 控制几何体的缩放、移动、旋转
 
-
 <CH.Section>
 
 ```js
@@ -326,9 +336,13 @@ const settings = {
   boxPositionX: 0,
   boxRotationX: 0,
 }
-folderBox.add(settings, 'boxWidth', 1, 10).onChange(v => (cube.scale.x = v))
-folderBox.add(settings, 'boxPositionX', -5, 5, 0.1).onChange(v => (cube.position.x = v))
-folderBox.add(settings, 'boxRotationX', -5, 5, 0.1).onChange(v => (cube.rotation.x = v))
+folderBox.add(settings, 'boxWidth', 1, 10).onChange((v) => (cube.scale.x = v))
+folderBox
+  .add(settings, 'boxPositionX', -5, 5, 0.1)
+  .onChange((v) => (cube.position.x = v))
+folderBox
+  .add(settings, 'boxRotationX', -5, 5, 0.1)
+  .onChange((v) => (cube.rotation.x = v))
 ```
 
 </CH.Section>
@@ -339,7 +353,6 @@ folderBox.add(settings, 'boxRotationX', -5, 5, 0.1).onChange(v => (cube.rotation
 
 ---
 
-
 ## 处理动画
 
 <CH.Section>
@@ -349,7 +362,13 @@ folderBox.add(settings, 'boxRotationX', -5, 5, 0.1).onChange(v => (cube.rotation
 函数,现在我们使用 [`gsap`](https://github.com/greensock/GSAP) 库辅助编写动画
 
 ```js
-gsap.to(cube.position, { x: 5, duration: 5, ease: 'power1.inOut', repeat: -1, yoyo: true })
+gsap.to(cube.position, {
+  x: 5,
+  duration: 5,
+  ease: 'power1.inOut',
+  repeat: -1,
+  yoyo: true,
+})
 gsap.to(cube.rotation, { x: 2 * Math.PI, duration: 5, ease: 'power1.inOut' })
 ```
 
@@ -358,5 +377,114 @@ gsap.to(cube.rotation, { x: 2 * Math.PI, duration: 5, ease: 'power1.inOut' })
 ```js src/index.js
 // from ../../data/three/hello-three/5-add-animation.js
 ```
+
+---
+
+## 鼠标交互
+
+拾取与 Raycaster
+
+<CH.Section>
+由于浏览器是一个 2d 视口，而在里面显示 three.js 的内容是 3d 场景，所以，现在有一
+个问题就是如何将 2d 视口的 x 和 y 坐标转换成 three.js 场景中的 3d 坐标。好在
+three.js 已经有了解决相关问题的方案，那就是 `THREE.Raycaster`
+
+- 拾取 指代推断用户点击或触碰了哪个对象的过程
+
+射线追踪法（raycasting）很可能是最常用的方法，其基本原理是：从鼠标处发射一条射线
+，穿透场景的视椎体，通过计算，找出视锥体中哪些对象与射线相交。
+
+```js
+const raycaster = new THREE.Raycaster()
+```
+
+- origin —— 光线投射的原点向量。
+- direction —— 向射线提供方向的方向向量，应当被标准化。
+- near —— 返回的所有结果比 near 远。near 不能为负值，其默认值为 0。
+- far —— 返回的所有结果都比 far 近。far 不能小于 near，其默认值为 Infinity（正无
+  穷。）
+
+</CH.Section>
+
+<CH.Section>
+
+Vector3 类表示的是一个三维向量一个三维向量表示的是一个有顺序的、三个为一组的数字
+组合(标记为 x、y 和 z)， 可被用来表示很多事物，例如：
+
+- 一个位于三维空间中的点。
+- 一个在三维空间中的方向与长度的定义。在 three.js 中，长度总是从(0, 0, 0)到(x,
+  y, z)的 欧几里德距离，(Euclidean distance 即直线距离)， 方向也是从(0, 0, 0)到
+  (x, y, z)的方向。
+- 任意的、有顺序的、三个为一组的数字组合。
+
+```js
+const a = new THREE.Vector3(0, 1, 0)
+```
+
+</CH.Section>
+
+```js src/index.js
+import * as THREE from 'three'
+
+const raycaster = new THREE.Raycaster()
+const pointer = new THREE.Vector3()
+
+const a = new THREE.Vector3(0, 1, 0)
+//no arguments; will be initialised to (0, 0, 0)
+const b = new THREE.Vector3()
+const d = a.distanceTo(b)
+```
+
+---
+
+<CH.Section>
+
+现在我们来实现一个简单的功能，当几何体上触发点击事件时几何体会随机变色
+
+初始化 Raycaster 和 pointer
+
+```js
+const raycaster = new THREE.Raycaster()
+const pointer = new THREE.Vector3()
+```
+
+</CH.Section>
+<CH.Section>
+接下来监听 `pointerdown` 事件
+
+首先将鼠标位置归一化为设备坐标。以屏幕中心未原点 x 和 y 方向的取值范围是 (-1 to
++1)
+
+```js
+function setPointer(event) {
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+}
+```
+
+</CH.Section>
+
+接下来透过鼠标位置和当前摄像机的矩阵计算出 raycaster 值, 并通过
+`intersectedObjects` 取得 raycaster 射线和物体相交的阵列集合
+
+- `setFromCamera (coords: Vector2, camera: Camera): undefined` 使用一个新的原点
+  和方向来更新射线。
+- `intersectObject (object: Object3D, recursive: Boolean, optionalTarget: Array): ReturnArray`
+  检测所有在射线与物体之间，包括或不包括后代的相交部分。返回结果时，相交部分将按
+  距离进行排序，最近的位于第一个。该方法返回一个包含有交叉部分的数组
+
+<CH.Section>
+```js
+raycaster.setFromCamera(pointer, camera)
+
+const intersectedObjects = raycaster.intersectObjects(scene.children)
+
+````
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/hello-three/6-raycaster.js
+````
 
 </CH.Scrollycoding>

@@ -1,11 +1,9 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
-import gsap from 'gsap'
 
 function main() {
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000)
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
 
@@ -22,21 +20,6 @@ function main() {
         cube = new THREE.Mesh(geometry, material)
         scene.add(cube)
         camera.position.z = 5
-    }
-
-    {
-        let type = 'scale'
-        const gui = new GUI()
-        const settings = {
-            type: type,
-            X: 1,
-            Y: 1,
-            Z: 1,
-        }
-        gui.add(settings, 'type', ['scale', 'position', 'rotation']).onChange(v => (type = v))
-        gui.add(settings, 'X', -5, 10, 1).onChange(v => (cube[type].y = v)) // min, max, step
-        gui.add(settings, 'Y', -5, 10, 1).onChange(v => (cube[type].z = v))
-        gui.add(settings, 'Z', -5, 5, 0.1).onChange(v => (cube[type].x = v))
     }
 
     {
@@ -58,9 +41,27 @@ function main() {
     }
 
     {
-        // focus(1:2)
-        gsap.to(cube.position, { x: 5, duration: 5, ease: 'power1.inOut', repeat: -1, yoyo: true })
-        gsap.to(cube.rotation, { x: 2 * Math.PI, duration: 5, ease: 'power1.inOut' })
+        // focus(1:21)
+        const raycaster = new THREE.Raycaster()
+        const pointer = new THREE.Vector3()
+
+        function setPointer(event) {
+            pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+            pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+        }
+        function onPointerDown(event) {
+            setPointer(event)
+            raycaster.setFromCamera(pointer, camera)
+            const intersectedObjects = raycaster.intersectObjects(scene.children)
+            if (intersectedObjects.length) {
+                intersectedObjects.forEach(item => {
+                    if (item.object.uuid === cube.uuid)
+                        item.object.material.color.set(`#${Math.floor(Math.random() * 16777215).toString(16)}`)
+                })
+            }
+        }
+
+        document.addEventListener('pointerdown', onPointerDown)
     }
 
     function render(time) {
@@ -71,7 +72,4 @@ function main() {
 }
 
 main()
-
-
-
 

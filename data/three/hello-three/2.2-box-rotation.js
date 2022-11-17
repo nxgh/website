@@ -1,40 +1,36 @@
 import * as THREE from 'three'
 
-let renderer, scene, camera
-let cube
-
-function init() {
-    scene = new THREE.Scene()
-    camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000)
-    camera.position.z = 5
-    renderer = new THREE.WebGLRenderer({ antialias: true })
+function main() {
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.render(scene, camera)
 
     const app = document.querySelector('#app')
     app.appendChild(renderer.domElement)
-}
 
-function createBox() {
-    const boxWidth = 1
-    const boxHeight = 1
-    const boxDepth = 1
-    const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
-    const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
-    cube = new THREE.Mesh(geometry, material)
-    scene.add(cube)
-    renderer.render(scene, camera)
-}
+    let cube
+    {
+        const boxWidth = 1
+        const boxHeight = 1
+        const boxDepth = 1
+        const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
+        const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
+        cube = new THREE.Mesh(geometry, material)
+        scene.add(cube)
+        camera.position.z = 5
+    }
 
-init()
-createBox()
-
-// focus(1:7)
-function render(time) {
-    time *= 0.001 // 将时间单位变为秒
-    cube.rotation.x = time
-    cube.rotation.y = time
-    renderer.render(scene, camera)
+    // focus(1:8)
+    function render(time) {
+        time *= 0.001 // 将时间单位变为秒
+        cube.rotation.x = time
+        cube.rotation.y = time
+        renderer.render(scene, camera)
+        requestAnimationFrame(render)
+    }
     requestAnimationFrame(render)
 }
-requestAnimationFrame(render)
+
+main()
+

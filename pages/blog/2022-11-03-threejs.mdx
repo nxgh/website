@@ -1,11 +1,9 @@
 ## Hello Three.js
 
-
-
 <CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
 
 这是 Three.js 系列文章的第一篇, 原文主要来自
-https://threejs.org/manual/#zh/fundamentals, 这个系列会用交互式代码来学习
+[Three.js 官方文档](https://threejs.org/docs), 这个系列会用交互式代码来学习
 Three.js
 
 人们在学习大多数编程语言的时候第一件事就是让电脑打印个"Hello World!"。 对于三维
@@ -16,10 +14,8 @@ Three.js
 
 ![Three.js应用结构](https://threejs.org/manual/resources/images/threejs-structure.svg)
 
-
 ```js src/index.js
 import * as Three from 'three'
-
 ```
 
 ---
@@ -28,22 +24,25 @@ import * as Three from 'three'
 
 <CH.Section>
 
-首先有一个渲染器(Renderer)。这可以说是 three.js 的主要对象。渲染器负责将你提供的
-所有数据渲染绘制到 canvas 上,目前的话是 WebGL 渲染器(WebGLRenderer)，它通过
-WebGL 将三维空间渲染到 canvas 上
+第一步，我们要搭建一个空场景，这个空场景需要以下几个对象:
+Renderer、Scene、Camera
+
+- Scene
+
+场景(Scene)是 three.js 的基本的组成部分。需要 three.js 绘制的东西都需要加入到
+scene 中。
 
 ```js
-renderer = new THREE.WebGLRenderer({ antialias: true })
+scene = new THREE.Scene()
 ```
-
-你传入一个场景 (Scene)和一个摄像机(Camera)到渲染器(Renderer)中，然后它会将摄像机
-视椎体中的三维场景渲染成一个二维图片显示在画布上。
 
 </CH.Section>
 
 <CH.Section>
 
-接下来我们需要一个透视摄像机(PerspectiveCamera)。
+- Camera:
+
+Three.js 中有几种不同的相机，这里使用的是 PerspectiveCamera (透视摄像机)。
 
 ```js
 const fov = 75 // 视野范围
@@ -51,27 +50,65 @@ const aspect = 2 // 画布的宽高比
 const near = 0.1 // 近平面
 const far = 5 // 远平面
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-
-camera.position.z = 2
 ```
 
-摄像机默认指向 Z 轴负方向，上方向朝向 Y 轴正方向。我们将会把立方体放置在坐标原点
-，所以我们需要往后移一下摄像机才能显示出物体。
-
-之后会在摄像机一节详细讲解
+摄像机之后会详细讲解
 
 </CH.Section>
 
 <CH.Section>
 
-然后我们创建一个场景(Scene)。场景(Scene)是 three.js 的基本的组成部分。需要
-three.js 绘制的东西都需要加入到 scene 中。
+- Renderer: 渲染器
+
+Renderer 是 three.js 的主要对象。渲染器负责将你提供的所有数据渲染绘制到 canvas
+上,目前的话是 WebGL 渲染器(WebGLRenderer)，它通过 WebGL 将三维空间渲染到 canvas
+上
+
+Three.js 同时提供了其他几种渲染器，当用户所使用的浏览器过于老旧，或者由于其他原
+因不支持 WebGL 时，可以使用这几种渲染器进行降级。
 
 ```js
-scene = new THREE.Scene()
+renderer = new THREE.WebGLRenderer({ antialias: true })
 ```
 
 </CH.Section>
+
+<CH.Section>
+
+你传入一个场景 (Scene)和一个摄像机(Camera)到渲染器(Renderer)中，然后它会将摄像机
+视椎体中的三维场景渲染成一个二维图片显示在画布上。
+
+```js
+renderer.render(scene, camera)
+```
+
+</CH.Section>
+
+<CH.Section>
+
+我们还需要给渲染器设置一个尺寸,比如说，我们可以使用所需要的渲染区域的宽高，来让
+渲染器渲染出的场景填充满我们的应用程序
+
+```js
+renderer.setSize(window.innerWidth, window.innerHeight)
+```
+
+</CH.Section>
+
+<CH.Section>
+
+最后一步很重要，我们将 renderer（渲染器）的 dom 元素（renderer.domElement）添加
+到我们的 HTML 文档中。这就是渲染器用来显示场景给我们看的 `<canvas>` 元素。
+
+```js
+const app = document.querySelector('#app')
+app.appendChild(renderer.domElement)
+```
+
+接下来，我们就来添加立方体
+
+</CH.Section>
+
 ```js src/index.js
 // from ../../data/three/hello-three/1-renderer.js
 ```
@@ -80,7 +117,8 @@ scene = new THREE.Scene()
 
 <CH.Section>
 
-创建一个包含盒子信息的立方几何体(BoxGeometry)。几乎所有希望在three.js中显示的物体都需要一个包含了组成三维物体的顶点信息的几何体。
+要创建一个立方体，我们需要一个 `BoxGeometry`（立方体）对象. 这个对象包含了一个立
+方体中所有的顶点（vertices）和面（faces）
 
 ```js
 const boxWidth = 1
@@ -92,7 +130,8 @@ const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
 </CH.Section>
 <CH.Section>
 
-然后创建一个基本的材质并设置它的颜色. 颜色的值可以用 css 方式和十六进制来表示
+对于这个立方体，我们需要给它一个材质，来让它有颜色, Three.js 自带了几种材质，在
+这里我们使用的是 `MeshBasicMaterial`
 
 ```js
 const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
@@ -101,19 +140,29 @@ const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
 </CH.Section>
 <CH.Section>
 
-再创建一个网格(Mesh)对象，它包含了：
+第三步，我们需要一个 Mesh（网格） 对象, 它包含了：
 
 1. 几何体(Geometry)(物体的形状)
 2. 材质(Material)(如何绘制物体，光滑还是平整，什么颜色，什么贴图等等)
 3. 对象在场景中相对于他父对象的位置、朝向、和缩放。下面的代码中父对象即为场景对
    象。
 
-最后我们将网格添加到场景中。之后将场景和摄像机传递给渲染器来渲染出整个场景。
+我们将网格添加到场景中。之后将场景和摄像机传递给渲染器来渲染出整个场景。
 
 ```js
 const cube = new THREE.Mesh(geometry, material)
 scene.add(cube)
 renderer.render(scene, camera)
+```
+
+</CH.Section>
+<CH.Section>
+默认情况下，当我们调用 scene.add()的时候，物体将会被添加到(0,0,0)坐标。但将使得
+摄像机和立方体彼此在一起。为了防止这种情况的发生，我们只需要将摄像机稍微向外移动
+一些即可。
+
+```js
+camera.position.z = 5
 ```
 
 </CH.Section>
@@ -158,6 +207,14 @@ requestAnimationFrame 会将页面开始加载到函数运行所经历的时间�
 
 回调函数之外在主进程中我们调用一次 requestAnimationFrame 来开始整个渲染循环。
 
+你或许会说“为什么我们不直接用`setInterval`来实现刷新的功能呢”
+
+，我们的确可以用 setInterval，但是，requestAnimationFrame 有很多的优点。最重要的
+一点或许就是当用户切换到其它的标签页时，它会暂停，因此不会浪费用户宝贵的处理器资
+源，也不会损耗电池的使用寿命
+
+我们现在已经成功完成了第一个 Three.js 应用程序, 下面我们将添加更多的功能
+
 </CH.Section>
 
 ```js src/index.js
@@ -168,9 +225,11 @@ requestAnimationFrame 会将页面开始加载到函数运行所经历的时间�
 
 <CH.Section>
 
-效果好了一些但还是很难看出是三维的。我们来添加些光照效果，应该会有点帮助
-。three.js 中有很多种类型的灯光，我们将在后期文章中详细讨论。现在我们先创建一盏
-平行光。
+在我们加上旋转之后效果好了一些,但还是很难看出是三维的。我们来添加一些光照效果，
+应该会有点帮助。
+
+three.js 中有很多种类型的灯光，我们将在后期文章中详细讨论。现在我们先创建一盏
+DirectionalLight (平行光)。
 
 ```js
 {
@@ -228,6 +287,7 @@ controls.update()
 ---
 
 <CH.Section>
+
 使用 `AxesHelper` 简单模拟3个坐标轴的对象
 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
 
@@ -245,6 +305,7 @@ scene.add(axesHelper)
 ---
 
 <CH.Section>
+
 使用 `GridHelper` 添加坐标格辅助对象. 坐标格实际上是2维线数组.
 
 ```js
@@ -278,8 +339,6 @@ const settings = {}
 </CH.Section>
 
 <CH.Section>
-
-这里简单介绍下 lil-gui 的基本操作
 
 lil-gui 会根据属性的数据类型选择适当的控制器
 
@@ -485,6 +544,6 @@ const intersectedObjects = raycaster.intersectObjects(scene.children)
 
 ```js src/index.js
 // from ../../data/three/hello-three/6-raycaster.js
-````
+```
 
 </CH.Scrollycoding>

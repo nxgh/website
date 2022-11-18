@@ -1,0 +1,35 @@
+很难看出来这是一个三维的立方体，因为我们直视 Z 轴的负方向并且立方体和坐标轴是对齐的，所以我们只能看
+到一个面。
+
+我们来让立方体旋转起来，以便更好的在三维环境中显示。为了让它动起来我们需要用到一个渲染循环函数
+`requestAnimationFrame`.
+
+```js
+function render(time) {
+  time *= 0.001 // 将时间单位变为秒
+  cube.rotation.x = time
+  cube.rotation.y = time
+  renderer.render(scene, camera)
+  requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+```
+
+requestAnimationFrame 函数会告诉浏览器你需要显示动画。传入一个函数作为回调函数。本例中的函数是
+render 函数。如果你更新了跟页面显示有关的任何东西，浏览器会调用你传入的函数来重新渲染页面。我们这里
+是调用 three.js 的 renderer.render 函数来绘制我们的场景。
+
+requestAnimationFrame 会将页面开始加载到函数运行所经历的时间当作入参传给回调函数，单位是毫秒数。但我
+觉得用秒会更简单所以我将它转换成了秒。
+
+然后我们把立方体的 X 轴和 Y 轴方向的旋转角度设置成这个时间。这些旋转角度是弧度制。一圈的弧度为 2π 所
+以我们的立方体在每个方向旋转一周的时间为 6.28 秒。
+
+最后渲染我们的场景并调用另一个帧动画函数来继续我们的循环。
+
+回调函数之外在主进程中我们调用一次 requestAnimationFrame 来开始整个渲染循环。
+
+你或许会说“为什么我们不直接用`setInterval`来实现刷新的功能呢”
+
+，我们的确可以用 setInterval，但是，requestAnimationFrame 有很多的优点。最重要的一点或许就是当用户切
+换到其它的标签页时，它会暂停，因此不会浪费用户宝贵的处理器资源，也不会损耗电池的使用寿命

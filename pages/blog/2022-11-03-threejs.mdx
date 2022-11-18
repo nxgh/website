@@ -1,21 +1,28 @@
+import AddGeometryS5 from '../../data/three/fundamentals/add-geometry/s5.mdx'
+
 ## Hello Three.js
 
 <CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
 
-这是 Three.js 系列文章的第一篇, 原文主要来自
-[Three.js 官方文档](https://threejs.org/docs), 这个系列会用交互式代码来学习
-Three.js
+这是 Three.js 系列文章的第一篇, 原文主要来自 [Three.js 官方文档](https://threejs.org/docs), 这个系列
+会用交互式代码来学习 Three.js
 
-人们在学习大多数编程语言的时候第一件事就是让电脑打印个"Hello World!"。 对于三维
-来说第一件事往往是创建一个三维的立方体。 所以我们从"Hello Cube!"开始。
+人们在学习大多数编程语言的时候第一件事就是让电脑打印个"Hello World!"。 对于三维来说第一件事往往是创
+建一个三维的立方体。 所以我们从"Hello Cube!"开始。
 
-在我们开始前，让我们试着让你了解一下一个 three.js 应用的整体结构。一个 three.js
-应用需要创建很多对象，并且将他们关联在一起。下图是一个基础的 three.js 应用结构。
+在我们开始前，让我们试着让你了解一下一个 three.js 应用的整体结构。一个 three.js 应用需要创建很多对象
+，并且将他们关联在一起。下图是一个基础的 three.js 应用结构。
 
 ![Three.js应用结构](https://threejs.org/manual/resources/images/threejs-structure.svg)
 
 ```js src/index.js
 import * as Three from 'three'
+
+function main() {
+  const app = document.querySelector('#app')
+}
+
+main()
 ```
 
 ---
@@ -24,13 +31,11 @@ import * as Three from 'three'
 
 <CH.Section>
 
-第一步，我们要搭建一个空场景，这个空场景需要以下几个对象:
-Renderer、Scene、Camera
+第一步，我们要搭建一个空场景，这个空场景需要以下几个对象: Renderer、Scene、Camera
 
-- Scene
+## Scene
 
-场景(Scene)是 three.js 的基本的组成部分。需要 three.js 绘制的东西都需要加入到
-scene 中。
+场景(Scene)是 three.js 的基本的组成部分。需要 three.js 绘制的东西都需要加入到 scene 中。
 
 ```js
 scene = new THREE.Scene()
@@ -38,9 +43,23 @@ scene = new THREE.Scene()
 
 </CH.Section>
 
+```js src/index.js
+import * as THREE from 'three'
+
+function main() {
+  // focus
+  const scene = new THREE.Scene()
+
+  const app = document.querySelector('#app')
+}
+main()
+```
+
+---
+
 <CH.Section>
 
-- Camera:
+## Camera:
 
 Three.js 中有几种不同的相机，这里使用的是 PerspectiveCamera (透视摄像机)。
 
@@ -56,16 +75,33 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
 
 </CH.Section>
 
+```js src/index.js
+import * as THREE from 'three'
+
+const { innerWidth, innerHeight } = window
+
+function main() {
+  const scene = new THREE.Scene()
+  // focus
+  const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+
+  const app = document.querySelector('#app')
+}
+
+main()
+```
+
+---
+
 <CH.Section>
 
-- Renderer: 渲染器
+## Renderer: 渲染器
 
-Renderer 是 three.js 的主要对象。渲染器负责将你提供的所有数据渲染绘制到 canvas
-上,目前的话是 WebGL 渲染器(WebGLRenderer)，它通过 WebGL 将三维空间渲染到 canvas
-上
+Renderer 是 three.js 的主要对象。渲染器负责将你提供的所有数据渲染绘制到 canvas 上,目前的话是 WebGL
+渲染器(WebGLRenderer)，它通过 WebGL 将三维空间渲染到 canvas 上
 
-Three.js 同时提供了其他几种渲染器，当用户所使用的浏览器过于老旧，或者由于其他原
-因不支持 WebGL 时，可以使用这几种渲染器进行降级。
+Three.js 同时提供了其他几种渲染器，当用户所使用的浏览器过于老旧，或者由于其他原因不支持 WebGL 时，可
+以使用这几种渲染器进行降级。
 
 ```js
 renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -73,10 +109,29 @@ renderer = new THREE.WebGLRenderer({ antialias: true })
 
 </CH.Section>
 
+```js src/index.js
+import * as THREE from 'three'
+
+const { innerWidth, innerHeight } = window
+
+function main() {
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+  // focus
+  const renderer = new THREE.WebGLRenderer({ antialias: true })
+
+  const app = document.querySelector('#app')
+}
+
+main()
+```
+
+---
+
 <CH.Section>
 
-你传入一个场景 (Scene)和一个摄像机(Camera)到渲染器(Renderer)中，然后它会将摄像机
-视椎体中的三维场景渲染成一个二维图片显示在画布上。
+你传入一个场景 (Scene)和一个摄像机(Camera)到渲染器(Renderer)中，然后它会将摄像机视椎体中的三维场景渲
+染成一个二维图片显示在画布上。
 
 ```js
 renderer.render(scene, camera)
@@ -86,8 +141,8 @@ renderer.render(scene, camera)
 
 <CH.Section>
 
-我们还需要给渲染器设置一个尺寸,比如说，我们可以使用所需要的渲染区域的宽高，来让
-渲染器渲染出的场景填充满我们的应用程序
+我们还需要给渲染器设置一个尺寸,比如说，我们可以使用所需要的渲染区域的宽高，来让渲染器渲染出的场景填
+充满我们的应用程序
 
 ```js
 renderer.setSize(window.innerWidth, window.innerHeight)
@@ -97,28 +152,66 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 
 <CH.Section>
 
-最后一步很重要，我们将 renderer（渲染器）的 dom 元素（renderer.domElement）添加
-到我们的 HTML 文档中。这就是渲染器用来显示场景给我们看的 `<canvas>` 元素。
+最后一步很重要，我们将 renderer（渲染器）的 dom 元素（renderer.domElement）添加到我们的 HTML 文档中
+。这就是渲染器用来显示场景给我们看的 `<canvas>` 元素。
 
 ```js
-const app = document.querySelector('#app')
 app.appendChild(renderer.domElement)
 ```
-
-接下来，我们就来添加立方体
 
 </CH.Section>
 
 ```js src/index.js
-// from ../../data/three/hello-three/1-renderer.js
+import * as THREE from 'three'
+
+const { innerWidth, innerHeight } = window
+
+function main() {
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true })
+  // focus(1,2)
+  renderer.setSize(innerWidth, innerHeight)
+  renderer.render(scene, camera)
+
+  const app = document.querySelector('#app')
+  // focus
+  app.appendChild(renderer.domElement)
+}
+
+main()
+```
+
+---
+
+到目前为止，我们已经创建了空白的场景、渲染器和摄像机，但是还没有渲染任何东西。接下来，我们来添加一个
+正方体
+
+```js src/index.js
+import * as THREE from 'three'
+const { innerWidth, innerHeight } = window
+
+function main() {
+  // focus(1:8)
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+  const renderer = new THREE.WebGLRenderer({ antialias: true })
+  renderer.setSize(innerWidth, innerHeight)
+  renderer.render(scene, camera)
+
+  const app = document.querySelector('#app')
+  app.appendChild(renderer.domElement)
+}
+
+main()
 ```
 
 ---
 
 <CH.Section>
-
-要创建一个立方体，我们需要一个 `BoxGeometry`（立方体）对象. 这个对象包含了一个立
-方体中所有的顶点（vertices）和面（faces）
+要创建一个立方体，我们需要一个 `BoxGeometry`（立方体）对象. 这个对象包含了一个立方体中所有的顶点
+（vertices）和面（faces）
 
 ```js
 const boxWidth = 1
@@ -128,24 +221,36 @@ const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
 ```
 
 </CH.Section>
+
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s1.js
+```
+
+---
+
 <CH.Section>
 
-对于这个立方体，我们需要给它一个材质，来让它有颜色, Three.js 自带了几种材质，在
-这里我们使用的是 `MeshBasicMaterial`
+对于这个立方体，我们需要给它一个材质，来让它有颜色, Three.js 自带了几种材质，在这里我们使用的是
+`MeshBasicMaterial`
 
 ```js
 const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 })
 ```
 
 </CH.Section>
-<CH.Section>
 
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s2.js
+```
+
+---
+
+<CH.Section>
 第三步，我们需要一个 Mesh（网格） 对象, 它包含了：
 
 1. 几何体(Geometry)(物体的形状)
 2. 材质(Material)(如何绘制物体，光滑还是平整，什么颜色，什么贴图等等)
-3. 对象在场景中相对于他父对象的位置、朝向、和缩放。下面的代码中父对象即为场景对
-   象。
+3. 对象在场景中相对于他父对象的位置、朝向、和缩放。下面的代码中父对象即为场景对象。
 
 我们将网格添加到场景中。之后将场景和摄像机传递给渲染器来渲染出整个场景。
 
@@ -156,80 +261,42 @@ renderer.render(scene, camera)
 ```
 
 </CH.Section>
+
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s3.js
+```
+
+---
+
 <CH.Section>
-默认情况下，当我们调用 scene.add()的时候，物体将会被添加到(0,0,0)坐标。但将使得
-摄像机和立方体彼此在一起。为了防止这种情况的发生，我们只需要将摄像机稍微向外移动
-一些即可。
+默认情况下，当我们调用 scene.add()的时候，物体将会被添加到(0,0,0)坐标。但将使得摄像机和立方体彼此在
+一起。为了防止这种情况的发生，我们只需要将摄像机稍微向外移动一些即可。
 
 ```js
 camera.position.z = 5
 ```
 
 </CH.Section>
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s4.js
+```
+
+---
+
+<AddGeometryS5 />
 
 ```js src/index.js
-// from ../../data/three/hello-three/2-add-box.js
+// from ../../data/three/fundamentals/add-geometry/s5.js
 ```
 
 ---
 
 <CH.Section>
 
-很难看出来这是一个三维的立方体，因为我们直视 Z 轴的负方向并且立方体和坐标轴是对
-齐的，所以我们只能看到一个面。
+在我们加上旋转之后效果好了一些,但还是很难看出是三维的。我们来添加一些光照效果，应该会有点帮助。
 
-我们来让立方体旋转起来，以便更好的在三维环境中显示。为了让它动起来我们需要用到一
-个渲染循环函数 `requestAnimationFrame`.
-
-```js
-function render(time) {
-  time *= 0.001 // 将时间单位变为秒
-  cube.rotation.x = time
-  cube.rotation.y = time
-  renderer.render(scene, camera)
-  requestAnimationFrame(render)
-}
-requestAnimationFrame(render)
-```
-
-requestAnimationFrame 函数会告诉浏览器你需要显示动画。传入一个函数作为回调函数。
-本例中的函数是 render 函数。如果你更新了跟页面显示有关的任何东西，浏览器会调用你
-传入的函数来重新渲染页面。我们这里是调用 three.js 的 renderer.render 函数来绘制
-我们的场景。
-
-requestAnimationFrame 会将页面开始加载到函数运行所经历的时间当作入参传给回调函数
-，单位是毫秒数。但我觉得用秒会更简单所以我将它转换成了秒。
-
-然后我们把立方体的 X 轴和 Y 轴方向的旋转角度设置成这个时间。这些旋转角度是弧度制
-。一圈的弧度为 2Π 所以我们的立方体在每个方向旋转一周的时间为 6.28 秒。
-
-最后渲染我们的场景并调用另一个帧动画函数来继续我们的循环。
-
-回调函数之外在主进程中我们调用一次 requestAnimationFrame 来开始整个渲染循环。
-
-你或许会说“为什么我们不直接用`setInterval`来实现刷新的功能呢”
-
-，我们的确可以用 setInterval，但是，requestAnimationFrame 有很多的优点。最重要的
-一点或许就是当用户切换到其它的标签页时，它会暂停，因此不会浪费用户宝贵的处理器资
-源，也不会损耗电池的使用寿命
-
-我们现在已经成功完成了第一个 Three.js 应用程序, 下面我们将添加更多的功能
-
-</CH.Section>
-
-```js src/index.js
-// from ../../data/three/hello-three/2.2-box-rotation.js
-```
-
----
-
-<CH.Section>
-
-在我们加上旋转之后效果好了一些,但还是很难看出是三维的。我们来添加一些光照效果，
-应该会有点帮助。
-
-three.js 中有很多种类型的灯光，我们将在后期文章中详细讨论。现在我们先创建一盏
-DirectionalLight (平行光)。
+three.js 中有很多种类型的灯光，我们将在后期文章中详细讨论。现在我们先创建一盏 DirectionalLight (平行
+光)。
 
 ```js
 {
@@ -241,14 +308,20 @@ DirectionalLight (平行光)。
 }
 ```
 
-平行光有一个位置和目标点。默认值都为(0, 0, 0)。我们这里 将灯光的位置设为(-1,
-2, 4)，让它位于摄像机前面稍微左上方一点的地方。目标点还是(0, 0, 0)，让它朝向坐标
-原点方向。
+平行光有一个位置和目标点。默认值都为(0, 0, 0)。我们这里 将灯光的位置设为(-1, 2, 4)，让它位于摄像机前
+面稍微左上方一点的地方。目标点还是(0, 0, 0)，让它朝向坐标原点方向。
 
 </CH.Section>
 
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s6.js
+```
+
+---
+
 <CH.Section>
-我们还需要改变下立方体的材质。MeshBasicMaterial材质不会受到灯光的影响。我们将他改成会受灯光影响的MeshPhongMaterial材质。
+现在立方体没有变化，是因为 MeshBasicMaterial 材质不会受到灯光的影响。我们将他改成会受灯光影响的
+MeshPhongMaterial 材质。
 
 ```diff
 - const material = new THREE.MeshBasicMaterial({color: 0x44aa88});  // 绿蓝色
@@ -258,38 +331,54 @@ DirectionalLight (平行光)。
 </CH.Section>
 
 ```js src/index.js
-// from ../../data/three/hello-three/2.3-box-light-mesh.js
+// from ../../data/three/fundamentals/add-geometry/s7.js
 ```
 
 ---
 
-# Helper
+现在应该可以很清楚的看出是三维立方体了。
 
-接下来我们添加一些辅助功能
+接下来我们将会在代码中添加
+
+- 轨道控制器
+- 坐标轴辅助与网格辅助
+- 光源与阴影
+
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s8.js
+```
+
+---
+
+## 添加一个轨道控制器
 
 <CH.Section>
-
-添加一个轨道控制器(Orbit controls)可以使得相机围绕目标进行轨道运动
+在代码中修改摄像机的属性总是不便的，Three.js 提供了 OrbitControls（轨道控制器）可以使得相机围绕目标
+进行轨道运动, 使用它的方式也非常简单
 
 ```js
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-controls = new OrbitControls(camera, renderer.domElement)
+const controls = new OrbitControls(camera, renderer.domElement)
 controls.update()
 ```
 
 </CH.Section>
 
 ```js src/index.js
-// from ../../data/three/hello-three/3-add-helper-orbit.js
+// from ../../data/three/fundamentals/add-geometry/s9.js
 ```
 
 ---
 
-<CH.Section>
+## 添加坐标轴辅助对象
 
-使用 `AxesHelper` 简单模拟3个坐标轴的对象
-红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
+<CH.Section>
+使用 `AxesHelper` 可以简单模拟 3 个坐标轴的对象
+
+- 红色代表 X 轴
+- 绿色代表 Y 轴
+- 蓝色代表 Z 轴.
 
 ```js
 const axesHelper = new THREE.AxesHelper(5)
@@ -297,16 +386,16 @@ scene.add(axesHelper)
 ```
 
 </CH.Section>
-
 ```js src/index.js
-// from ../../data/three/hello-three/3.1-add-helper-axes.js
+// from ../../data/three/fundamentals/add-geometry/s10.js
 ```
 
 ---
 
-<CH.Section>
+## 添加坐标格辅助对象
 
-使用 `GridHelper` 添加坐标格辅助对象. 坐标格实际上是2维线数组.
+<CH.Section>
+  使用 `GridHelper` 添加坐标格辅助对象. 坐标格实际上是 2 维线数组.
 
 ```js
 const size = 10
@@ -319,231 +408,131 @@ scene.add(gridHelper)
 </CH.Section>
 
 ```js src/index.js
-// from ../../data/three/hello-three/3.2-add-helper-grid.js
+// from ../../data/three/fundamentals/add-geometry/s11.js
 ```
 
 ---
 
+## 添加一个平面
+
 <CH.Section>
 
-添加图形界面工具控制变量 three.js 自带了
-[lil-gui.js](https://lil-gui.georgealways.com/), 一个简单的 GUI 工具
+平面的创建分为两步来完成。首先，使用 THREE.PlaneGeometry(height, width) 来定义平面的大小, 之后通过创
+建 Material 对象设置平面的外观
+
+这里使用了 MeshLambertMaterial 对象, 它是一种非光泽表面的材质，没有镜面高光
 
 ```js
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
-
-const gui = new GUI({ width: 310 })
-const settings = {}
+const mesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(10, 10),
+  new THREE.MeshLambertMaterial({ color: 0xffffff })
+)
 ```
 
 </CH.Section>
 
 <CH.Section>
 
-lil-gui 会根据属性的数据类型选择适当的控制器
+在将平面添加到场景之前，还需要设置平面的位置：先将平面围绕 x 轴旋转 90 度，然后使用 position 属性来
+定义其在场景中的位置
 
 ```js
-const obj = {
-  boolean: true,
-}
-const gui = new GUI()
-gui.add(obj, 'boolean') // 单选
+mesh.rotation.x = -Math.PI / 2
+scene.add(mesh)
 ```
 
 </CH.Section>
-
 <CH.Section>
 
-使用 onChange 在值改变时更新
+最后我们把几何体的 y 轴坐标设置为 1
 
 ```js
-folder.add(obj, 'y', 0, 100).onChange((v) => console.log('y', v))
-```
-
-</CH.Section>
-
-<CH.Section>
-
-如果 GUI 控制的值在 GUI 之外的任何地方的代码中被更改，那么控制器的显示将不会反映
-新的值。您可以调用 listen ()来更新控制器的每帧显示
-
-```js
-gui.add(params, 'feedback', -1, 1).listen().disable()
-
-function animate() {
-  params.feedback = Math.sin(Date.now() / 1000)
-}
+cube.position.y = 1
 ```
 
 </CH.Section>
 
 ```js src/index.js
-// from ../../data/three/hello-three/lil-gui.js
+// from ../../data/three/fundamentals/add-geometry/s12.js
 ```
 
 ---
 
-使用 GUI 控制几何体的缩放、移动、旋转
+## 添加一个光源辅助对象
 
 <CH.Section>
 
+在上边我们通过 DirectionalLight 对象定义光源并从位置(1, 2, 2)照射场景。我们可以使用
+DirectionalLightHelper 来创建一个光源的辅助对象，它会绘制一个方形的小平面代表方向光的位置，一条连接
+光源与目标点的直线，代表了光的方向
+
 ```js
-const gui = new GUI({ width: 310 })
-const folderHelper = gui.addFolder('helper')
-const settings = {
-  boxWidth: 1,
-  boxPositionX: 0,
-  boxRotationX: 0,
-}
-folderBox.add(settings, 'boxWidth', 1, 10).onChange((v) => (cube.scale.x = v))
-folderBox
-  .add(settings, 'boxPositionX', -5, 5, 0.1)
-  .onChange((v) => (cube.position.x = v))
-folderBox
-  .add(settings, 'boxRotationX', -5, 5, 0.1)
-  .onChange((v) => (cube.rotation.x = v))
+const helper = new THREE.DirectionalLightHelper(light)
+scene.add(helper)
 ```
 
 </CH.Section>
 
 ```js src/index.js
-// from ../../data/three/hello-three/4-add-gui.js
+// from ../../data/three/fundamentals/add-geometry/s13.js
 ```
 
 ---
 
-## 处理动画
+## 添加阴影
+
+{/* 通过将 castShadow 属性设置为 true，THREE.js 的阴影功能被启用 */}
 
 <CH.Section>
 
-在上边我们让 box 动起来使用了
-[`requestAnimationFrame`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)
-函数,现在我们使用 [`gsap`](https://github.com/greensock/GSAP) 库辅助编写动画
+由于渲染阴影需要耗费大量的计算资源，所以默认情况下 Three.js 中是不会渲染阴影的。为了渲染阴影效果，我
+们需要进行如下设置
 
 ```js
-gsap.to(cube.position, {
-  x: 5,
-  duration: 5,
-  ease: 'power1.inOut',
-  repeat: -1,
-  yoyo: true,
-})
-gsap.to(cube.rotation, { x: 2 * Math.PI, duration: 5, ease: 'power1.inOut' })
+renderer.shadowMap.enabled = true
 ```
 
-</CH.Section>
+这时候查看修改的效果，那么你将会发现还是没有任何区别，因为你还需要明确地指定哪个物体投射阴影、哪个物
+体接受阴影
 
+</CH.Section>
 ```js src/index.js
-// from ../../data/three/hello-three/5-add-animation.js
-```
-
----
-
-## 鼠标交互
-
-拾取与 Raycaster
-
-<CH.Section>
-由于浏览器是一个 2d 视口，而在里面显示 three.js 的内容是 3d 场景，所以，现在有一
-个问题就是如何将 2d 视口的 x 和 y 坐标转换成 three.js 场景中的 3d 坐标。好在
-three.js 已经有了解决相关问题的方案，那就是 `THREE.Raycaster`
-
-- 拾取 指代推断用户点击或触碰了哪个对象的过程
-
-射线追踪法（raycasting）很可能是最常用的方法，其基本原理是：从鼠标处发射一条射线
-，穿透场景的视椎体，通过计算，找出视锥体中哪些对象与射线相交。
-
-```js
-const raycaster = new THREE.Raycaster()
-```
-
-- origin —— 光线投射的原点向量。
-- direction —— 向射线提供方向的方向向量，应当被标准化。
-- near —— 返回的所有结果比 near 远。near 不能为负值，其默认值为 0。
-- far —— 返回的所有结果都比 far 近。far 不能小于 near，其默认值为 Infinity（正无
-  穷。）
-
-</CH.Section>
-
-<CH.Section>
-
-Vector3 类表示的是一个三维向量一个三维向量表示的是一个有顺序的、三个为一组的数字
-组合(标记为 x、y 和 z)， 可被用来表示很多事物，例如：
-
-- 一个位于三维空间中的点。
-- 一个在三维空间中的方向与长度的定义。在 three.js 中，长度总是从(0, 0, 0)到(x,
-  y, z)的 欧几里德距离，(Euclidean distance 即直线距离)， 方向也是从(0, 0, 0)到
-  (x, y, z)的方向。
-- 任意的、有顺序的、三个为一组的数字组合。
-
-```js
-const a = new THREE.Vector3(0, 1, 0)
-```
-
-</CH.Section>
-
-```js src/index.js
-import * as THREE from 'three'
-
-const raycaster = new THREE.Raycaster()
-const pointer = new THREE.Vector3()
-
-const a = new THREE.Vector3(0, 1, 0)
-//no arguments; will be initialised to (0, 0, 0)
-const b = new THREE.Vector3()
-const d = a.distanceTo(b)
+// from ../../data/three/fundamentals/add-geometry/s14.js
 ```
 
 ---
 
 <CH.Section>
-
-现在我们来实现一个简单的功能，当几何体上触发点击事件时几何体会随机变色
-
-初始化 Raycaster 和 pointer
+设置地面上接受阴影
 
 ```js
-const raycaster = new THREE.Raycaster()
-const pointer = new THREE.Vector3()
-```
-
-</CH.Section>
-<CH.Section>
-接下来监听 `pointerdown` 事件
-
-首先将鼠标位置归一化为设备坐标。以屏幕中心未原点 x 和 y 方向的取值范围是 (-1 to
-+1)
-
-```js
-function setPointer(event) {
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
-}
+mesh.receiveShadow = true
 ```
 
 </CH.Section>
 
-接下来透过鼠标位置和当前摄像机的矩阵计算出 raycaster 值, 并通过
-`intersectedObjects` 取得 raycaster 射线和物体相交的阵列集合
+<CH.Section>
+设置立方体在地面上投射阴影
 
-- `setFromCamera (coords: Vector2, camera: Camera): undefined` 使用一个新的原点
-  和方向来更新射线。
-- `intersectObject (object: Object3D, recursive: Boolean, optionalTarget: Array): ReturnArray`
-  检测所有在射线与物体之间，包括或不包括后代的相交部分。返回结果时，相交部分将按
-  距离进行排序，最近的位于第一个。该方法返回一个包含有交叉部分的数组
+```js
+cube.castShadow = true
+```
+
+</CH.Section>
 
 <CH.Section>
+
+设置光源阴影，并不是所有的光源都能够产生阴影, 通过 DirectionalLight 定义的光源是能够产生阴影的。我们
+只要将属性 castShadow 设置为 true 就可以将阴影渲染出来了
+
 ```js
-raycaster.setFromCamera(pointer, camera)
-
-const intersectedObjects = raycaster.intersectObjects(scene.children)
-
-````
+light.castShadow = true
+```
 
 </CH.Section>
 
 ```js src/index.js
-// from ../../data/three/hello-three/6-raycaster.js
+// from ../../data/three/fundamentals/add-geometry/s15.js
 ```
 
 </CH.Scrollycoding>

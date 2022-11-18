@@ -17,3 +17,7 @@
 .ch-scrollycoding-with-preview .ch-scrollycoding-sticker .ch-preview.ch-scrollycoding-preview {
   height: 45vh;
 }
+
+.ch-scrollycoding-content .ch-scrollycoding-step-content {
+  min-height: 300px;
+}

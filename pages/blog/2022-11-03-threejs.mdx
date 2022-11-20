@@ -103,6 +103,8 @@ Renderer 是 three.js 的主要对象。渲染器负责将你提供的所有数�
 Three.js 同时提供了其他几种渲染器，当用户所使用的浏览器过于老旧，或者由于其他原因不支持 WebGL 时，可
 以使用这几种渲染器进行降级。
 
+这里我们设置属性抗锯齿 `antialias` 为 true 
+
 ```js
 renderer = new THREE.WebGLRenderer({ antialias: true })
 ```
@@ -533,6 +535,208 @@ light.castShadow = true
 
 ```js src/index.js
 // from ../../data/three/fundamentals/add-geometry/s15.js
+```
+
+---
+
+## 使用 GUI 简化试验流程
+
+在本章最后，将会使用 three.js 中的 lil-gui 库为我们的示例添加用户操作界面, 使我们可以
+
+- 控制灯光的位置
+- 控制立方体的位置
+
+你也可以使用其他的 GUI 库 ，例如 dat.GUI
+
+<CH.Section>
+
+lil-gui 会根据属性的数据类型选择适当的控制器,而 onChange 会在值改变时更新
+
+```js
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js'
+
+const settings = {}
+{
+  const settings = { x: 1, y: 1, z: 1 }
+  const gui = new GUI()
+  gui.add(settings, 'x', -4.5, 4.5, 0.5).onChange((v) => (cube.position.x = v)) // min, max, step
+  gui.add(settings, 'y', -4.5, 4.5, 0.5).onChange((v) => (cube.position.y = v))
+  gui.add(settings, 'z', -4.5, 4.5, 0.5).onChange((v) => (cube.position.z = v))
+}
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s16.js
+```
+
+---
+
+<CH.Section>
+可以使用 addFolder 添加一个折叠面板对 GUI 中的属性进行分类
+
+```js
+const lightFolder = gui.addFolder('light')
+
+lightFolder.add(settings, 'light x', -5, 5, 0.5).onChange((v) => updateLight('x', v))
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s17.js
+```
+
+---
+
+## 添加帧数显示
+
+最后我们介绍一个辅助库 State.js 这个库也是 Three.js 作者开发的，主要用于检测动画运行时的帧数。在动画
+
+运行时，该库可以显示每秒渲染的帧数、每渲染一帧所花费的时间和内存占用量。
+
+State.js 使用也非常简便
+
+<CH.Section>
+
+```js
+import Stats from 'three/examples/jsm//libs/stats.module.js'
+
+const stats = new Stats()
+app.appendChild(stats.dom)
+
+function render(time) {
+  stats.update()
+  // ...
+}
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/fundamentals/add-geometry/s18.js
+```
+
+---
+
+## 总结
+
+在本章中展示了使用 Three.js 渲染场景时，首先需要做的是创建 THREE.Scene 对象，添加摄像机、光源和需要
+渲染的物体；如何给场景添加阴影和动画效果；添加辅助库 lil-gui 和 stats.js 创建用户控制界面和快速获取
+场景渲染时的帧数。
+
+
+接下来我们将会进一步扩展这个示例
+
+
+```js src/index.js
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
+import Stats from 'three/examples/jsm//libs/stats.module.js'
+
+const { innerWidth, innerHeight } = window
+
+function main() {
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+  const renderer = new THREE.WebGLRenderer({ antialias: true })
+  renderer.setSize(innerWidth, innerHeight)
+  renderer.shadowMap.enabled = true
+  renderer.render(scene, camera)
+
+  const app = document.querySelector('#app')
+  app.appendChild(renderer.domElement)
+  const stats = new Stats();
+  app.appendChild(stats.dom);
+
+  let cube
+  {
+    const boxWidth = 1
+    const boxHeight = 1
+    const boxDepth = 1
+    const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth)
+    const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 })
+    cube = new THREE.Mesh(geometry, material)
+    cube.position.y = 1
+    cube.castShadow = true
+    scene.add(cube)
+    renderer.render(scene, camera)
+  }
+
+  let light, helper
+  {
+    const color = 0xffffff
+    const intensity = 1
+    light = new THREE.DirectionalLight(color, intensity)
+    light.position.set(1, 3, 3)
+    light.castShadow = true
+    light.shadow.mapSize = new THREE.Vector2(2048, 2048)
+    scene.add(light)
+    helper = new THREE.DirectionalLightHelper(light)
+    scene.add(helper)
+  }
+
+  {
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(10, 10),
+      new THREE.MeshLambertMaterial({ color: 0xffffff })
+    )
+    mesh.receiveShadow = true
+    mesh.rotation.x = -Math.PI / 2
+    scene.add(mesh)
+  }
+
+  {
+    const controls = new OrbitControls(camera, renderer.domElement)
+    controls.update()
+  }
+
+  {
+    const axesHelper = new THREE.AxesHelper(5)
+    scene.add(axesHelper)
+    const gridHelper = new THREE.GridHelper(10, 10)
+    scene.add(gridHelper)
+    camera.position.set(0, 3, 9)
+  }
+
+  {
+    const settings = {
+      type: true,
+      'cube x': 1,
+      'cube y': 1,
+      'cube z': 1,
+
+      'light x': 1,
+      'light y': 1,
+      'light z': 1,
+    }
+    const gui = new GUI()
+
+    gui.add(settings, 'cube x', -4.5, 4.5, 0.5).onChange((v) => (cube.position.x = v)) 
+    gui.add(settings, 'cube y', -4.5, 4.5, 0.5).onChange((v) => (cube.position.y = v))
+    gui.add(settings, 'cube z', -4.5, 4.5, 0.5).onChange((v) => (cube.position.z = v))
+
+    const lightFolder = gui.addFolder('light')
+    function updateLight(axes, value) {
+      light.position[axes] = value
+      helper.update()
+    }
+    lightFolder.add(settings, 'light x', -5, 5, 0.5).onChange((v) => updateLight('x', v)) 
+    lightFolder.add(settings, 'light y', 1, 5, 0.5).onChange((v) => updateLight('y', v)) 
+    lightFolder.add(settings, 'light z', -4.5, 4.5, 0.5).onChange((v) => updateLight('z', v))
+  }
+
+  function render(time) {
+    stats.update()
+    renderer.render(scene, camera)
+    requestAnimationFrame(render)
+  }
+  requestAnimationFrame(render)
+}
+
+main()
 ```
 
 </CH.Scrollycoding>

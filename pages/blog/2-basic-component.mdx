@@ -17,18 +17,271 @@ THREE.Scene 对象有时被称为场景图，可以用来保存所有图形场�
 
 场景图不仅仅是一个对象数组，还包含了场景图树形结构中的所有节点。
 
-每个你添加到 Three.js 场景的 对象，甚至包括 THREE.Scene 本身，都是继承自一个名为 THREE.Object3D 的对
-象。
+每个你添加到 Three.js 场景的 对象，甚至包括 THREE.Scene 本身，都是继承自一个名为 THREE.Object3D 的对象。
 
-一个 THREE.Object3D 对象也可以有自己的子对象，你也可以使用它的子对象来创建一个 Three.js 能解释和渲染
-的对象树。
+一个 THREE.Object3D 对象也可以有自己的子对象，你也可以使用它的子对象来创建一个 Three.js 能解释和渲染的对象树。
 
 ![](/assets/scene/scenegraph-generic.svg)
+
+### Scene 常用的属性/方法
+
+- `.children`: 用于获取场景中所有的子对象列表
+
+- `.add`: 用于向场景中添加对象
+- `.remove`: 用于向场景中添加对象
+- `.getObjectByName`: 利用 name 属性，用于获取场景中特定的对象
+
+完整 api 参考[文档](https://threejs.org/docs/index.html?q=obje#api/zh/core/Object3D)
 
 现在我们来实现一个太阳系的场景,例子的介绍请参照 [three.js 场景图](https://threejs.org/manual/#zh/scenegraph)
 
 <CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
 
+<CH.Section>
+首先我们需要一个基础的项目结构
 
+为了便于观察，我们要把摄像头放在原点的正上方向下看。
 
-<CH.Scrollycoding>
+最简单的方法是使用 lookAt 函数。 lookAt 函数让摄像机从它的位置“看向”我们传递 lookAt 的位置。
+
+```js
+camera.position.set(0, 25, 0)
+camera.up.set(0, 0, 1)
+camera.lookAt(0, 0, 0)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s1.js
+```
+
+---
+
+<CH.Section>
+第一步我们先创建一个 Geometry, 它会被太阳、地球与月亮共用, 这里使用的是一个低多边形球体（low-polygon sphere）。赤道周围只有 6 个分段。这是为了便于观察旋转情况。
+
+```js
+let sphereGeometry
+{
+  const radius = 1 // ui: radius
+  const widthSegments = 6 // ui: widthSegments
+  const heightSegments = 6 // ui: heightSegments
+  sphereGeometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments)
+}
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s2.js
+```
+
+---
+
+<CH.Section>
+## 创建太阳
+
+因为我们会重用同一个球体, 所以我们将太阳网格(sunMesh)的比例设置为 5x
+
+这里还将 `phong` 材质的 `emissive` 属性设置为黄色。`phong` 材质的放射属性(emissive)是基本上不受其他光照影响的固有颜色。光照会被添加到该颜色上
+
+objects 要更新旋转角度的对象数组
+
+```js
+const sunMaterial = new THREE.MeshPhongMaterial({ emissive: 0xffff00 })
+const sunMesh = new THREE.Mesh(sphereGeometry, sunMaterial)
+sunMesh.scale.set(5, 5, 5) // 扩大太阳的大小
+scene.add(sunMesh)
+objects.push(sunMesh)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s3.js
+```
+
+---
+
+<CH.Section>
+## 添加点光源
+
+在场景的中心放置了一个点光源（point light）和一个光源的辅助对象，点光源代表从一个点向各个方向发射的光源
+
+```js
+const color = 0xffffff
+const intensity = 1
+const light = new THREE.PointLight(color, intensity)
+scene.add(light)
+const helper = new THREE.PointLightHelper(light)
+scene.add(helper)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s4.js
+```
+
+---
+
+<CH.Section>
+
+## 旋转对象
+
+我们可以在渲染循环中，通过这段代码旋转 objects 数组中的所有对象
+
+```js
+objects.forEach((obj) => {
+  obj.rotation.y = time
+})
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s5.js
+```
+
+---
+
+<CH.Section>
+现在让我们把地球（earth）也加进去。我们做的材料是蓝色的，但是我们给它加了少量的放射蓝（emissive blue）
+
+将其定位在太阳的左边 10 个单位，并将其添加到场景中。由于我们将它添加到了我们的 objects 数组中，所以它也会旋转。
+
+```js
+const earthMaterial = new THREE.MeshPhongMaterial({
+  color: 0x2233ff,
+  emissive: 0x112244,
+})
+const earthMesh = new THREE.Mesh(sphereGeometry, earthMaterial)
+earthMesh.position.x = 10
+scene.add(earthMesh)
+objects.push(earthMesh)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s6.js
+```
+
+---
+
+<CH.Section>
+
+你可以看到太阳和地球都在自转，但地球并没有绕着太阳转。让我们把地球变成太阳的子节点吧。
+
+```diff
+-scene.add(earthMesh);
++sunMesh.add(earthMesh);
+```
+
+你可能会发现地球不见了，只有进行缩放摄像机才能看到地球，而地球和太阳一样大小
+
+我们让 earthMesh 成为 sunMesh 的一个子节点。`sunMesh.scale.set(5, 5, 5)` 将其比例设置为 5x。这意味着 `sunMeshs` 的局部空间是 5 倍大
+
+这表示地球现在大了 5 倍，它与太阳的距离 ( earthMesh.position.x = 10 ) 也是 5 倍。
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s7.js
+```
+
+---
+
+<CH.Section>
+为了解决这个问题，我们添加一个空的场景图节点。我们将把太阳和地球都作为该节点的子节点
+
+这里我们创建了一个 Object3D 。像 Mesh 一样，它也是场景图中的一个节点，但与 Mesh 不同的是，它没有材质（material）和几何体（geometry）。它只是代表一个局部空间。
+
+sunMesh 和 earthMesh 都是 solarSystem 的子网格。三者都在旋转，现在因为 earthMesh 不是 sunMesh 的子网格，所以不再按 5 倍比例缩放
+
+```js
+const solarSystem = new THREE.Object3D()
+scene.add(solarSystem)
+objects.push(solarSystem)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s8.js
+```
+
+---
+
+<CH.Section>
+延续同样的模式，我们再加一个月亮, 现在的场景图是这样
+
+![](/assets/scene/scenegraph-sun-earth-moon.svg)
+
+```js
+const moonOrbit = new THREE.Object3D()
+moonOrbit.position.x = 2
+earthOrbit.add(moonOrbit)
+
+const moonMaterial = new THREE.MeshPhongMaterial({ color: 0x888888, emissive: 0x222222 })
+const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial)
+moonMesh.scale.set(0.5, 0.5, 0.5)
+moonOrbit.add(moonMesh)
+objects.push(moonMesh)
+```
+
+</CH.Section>
+```js src/index.js
+// from ../../data/three/scenegraph/s9.js
+```
+
+---
+
+<CH.Section>
+## 添加细节
+
+为了方便观察旋转情况，现在的球体是一个低多边形的球体，我们可以将球体的 widthSegments 和 heightSegments 加大，然后为球体添加一个纹理
+
+```diff
+-const widthSegments = 6
+-const heightSegments = 6
++const widthSegments = 50
++const heightSegments = 50
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s10.js
+```
+
+---
+
+<CH.Section>
+添加纹理
+
+纹理一般是指我们常见的在一些第三方程序中创建的图像
+
+使用最简单的加载纹理的方法
+
+我们创建一个 TextureLoader ，然后调用它的 load 方法。 这将返回一个 Texture 对象。
+
+```diff
+const rawUrl = 'https://raw.githubusercontent.com/nxgh/nxgh.github.io/main/public/assets/scene'
+const loader = new THREE.TextureLoader();
+
+const bgTexture = loader.load(`${rawUrl}/StarsMap.jpg`);
+scene.background = bgTexture;
+
+-const material = new THREE.MeshPhongMaterial({ emissive: 0xffff00 })
++const material = new THREE.MeshBasicMaterial({ map: loader.load(`${rawUrl}/sun.jpg`) })
+```
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/scenegraph/s11.js
+```
+
+</CH.Scrollycoding>

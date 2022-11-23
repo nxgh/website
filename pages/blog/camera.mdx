@@ -1,0 +1,73 @@
+# 摄像机
+
+<CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
+在 Three.js 中最常用的摄像机有：
+
+- 透视投影摄像机(PerspectiveCamera)
+- 正交投影摄像机(OrthographicCamera)
+
+透视摄像机 PerspectiveCamera, 通过 near, far, fov, aspect 四个属性定义了一个视锥，提供一个近大远小的 3D 视觉效果
+
+正交摄像机 OrthographicCamera, 和指定一个视锥不同的是, 它需要设置 left, right top, bottom, near, 和 far 指定一个长方体, 使得视野是平行的而不是透视的
+
+当使用透视摄像机时立方体距离摄像机越远，它们就会被渲染得越小，而使用正交投影摄像机的话，所有的立方体被渲染出来的尺寸都是一样的，因为对象相对于摄像机的距离对渲染的结果是没有影响的
+
+正交投影摄像机的话，所有的立方体被渲染出来的尺寸都是一样的，因为对象相对于摄像机的距离对渲染的结果是没有影响的
+
+```js src/index.js
+// from ../../data/three/camera/two-camera.js
+```
+
+---
+
+<CH.Section>
+
+## 透视投影摄像机
+
+PerspectiveCamera 定义了一个 **视锥 frustum**. frustum 是一个切掉顶的三角锥或者说实心金字塔型.
+
+![](/assets/camera/frustum-3d.svg)
+
+```js
+PerspectiveCamera( fov : Number, aspect : Number, near : Number, far : Number )
+```
+
+- fov — 摄像机视锥体垂直视野角度 在摄像机中能够看到的那部分场景。比如，人类有接近 180 度的视场，而有些鸟类有接近 360 度的视场，但是由于计算机不能完全显示我们能够看到的场景，所以一般会选择一块较小的区
+  域
+- aspect — 摄像机视锥体长宽比 渲染结果的横向尺寸和纵向尺寸的比值，决定着横向视场与纵向视场的比例关系。推荐使用 `window.innerWidth / window.innerHeight`
+- near — 摄像机视锥体近端面 定义了从距离摄像机多近的距离开始渲染，通常情况下这个值会设置的尽可能小。比如 `0.1`
+- far — 摄像机视锥体远端面 定义了摄像机从它所在的位置能够看多远，值如果较小，场景的部分不会被渲染; 如果值过大，会影响渲染的性能
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/camera/camera-helper1.js
+```
+
+---
+
+<CH.Section>
+
+## 正交投影摄像机
+
+当使用正交投影摄像机时，定义的是一个需要被渲染的方块区域
+
+```ts
+OrthographicCamera( left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number )
+```
+
+- left — 摄像机视锥体左侧面。
+- right — 摄像机视锥体右侧面。
+- top — 摄像机视锥体上侧面。
+- bottom — 摄像机视锥体下侧面。
+- near — 摄像机视锥体近端面。
+- far — 摄像机视锥体远端面。
+
+
+</CH.Section>
+
+```js src/index.js
+// from ../../data/three/camera/camera-helper2.js
+```
+
+</CH.Scrollycoding >

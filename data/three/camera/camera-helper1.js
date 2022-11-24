@@ -143,7 +143,6 @@ function main() {
 
     function render(time) {
         renderCameraWithHelper()
-        renderer.render(scene, view1);
         requestAnimationFrame(render)
     }
     requestAnimationFrame(render)

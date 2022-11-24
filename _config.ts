@@ -1,5 +1,5 @@
 const MenuConfig = [
-  { name: 'Blog', path: '/blog' },
+  { name: 'Three.js', path: '/three' },
   { name: 'Docs', path: '/docs/index' },
 ]
 

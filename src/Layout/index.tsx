@@ -34,7 +34,7 @@ const BlogLayout: FCP = ({ children }) => {
 
 const ContentLayout: FCP = ({ children }) => {
   const router = useRouter()
-  if (router.asPath.startsWith('/blog')) {
+  if (router.asPath.startsWith('/three')) {
     return <BlogLayout>{children}</BlogLayout>
   }
   return <>{children}</>

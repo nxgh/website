@@ -4,6 +4,20 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 const rawUrl = 'https://raw.githubusercontent.com/nxgh/nxgh.github.io/main/public/assets/texture'
 const { innerWidth, innerHeight } = window
 
+// focus(1:12)
+class ColorGUIHelper {
+    constructor(object, prop) {
+        this.object = object;
+        this.prop = prop;
+    }
+    get value() {
+        return `#${this.object[this.prop].getHexString()}`;
+    }
+    set value(hexString) {
+        this.object[this.prop].set(hexString);
+    }
+}
+
 function main() {
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
@@ -15,8 +29,15 @@ function main() {
     const app = document.querySelector('#app')
     app.appendChild(renderer.domElement)
 
+    let light
     {
-        // focus(1:17)
+        const color = 0xFFFFFF;
+        const intensity = 1;
+        light = new THREE.AmbientLight(color, intensity);
+        scene.add(light);
+    }
+
+    {
         const planeSize = 40;
         const loader = new THREE.TextureLoader();
         const texture = loader.load(`${rawUrl}/checker.png`);
@@ -28,11 +49,29 @@ function main() {
 
         const mesh = new THREE.Mesh(
             new THREE.PlaneGeometry(planeSize, planeSize),
-            new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide,})
+            new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide })
         )
         mesh.receiveShadow = true
         mesh.rotation.x = -Math.PI / 2
         scene.add(mesh)
+    }
+    {
+        const cubeSize = 4;
+        const cubeGeo = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+        const cubeMat = new THREE.MeshPhongMaterial({ color: '#8AC' });
+        const mesh = new THREE.Mesh(cubeGeo, cubeMat);
+        mesh.position.set(cubeSize + 1, cubeSize / 2, 0);
+        scene.add(mesh);
+    }
+    {
+        const sphereRadius = 3;
+        const sphereWidthDivisions = 32;
+        const sphereHeightDivisions = 16;
+        const sphereGeo = new THREE.SphereGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
+        const sphereMat = new THREE.MeshPhongMaterial({ color: '#CA8' });
+        const mesh = new THREE.Mesh(sphereGeo, sphereMat);
+        mesh.position.set(-sphereRadius - 1, sphereRadius + 2, 0);
+        scene.add(mesh);
     }
 
     {

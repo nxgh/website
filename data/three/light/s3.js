@@ -15,8 +15,17 @@ function main() {
     const app = document.querySelector('#app')
     app.appendChild(renderer.domElement)
 
+
+    // focus(1:7)
+    let light
     {
-        // focus(1:17)
+        const color = 0xFFFFFF;
+        const intensity = 1;
+        light = new THREE.AmbientLight(color, intensity);
+        scene.add(light);
+    }
+
+    {
         const planeSize = 40;
         const loader = new THREE.TextureLoader();
         const texture = loader.load(`${rawUrl}/checker.png`);
@@ -28,12 +37,31 @@ function main() {
 
         const mesh = new THREE.Mesh(
             new THREE.PlaneGeometry(planeSize, planeSize),
-            new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide,})
+            new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide })
         )
         mesh.receiveShadow = true
         mesh.rotation.x = -Math.PI / 2
         scene.add(mesh)
     }
+    {
+        const cubeSize = 4;
+        const cubeGeo = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+        const cubeMat = new THREE.MeshPhongMaterial({ color: '#8AC' });
+        const mesh = new THREE.Mesh(cubeGeo, cubeMat);
+        mesh.position.set(cubeSize + 1, cubeSize / 2, 0);
+        scene.add(mesh);
+    }
+    {
+        const sphereRadius = 3;
+        const sphereWidthDivisions = 32;
+        const sphereHeightDivisions = 16;
+        const sphereGeo = new THREE.SphereGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
+        const sphereMat = new THREE.MeshPhongMaterial({ color: '#CA8' });
+        const mesh = new THREE.Mesh(sphereGeo, sphereMat);
+        mesh.position.set(-sphereRadius - 1, sphereRadius + 2, 0);
+        scene.add(mesh);
+    }
+
 
     {
         const controls = new OrbitControls(camera, renderer.domElement)

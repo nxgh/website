@@ -9,6 +9,7 @@ const paths = [
   { path: 'basic-components', title: 'Three.js 基础组件' },
   { path: 'camera', title: 'Three.js 摄像机' },
   { path: 'light', title: 'Three.js 灯光' },
+  { path: 'material', title: 'Three.js 材质' },
 ]
 
 export default function BlogIndex() {

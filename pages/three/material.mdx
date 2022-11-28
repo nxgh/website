@@ -13,12 +13,14 @@
 | MeshStandardMaterial | 一种基于物理的标准材质                                                           |
 | MeshToonMaterial     | MeshPhongMaterial 的扩展材质，使得物体渲染更加卡通化                             |
 | ShaderMaterial       | 着色器材质，允许使用自定义的着色器程序，直接控制顶点的放置方式以及像素的着色方式 |
+| ShadowMaterial       | 此材质可以接收阴影，但在其他方面完全透明。                                       |
 
 ## 材质的属性
 
 - 基础属性: 这些属性是最常用的。通过这些属性,可以控制物体的不透明度、是否可见以及如何被引用。
 - 融合属性: 每个物体都有一系列的融合属性。这些属性决定了物体如何与背景融合
-- 高级属性: 有一些高级属性可以控制底层 WebGL 上下文对象渲染物体的方式。大多数情况下是不需要使用这些属性的
+- 高级属性: 有一些高级属性可以控制底层 WebGL 上下文对象渲染物体的方式。大多数情况下是不需要使用这些
+  属性的
 
 | 属性                                   | 描述                                                                                                                                                                                                                                                                                                                        |
 | :------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -53,7 +55,8 @@
 
 <CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
 
-Three.js 提供了多种类型的材质（material）。它们定义了对象在场景中的外型。你使用哪种材质取决于你想达到的目的。
+Three.js 提供了多种类型的材质（material）。它们定义了对象在场景中的外型。你使用哪种材质取决于你想达
+到的目的。
 
 有 2 种方法可以设置大部分的材质属性。一种是在实例化时设置，也就是我们之前看到的。
 
@@ -152,10 +155,13 @@ MeshPhongMaterial 的 shininess 设置决定了镜面高光的光泽度。它的
 
 ### emissive
 
-请注意，将 MeshLambertMaterial 或 MeshPhongMaterial 的 emissive 属性设置为颜色，并将颜色设置为黑色(phong 的 shininess 为 0)，最终看起来就像 MeshBasicMaterial 一样。
+请注意，将 MeshLambertMaterial 或 MeshPhongMaterial 的 emissive 属性设置为颜色，并将颜色设置为黑色
+(phong 的 shininess 为 0)，最终看起来就像 MeshBasicMaterial 一样。
 
-既然 MeshBasicMaterial、MeshLambertMaterial 可以做到的，MeshPhongMaterial 也可以做到，那为什么还要有这 3 种材质呢？原因是更复杂的材质会消耗更多的 GPU 功耗。在一个较慢的 GPU 上，比如说手机，你可能想通
-过使用一个不太复杂的材质来减少绘制场景所需的 GPU 功耗。同样，如果你不需要额外的功能，那就使用最简单的材质。如果你不需要照明和镜面高光，那么就使用 MeshBasicMaterial 。
+既然 MeshBasicMaterial、MeshLambertMaterial 可以做到的，MeshPhongMaterial 也可以做到，那为什么还要有
+这 3 种材质呢？原因是更复杂的材质会消耗更多的 GPU 功耗。在一个较慢的 GPU 上，比如说手机，你可能想通
+过使用一个不太复杂的材质来减少绘制场景所需的 GPU 功耗。同样，如果你不需要额外的功能，那就使用最简单
+的材质。如果你不需要照明和镜面高光，那么就使用 MeshBasicMaterial 。
 
 ```js src/index.js
 // from ../../data/three/material/s5.js
@@ -165,8 +171,10 @@ MeshPhongMaterial 的 shininess 设置决定了镜面高光的光泽度。它的
 
 ## MeshToonMaterial
 
-MeshToonMaterial 与 MeshPhongMaterial 类似，但有一个很大的不同。它不是平滑地着色，而是使用一个渐变图（一个 X 乘 1 的纹理（X by 1 texture））来决定如何着色。默认使用的渐变图是前 70%的部分使用 70%的亮度
-，之后的部分使用 100%的亮度，当然，你可以定义你自己的渐变图。这最终会给人一种 2 色调的感觉，看起来就像卡通一样。
+MeshToonMaterial 与 MeshPhongMaterial 类似，但有一个很大的不同。它不是平滑地着色，而是使用一个渐变图
+（一个 X 乘 1 的纹理（X by 1 texture））来决定如何着色。默认使用的渐变图是前 70%的部分使用 70%的亮度
+，之后的部分使用 100%的亮度，当然，你可以定义你自己的渐变图。这最终会给人一种 2 色调的感觉，看起来就
+像卡通一样。
 
 ```js src/index.js
 // from ../../data/three/material/s6.js
@@ -174,7 +182,8 @@ MeshToonMaterial 与 MeshPhongMaterial 类似，但有一个很大的不同。�
 
 ---
 
-接下来是 2 种基于物理渲染（Physically Based Rendering）的材质。Physically Based Rendering 通常简称为 PBR。
+接下来是 2 种基于物理渲染（Physically Based Rendering）的材质。Physically Based Rendering 通常简称为
+PBR。
 
 | 材质                 | 描述                                                          |
 | :------------------- | :------------------------------------------------------------ |
@@ -193,7 +202,8 @@ MeshPhongMaterial 和 MeshStandardMaterial 最大的区别是它们使用的参�
 | roughness | 材质的粗糙程度，roughness。 0.0 表示平滑的镜面反射，1.0 表示完全漫反射。默认值为 1.0。如果还提供 roughnessMap，则两个值相乘。                                                         |
 | metalness | 材质与金属的相似度。非金属材质，如木材或石材，使用 0.0，金属使用 1.0，通常没有中间值。 默认值为 0.0。0.0 到 1.0 之间的值可用于生锈金属的外观。如果还提供了 metalnessMap，则两个值相乘 |
 
-这里是 MeshStandardMaterial 的一个快速示例，从左至右看，粗糙度从 0 到 1，从上至下看，金属度从 0 到 1。(step 为 0.25)
+这里是 MeshStandardMaterial 的一个快速示例，从左至右看，粗糙度从 0 到 1，从上至下看，金属度从 0 到
+1。(step 为 0.25)
 
 ```js src/index.js
 // from ../../data/three/material/s7.js
@@ -205,6 +215,27 @@ MeshPhysicalMaterial 与 MeshStandardMaterial 相同，但它增加了
 
 - clearcoat 参数，该参数从 0 到 1,决定了要涂抹的清漆光亮层的程度
 - clearCoatRoughness 参数，指定光泽层的粗糙程度。
+
+各种标准材质的构建速度从最快到最慢：MeshBasicMaterial ➡ MeshLambertMaterial ➡ MeshPhongMaterial ➡
+MeshStandardMaterial ➡ MeshPhysicalMaterial。构建速度越慢的材质，做出的场景越逼真，但在低功率或移动
+设备上，你可能需要思考代码的设计，使用构建速度较快的材质。
+
+```js src/index.js
+// from ../../data/three/material/s8.js
+```
+
+---
+
+| 材质               | 描述                                                                                           |
+| :----------------- | :--------------------------------------------------------------------------------------------- |
+| ShadowMaterial     | 用于获取阴影创建的数据                                                                         |
+| MeshDepthMaterial  | 渲染每个像素的深度，其中处在摄像机负近端面的像素其深度为 0，处在摄像机负远端面的像素其深度为 1 |
+| MeshNormalMaterial | 显示几何体的法线。法线是一个特定的三角形或像素所面对的方向                                     |
+| ShaderMaterial     | 通过 three.js 的着色器系统来制作自定义材质                                                     |
+| RawShaderMaterial  | 可以用来制作完全自定义的着色器，不需要 three.js 的帮助                                         |
+
+---
+
 
 
 </CH.Scrollycoding>

@@ -50,12 +50,25 @@ function main() {
 
     {
         class PhysicalHelper {
-            constructor(scene, light) { }
-
+            constructor(scene, attr) {
+                this.scene = scene
+                this.attr = attr
+                this.value = 0
+            }
+            get modify() {
+                return this.value
+            }
+            set modify(v) {
+                this.value = v
+                this.scene.children.forEach(item => {
+                    if (item.type === 'Mesh') {
+                        item.material[this.attr] = v
+                    }
+                })
+            }
         }
-
-        gui.add(new PhysicalHelper(scene, 'clearcoat'), 'value', lights).name('light')
-        gui.add(new PhysicalHelper(scene, 'clearCoatRoughness'), 'value', lights).name('light')
+        gui.add(new PhysicalHelper(scene, 'clearcoat'), 'modify', 0, 1, 0.01).name('clearcoat')
+        gui.add(new PhysicalHelper(scene, 'clearcoatRoughness'), 'modify', 0, 1, 0.01).name('clearcoatRoughness')
     }
 
 

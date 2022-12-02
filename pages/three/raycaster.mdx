@@ -1,0 +1,107 @@
+- raycaster
+- 坐标系
+
+[manual-picking](https://threejs.org/manual/#zh/picking)
+[Raycaster-doc](https://threejs.org/docs/index.html?q=raycaster#api/zh/core/Raycaster)
+
+
+<CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
+# 鼠标交互: raycaster
+
+浏览器是一个 2D 视口, 而在里面显示 Three.js 的内容是 3D 场景, 所以，现在就有了一个问题：如何判断用户点击或触碰了哪个对象
+, 或者说**如何将 2d 视口的 x 和 y 坐标转换成 three.js 场景中的 3d 坐标**
+
+在 three.js 中常用方式是射线追踪法(raycasting), 在三维空间中计算出鼠标移过了什么物体
+
+其基本原理是：从鼠标处发射一条射线，穿透场景的视椎体，通过计算，找出视锥体中哪些对象与射线相交。
+
+THREE.js 提供了 RayCaster 类来做这些事情。现在我们来创建一个场景，场景中存在三个球体和一条自 (-3, 0, 0) 射向 (1, 0, 0)
+的射线，三个球体经过这条射线时会改变颜色
+
+首先我们来搭建基础的场景
+
+```js src/index.js
+// from  ../../data/three/raycaster/s1.js
+```
+
+---
+
+<CH.Section>
+
+接下来我们创建一个 raycaster，和光线投射的原点向量 `rayOrigin`, 为光线提供方向的标准化方向向量 `rayDirOrigin`
+
+- `normalize()` 将该向量转换为单位向量（unit vector）， 也就是说，将该向量的方向设置为和原向量相同，但是其长度（length）
+  为 1
+
+- `raycaster.set(rayOrigin, rayDirOrigin)` 使用一个新的原点和方向来更新射线
+
+```js
+const raycaster = new THREE.Raycaster()
+const rayOrigin = new THREE.Vector3(-3, 0, 0)
+const rayDirOrigin = new THREE.Vector3(1, 0, 0)
+rayDirOrigin.normalize()
+raycaster.set(rayOrigin, rayDirOrigin)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from  ../../data/three/raycaster/s2.js
+```
+
+---
+
+<CH.Section>
+
+为了更直观的查看，我们添加一条 line 来表示 raycaster。并且使用 requestAnimationFrame 让三个球体动起来
+
+```js
+const line = new THREE.Line(
+  new THREE.BufferGeometry().setFromPoints([rayOrigin, new THREE.Vector3(3, 0, 0)]),
+  new THREE.LineBasicMaterial({ color: 0x00ff00 })
+)
+scene.add(line)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from  ../../data/three/raycaster/s3.js
+```
+
+---
+
+现在我们来实现最终的效果
+
+<CH.Section>
+
+`raycaster.intersectObjects` 检测所有在射线与物体之间，包括或不包括后代的相交部分。
+
+返回结果时，相交部分将按距离进行排序，最近的位于第一个
+
+```js
+const intersects = raycaster.intersectObjects(objects)
+```
+
+</CH.Section>
+
+<CH.Section>
+
+判断球体对象是否与射线相交
+
+```js
+objects.forEach((item) => item.material.color.set('#ff0000'))
+intersects.forEach((item) => item.object.material.color.set('#00ff00'))
+```
+
+</CH.Section>
+
+```js src/index.js
+// from  ../../data/three/raycaster/s4.js
+```
+
+--- 
+
+## 坐标系
+
+</CH.Scrollycoding>

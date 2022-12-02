@@ -23,6 +23,7 @@ function main() {
         cube = new THREE.Mesh(geometry, material)
         scene.add(cube)
         camera.position.z = 5
+        camera.position.y = 2
         renderer.render(scene, camera)
     }
 

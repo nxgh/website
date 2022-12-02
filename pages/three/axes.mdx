@@ -1,0 +1,33 @@
+# 坐标系
+
+<CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
+我们的屏幕是二维的，而我们构建 Three.js 程序时往往使用的是三维坐标（世界坐标）,三维坐标转化为屏幕坐标会经过多道矩阵变换
+，而在其中 WebGL 替我们做了许多事情
+
+二维坐标系一般默认为 x 轴朝右，y 轴朝上
+
+而对于三维坐标系, 一般有两种习俗 **左手坐标系** 和**右手坐标系**
+
+我们可以将 X Y Z 固定对应到 拇指 食指 中指 的顺序
+
+![](/assets/axes/left-or-right-handed-coordinate.jpg)
+
+Threejs 使用的是右手坐标系，这源于 opengl 默认情况下，也是右手坐标系。
+
+在 WebGL 中，世界坐标系是以屏幕中心为原点(0, 0, 0)，且是始终不变的。你面对屏幕，你的右边是 x 正轴，上面是 y 正轴，屏幕指
+向你的为 z 正轴。
+
+还记得之前的 [AxesHelper](https://threejs.org/docs/index.html?q=axes#api/zh/helpers/AxesHelper) 对象吗，红色代表 X 轴.
+绿色代表 Y 轴. 蓝色代表 Z 轴.
+
+```js src/index.js
+// from ../../data/three/fundamentals/s10.js
+```
+
+---
+
+## 世界坐标与本地坐标
+
+世界坐标指的是公共场景的坐标相对于物体来说，物体本身的坐标就是本地坐标相机默认在世界坐标系的原点
+
+</CH.Scrollycoding>

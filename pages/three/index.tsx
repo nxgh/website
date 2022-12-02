@@ -10,6 +10,7 @@ const paths = [
   { path: 'camera', title: 'Three.js 摄像机' },
   { path: 'light', title: 'Three.js 灯光' },
   { path: 'material', title: 'Three.js 材质' },
+  { path: 'axes', title: 'Three.js 坐标系' },
   { path: 'raycaster', title: 'Three.js 鼠标交互' },
 ]
 

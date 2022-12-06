@@ -4,7 +4,6 @@
 [manual-picking](https://threejs.org/manual/#zh/picking)
 [Raycaster-doc](https://threejs.org/docs/index.html?q=raycaster#api/zh/core/Raycaster)
 
-
 <CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
 # 鼠标交互: raycaster
 
@@ -100,15 +99,122 @@ intersects.forEach((item) => item.object.material.color.set('#00ff00'))
 // from  ../../data/three/raycaster/s4.js
 ```
 
---- 
+---
 
-## 坐标系
+## 鼠标拾取物体
 
+在这个案例中，我们监听 `pointerdown` 事件并为其绑定一个方法, 在触发点击事件时,
 
+<CH.Section>
+首先会将[屏幕坐标转换为世界坐标](./axes)
+
+```js
+pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+```
+
+</CH.Section>
+
+`raycaster.setFromCamera(coords , camera)` 与 `raycaster.set` 类似，参数变为
+
+- coords —— 在标准化设备坐标中鼠标的二维坐标 X,Y 分量应当在-1 到 1 之间。
+- camera —— 射线所来源的摄像机。
+
+再使用 `intersectObjects` 检测与射线相交的物体, 并使之更改为一个随机颜色(生成颜色时会出现 5 位的 16 进制颜色)
 
 ```js src/index.js
 // from  ../../data/three/raycaster/s5.js
 ```
 
+---
+
+## 基于 GPU 的拾取
+
+raycaster 看起来效果不错，而且能处理很多用户场景，但是也存在几个问题
+
+- 检查对象是否与射线相交是基于 CPU 运算, 当存在大量对象时，cpu 负载会很高
+- 无法检测透明的对象
+
+在这个案例中有四个立方体，且每个立方体应用了一个中心透明的纹理。我们无法透过透明的部分来选中物体
+
+这时，我们需要使用 GPU 拾取
+
+```js src/index.js
+// from  ../../data/three/raycaster/s6.js
+```
+
+---
+
+GPU 拾取的一般做法是给每个 mesh 一种颜色 然后渲染绘制一遍，在鼠标点所在的位置调用 readPixel 读取像素颜色，根据颜色与模型
+的对应关系，反推当前拾取到的颜色对应的 mesh
+
+要在 THREE.js 中实现这种拾取方式，需要创建两个场景。一个使用正常的网格对象填充。另外一个使用“拾取材质”的网格对象填充
+
+<CH.Section>
+
+```js
+const pickingScene = new THREE.Scene()
+pickingScene.background = new THREE.Color(0)
+```
+
+</CH.Section>
+
+然后，对于在主场景中的每一个立方体，在 pickingScene 中，在同样的位置，创建一个与原立方体相似的，相关联的“可拾取立方体”，
+用对象的 id 生成颜色值，去设置对象的材质。
+
+pickingCube 的一些属性
+
+- 使用 `MeshPhongMaterial` 创建材质
+- 材质属性 `emissive` 材质的放射（光）颜色设置为 id
+- 材质属性 `color` 和 `specular`: 颜色和高光颜色设置为 0
+- 材质属性 `alphaTest` 属性为 0.5 只渲染纹理的 alpha 值大于该属性值的部分
+- 材质属性 `blending` 设置为 `NoBlending`，这样 alpha 通道不会作用到 id 生成色
+
+<CH.Section>
+
+```js
+function createPickingCube(id, cube) {
+  const pickingMaterial = new THREE.MeshPhongMaterial({
+    emissive: new THREE.Color(id), // 使用id生成颜色
+    color: new THREE.Color(0, 0, 0),
+    specular: new THREE.Color(0, 0, 0),
+    map: texture,
+    transparent: true,
+    side: THREE.DoubleSide,
+    alphaTest: 0.5,
+    blending: THREE.NoBlending,
+  })
+  const pickingCube = new THREE.Mesh(geometry, pickingMaterial)
+  pickingScene.add(pickingCube)
+  pickingCube.position.copy(cube.position)
+  pickingCube.rotation.copy(cube.rotation)
+  pickingCube.scale.copy(cube.scale)
+}
+```
+
+</CH.Section>
+
+```js src/index.js
+// from  ../../data/three/raycaster/s7.js
+```
+
+---
+
+由于我们使用的是像素点拾取，需要将坐标转换更改为
+
+<CH.Section>
+
+```diff
+- pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+- pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
++ pointer.x = event.clientX
++ pointer.y = event.c
+```
+
+</CH.Section>
+
+```js src/index.js
+// from  ../../data/three/raycaster/s8.js
+```
 
 </CH.Scrollycoding>

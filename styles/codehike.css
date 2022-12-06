@@ -24,3 +24,9 @@
   width: 45vw;
   max-width: 45vw;
 }
+
+.ch-scrollycoding-step-content p code {
+  background-color: var(--ant-primary-2);
+  border-radius: 4px;
+  padding: 2px 3px;
+}

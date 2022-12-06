@@ -1,51 +1,70 @@
+
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
+const rawUrl = 'https://raw.githubusercontent.com/nxgh/nxgh.github.io/main/public/'
+
+function rand(min, max) {
+    if (max === undefined) {
+        max = min;
+        min = 0;
+    }
+    return min + (max - min) * Math.random();
+}
+
+function randomColor() {
+    return `hsl(${rand(360) | 0}, ${rand(50, 100) | 0}%, 50%)`;
+}
 
 const { innerWidth, innerHeight } = window
 
 function main() {
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+    camera.position.set(0, 0, 10)
+
     const renderer = new THREE.WebGLRenderer({ antialias: true })
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(innerWidth, innerHeight)
+
+    const controls = new OrbitControls(camera, renderer.domElement)
+    controls.update()
 
     const app = document.querySelector('#app')
     app.appendChild(renderer.domElement)
 
-    const cubes = []
+    const light = new THREE.AmbientLight()
+    scene.add(light)
+    const axesHelper = new THREE.AxesHelper(5)
+    scene.add(axesHelper)
+
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load(`${rawUrl}/assets/texture/frame.png`);
+
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const cubes = [
+        [-1, 0, 1,], [1, 0, 1], [-1, 0, -1], [1, 0, -1],
+        [-1, 2, 1,], [1, 2, 1], [-1, 2, -1], [1, 2, -1],
+
+    ].map((pos) => {
+        const material = new THREE.MeshPhongMaterial({
+            color: randomColor(),
+            map: texture,
+            transparent: true,
+            side: THREE.DoubleSide,
+            alphaTest: 0.1,
+        });
+
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(...pos)
+        scene.add(cube);
+        return cube;
+    })
+
+
     {
-        ;[...Array(5).keys()].reduce((arr, item) => {
-            [...Array(5).keys()].forEach(i => {
-                arr.push([item * 2, i * 2])
-            })
-            return arr
-        }, []).forEach(([x, y], index) => {
-            const geometry = new THREE.SphereGeometry(1, 100, 100);
-            const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-                color: '#4ee580',
-            }))
-            mesh.position.x = x
-            mesh.position.y = y
-            cubes.push(mesh)
-            scene.add(mesh)
-        })
-
-        camera.position.set(4, 4, 10)
-        camera.lookAt(new THREE.Vector3(3, 3, 0))
-
-
-    }
-
-    const controls = new OrbitControls(camera, renderer.domElement)
-    controls.target.set(4, 4, 0)
-    controls.update();
-
-    {
-        // focus
         const raycaster = new THREE.Raycaster()
 
         function setPointer(event) {
-            // focus(1:3)
             const pointer = new THREE.Vector3()
             pointer.x = (event.clientX / window.innerWidth) * 2 - 1
             pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
@@ -53,7 +72,6 @@ function main() {
         }
         function onPointerDown(event) {
             const pointer = setPointer(event)
-            // focus(1:4)
             raycaster.setFromCamera(pointer, camera)
             const intersectedObjects = raycaster.intersectObjects(cubes)
             if (intersectedObjects.length) {
@@ -72,4 +90,3 @@ function main() {
 }
 
 main()
-

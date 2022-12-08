@@ -97,7 +97,6 @@ function main() {
     function onPointerDown(event) {
         const pointer = setPointer(event)
 
-        // focus(1:7)
         const pickingTexture = new THREE.WebGLRenderTarget(1, 1)
         const pixelBuffer = new Uint8Array(4)
 
@@ -106,11 +105,14 @@ function main() {
         const [rectX, rectY] = [pointer.x * pixelRatio | 0, pointer.y * pixelRatio | 0]
         camera.setViewOffset(drawingBufferWidth, drawingBufferHeight, rectX, rectY, 1, 1);
 
+        // focus(1:6)
         renderer.setRenderTarget(pickingTexture)
         renderer.render(pickingScene, camera);
         renderer.setRenderTarget(null);
+
         camera.clearViewOffset();
         renderer.readRenderTargetPixels(pickingTexture, 0, 0, 1, 1, pixelBuffer);
+
         const id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | (pixelBuffer[2]);
         const intersectedObject = idToObject[id];
         if (intersectedObject) {

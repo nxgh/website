@@ -20,7 +20,7 @@ const { innerWidth, innerHeight } = window
 function main() {
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
-    camera.position.set(0, 0, 10)
+    camera.position.set(0, 2, 6)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(innerWidth, innerHeight)

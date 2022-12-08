@@ -208,13 +208,86 @@ function createPickingCube(id, cube) {
 - pointer.x = (event.clientX / window.innerWidth) * 2 - 1
 - pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
 + pointer.x = event.clientX
-+ pointer.y = event.c
++ pointer.y = event.clientY
+```
+
+</CH.Section>
+
+接下来修改 `pointerdown` 事件
+
+首先创建一个 `WebGLRenderTarget` 这里将渲染目标设置为 1x1,
+
+<CH.Section>
+
+```js
+const pickingTexture = new THREE.WebGLRenderTarget(1, 1)
+// 创建一个 buffer 容器, 用于存储颜色信息
+const pixelBuffer = new Uint8Array(4)
+```
+
+</CH.Section>
+
+设置相机为鼠标点的一个像素
+
+<CH.Section>
+
+```js
+const pixelRatio = renderer.getPixelRatio()
+const { drawingBufferWidth, drawingBufferHeight } = renderer.getContext()
+const [rectX, rectY] = [(pointer.x * pixelRatio) | 0, (pointer.y * pixelRatio) | 0]
+camera.setViewOffset(drawingBufferWidth, drawingBufferHeight, rectX, rectY, 1, 1)
 ```
 
 </CH.Section>
 
 ```js src/index.js
 // from  ../../data/three/raycaster/s8.js
+```
+
+---
+
+<CH.Section>
+
+设置当前渲染目标对象并渲染当前场景
+
+```js
+renderer.setRenderTarget(pickingTexture)
+renderer.render(pickingScene, camera)
+renderer.setRenderTarget(null)
+```
+
+</CH.Section>
+
+<CH.Section>
+
+清理视野偏移，回归正常, 读取像素信息到 buffer 容器
+
+```js
+camera.clearViewOffset()
+renderer.readRenderTargetPixels(pickingTexture, 0, 0, 1, 1, pixelBuffer)
+```
+
+</CH.Section>
+
+```js src/index.js
+// from  ../../data/three/raycaster/s9.js
+```
+
+---
+
+<CH.Section>
+
+获取颜色对应的 id, 这里是为了将 RGB 的数据转为数字
+
+```js
+const id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | pixelBuffer[2]
+const intersectedObject = idToObject[id]
+```
+
+</CH.Section>
+
+```js src/index.js
+// from  ../../data/three/raycaster/s10.js
 ```
 
 </CH.Scrollycoding>

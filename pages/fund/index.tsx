@@ -3,8 +3,8 @@ import Script from 'next/script'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
 import { Input } from 'antd'
-
-const FundApi = (id) => `https://fund.eastmoney.com/pingzhongdata/${id}.js`
+import useJsonP from 'src/fund/useJsonp'
+import FundResponse from 'src/fund/api.response'
 
 interface IData_netWorthTrend {
   x: number
@@ -13,10 +13,11 @@ interface IData_netWorthTrend {
   unitMoney: string
 }
 
-const Chart = ({ data }: { data: IData_netWorthTrend[] }) => {
+const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
   const ref = useRef<HTMLDivElement>(null!)
 
   useEffect(() => {
+    if (!data) return
     const myChart = echarts.init(ref.current)
 
     // 指定图表的配置项和数据
@@ -25,8 +26,20 @@ const Chart = ({ data }: { data: IData_netWorthTrend[] }) => {
         source: data.map((item) => ({ ...item, x: dayjs(item.x).format('YYYY/MM/DD') })),
       },
       xAxis: {
+        boundaryGap: false,
         type: 'time',
       },
+      dataZoom: [
+        {
+          type: 'inside',
+          start: 0,
+          end: 10
+        },
+        {
+          start: 0,
+          end: 10
+        }
+      ],
       yAxis: {
         type: 'value',
       },
@@ -45,6 +58,7 @@ const Chart = ({ data }: { data: IData_netWorthTrend[] }) => {
           },
           type: 'line',
           name: '净值',
+          areaStyle: {}
         },
       ],
     }
@@ -60,47 +74,10 @@ const Chart = ({ data }: { data: IData_netWorthTrend[] }) => {
   )
 }
 
-const useJsonP = (fundId) => {
-  // useEffect(() => {
-
-  const jsonp = () => {
-    const script = document.createElement('script')
-    script.src = FundApi(fundId)
-    script.defer = true
-    script.id = 'fund-script'
-    document.body.appendChild(script)
-
-    return new Promise((resolve, reject) => {
-      try {
-        script.onload = () => {
-          resolve(window.fS_name)
-        }
-      } catch (error) {
-        script.onerror = () => {
-          reject()
-        }
-      } finally {
-        document.querySelector('#fund-script')?.remove()
-      }
-    })
-  }
-
-  useEffect(() => {
-    if (!fundId) return
-    jsonp(fundId).then((res) => {
-      console.log(res)
-    })
-  }, [fundId])
-
-  // }, [fundId])
-}
-
 export default function Fund() {
   const [fundId, setFundId] = useState('002708')
 
-  // const [fundData, setFundData] = useState<any>([])
-
-  useJsonP(fundId)
+  const data = useJsonP(fundId)
 
   return (
     <div>
@@ -110,8 +87,7 @@ export default function Fund() {
           setFundId(e.target.value)
         }}
       />
-      {/* <AddScript fundId={fundId} /> */}
-      {/* <Chart data={fundData} /> */}
+      <Chart data={data?.Data_netWorthTrend} />
     </div>
   )
 }

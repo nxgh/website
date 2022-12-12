@@ -1,17 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import Script from 'next/script'
+import { KeyboardEventHandler, useEffect, useRef, useState } from 'react'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
 import { Input } from 'antd'
 import useJsonP from 'src/fund/useJsonp'
 import FundResponse from 'src/fund/api.response'
+import BigNumber from 'bignumber.js'
 
-interface IData_netWorthTrend {
-  x: number
-  y: number
-  equityReturn: number
-  unitMoney: string
-}
+const filterDataMin = (data: FundResponse['Data_netWorthTrend']) => {}
 
 const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
   const ref = useRef<HTMLDivElement>(null!)
@@ -26,25 +21,25 @@ const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
         source: data.map((item) => ({ ...item, x: dayjs(item.x).format('YYYY/MM/DD') })),
       },
       xAxis: {
-        boundaryGap: false,
         type: 'time',
+        minInterval: 1
       },
       dataZoom: [
         {
-          type: 'inside',
-          start: 0,
-          end: 10
+          type: 'slider',
+          start: 95,
+          end: 100,
+          minValueSpan: 3600 * 24 * 1000 * 7,
         },
-        {
-          start: 0,
-          end: 10
-        }
       ],
       yAxis: {
         type: 'value',
+        min: (value: { min: number; max: number }) => new BigNumber(value.min).minus(0.01).toNumber(),
+        // max: 'dataMax',
       },
       tooltip: {
         trigger: 'axis',
+        formatter: (params: any) => { `${params[0].seriesName}: ${params[0].value.y};\n 日期: ${params[0].value.x}` }, 
       },
       series: [
         {
@@ -58,7 +53,7 @@ const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
           },
           type: 'line',
           name: '净值',
-          areaStyle: {}
+          areaStyle: {},
         },
       ],
     }
@@ -74,10 +69,39 @@ const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
   )
 }
 
+const useIndexedDB = () => {
+  const [db, setDB] = useState()
+
+  useEffect(() => {
+    const request = window.indexedDB.open('fund', 2)
+    request.onerror = (event) => {
+      console.log('数据库打开报错')
+    }
+    request.onsuccess = (event) => {
+      console.log('数据库打开成功')
+    }
+    request.onupgradeneeded = (event) => {
+      const _db = event.target.result
+      const objectStore = _db.createObjectStore('fund', { keyPath: 'id', autoIncrement: true })
+      objectStore.createIndex('id', 'id', { unique: true })
+      objectStore.createIndex('code', 'code', { unique: true })
+      objectStore.createIndex('name', 'name', { unique: false })
+
+      setDB(db)
+    }
+  }, [])
+
+  return db
+}
+
 export default function Fund() {
   const [fundId, setFundId] = useState('002708')
 
   const data = useJsonP(fundId)
+
+  console.log({ data })
+
+  const db = useIndexedDB()
 
   return (
     <div>

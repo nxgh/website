@@ -1,0 +1,226 @@
+<CH.Scrollycoding preset="https://codesandbox.io/s/7wt1zq">
+
+## css 滤镜
+
+因为要使用滤镜对文字单独处理，所以需要额外一层标签
+
+<CH.Section>
+
+```html
+<div class="box">
+  <span class="text">Hello World</span>
+</div>
+```
+
+</CH.Section>
+
+容器和文字用同一种颜色表示，目的是让文字颜色和背景相关联，可以通过 currentColor 实现
+
+<CH.Section>
+```css
+.box {
+    color: #ffeb3b;
+    background-color: currentColor;
+}
+```
+</CH.Section>
+
+```js index.html
+<html>
+<style>
+.box {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    font-size: 32px;
+    // focus(1,2)
+    color: #ffeb3b;
+    background-color: currentColor;
+}
+</style>
+<div class="wrap">
+<input type="color" onchange="this.nextElementSibling.style.color = this.value">
+<div class="box">
+      <span class="text">Hello World</span>
+</div>
+</div>
+</html>
+```
+
+---
+
+使用灰度滤镜 grayscale 让彩色文字变成黑白
+
+<CH.Section>
+```css 
+.text{
+  filter: grayscale(1)
+}
+```
+</CH.Section>
+
+```js index.html
+<html>
+<style>
+.box {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    font-size: 32px;
+    color: #ffeb3b;
+    background-color: currentColor;
+}
+.text{
+  // focus
+  filter: grayscale(1)
+}
+</style>
+<div class="wrap">
+<input type="color" onchange="this.nextElementSibling.style.color = this.value">
+<div class="box">
+      <span class="text">Hello World</span>
+</div>
+</div>
+</html>
+```
+
+---
+
+使用对比度滤镜 contrast 加强文字对比度
+
+<CH.Section>
+```css
+.text{
+  filter: grayscale(1) contrast(999)
+}
+```
+</CH.Section>
+
+```js index.html
+<html>
+<style>
+.box {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    font-size: 32px;
+    color: #ffeb3b;
+    background-color: currentColor;
+}
+.text{
+    // focus
+    filter: grayscale(1) contrast(999);
+}
+</style>
+<div class="wrap">
+<input type="color" onchange="this.nextElementSibling.style.color = this.value">
+<div class="box">
+      <span class="text">Hello World</span>
+</div>
+</div>
+</html>
+```
+
+---
+
+用到反转滤镜 `invert`, 颠倒黑白
+
+<CH.Section>
+```css
+.text{
+  filter: grayscale(1) contrast(999) invert(1)
+}
+```
+</CH.Section>
+
+```js index.html
+<html>
+<style>
+.box {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    font-size: 32px;
+    color: #ffeb3b;
+    background-color: currentColor;
+}
+.text{
+    // focus
+    filter: grayscale(1) contrast(999) invert(1);
+}
+</style>
+<div class="wrap">
+<input type="color" onchange="this.nextElementSibling.style.color = this.value">
+<div class="box">
+      <span class="text">Hello World</span>
+</div>
+</div>
+</html>
+```
+
+---
+
+## 使用 css 变量
+
+实现思路
+
+1. 将颜色 RGB 值拆分成 3 个独立的 CSS 变量
+2. 通过灰度算法，用 CSS 计算函数算出灰度
+3. 用得到的灰度和阈值做差值，通过 hsl 模式转换成纯黑和纯白
+
+[CSS 前景背景自动配色技术简介](https://www.zhangxinxu.com/wordpress/2018/11/css-background-color-font-auto-match/)
+
+```html index.html
+<html>
+  <style>
+    :root {
+      /* 定义RGB变量 */
+      --red: 44;
+      --green: 135;
+      --blue: 255;
+      /* 文字颜色变色的临界值，建议0.5~0.6 */
+      --threshold: 0.5;
+    }
+
+    .btn {
+      /* 按钮背景色就是基本背景色 */
+      background: rgb(var(--red), var(--green), var(--blue));
+
+      /** 
+        * 使用sRGB Luma方法计算灰度（可以看成亮度）
+        * 算法为：
+        * lightness = (red * 0.2126 + green * 0.7152 + blue * 0.0722) / 255
+        */
+      --r: calc(var(--red) * 0.2126);
+      --g: calc(var(--green) * 0.7152);
+      --b: calc(var(--blue) * 0.0722);
+      --sum: calc(var(--r) + var(--g) + var(--b));
+      --lightness: calc(var(--sum) / 255);
+
+      /* 设置颜色 */
+      color: hsl(0, 0%, calc((var(--lightness) - var(--threshold)) * -999999%));
+    }
+  </style>
+  <button class="btn">我是按钮</button>
+  <p>拖动滑块，改变RGB变量：</p>
+  <p>R：<input type="range" min="0" max="255" value="44" name="red" /></p>
+  <p>G：<input type="range" min="0" max="255" value="135" name="green" /></p>
+  <p>B：<input type="range" min="0" max="255" value="255" name="blue" /></p>
+
+  <script>
+    var eleRanges = document.querySelectorAll('input[type="range"]')
+    Array.from(eleRanges).forEach(function (range) {
+      range.addEventListener('input', function () {
+        console.log('range', this.name, this.value)
+        document.documentElement.style.setProperty('--' + this.name, this.value)
+      })
+    })
+  </script>
+</html>
+```
+
+</CH.Scrollycoding>

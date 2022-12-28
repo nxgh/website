@@ -41,9 +41,8 @@ const jsonp = (fundId: string): Promise<FundResponse> => {
       script.onload = () => {
         resolve(FormatFundResponse(window as unknown as WindowFundResponse))
       }
-    } catch (error) {
-      script.onerror = () => {
-        reject()
+      script.onerror = (error) => {
+        reject(new Error('fundId is not match'))
       }
     } finally {
       document.querySelector('#fund-script')?.remove()
@@ -51,19 +50,38 @@ const jsonp = (fundId: string): Promise<FundResponse> => {
   })
 }
 
-export const useJsonP = (fundId: string) => {
-  const [data, setData] = useState<FundResponse>()
+export const useJsonP = (
+  fundId: string,
+  config?: {
+    onSuccess?: (data: FundResponse) => void
+    onError?: (error: Error) => void
+  }
+) => {
+  const [response, setResponse] = useState<{
+    data?: FundResponse | {}
+    loading: boolean
+    error: Error | null
+  }>({
+    data: {},
+    loading: true,
+    error: null,
+  })
 
   useEffect(() => {
     if (!fundId) return
-    jsonp(fundId).then((res) => {
-      console.log({ res })
 
-      setData(res)
-    })
+    jsonp(fundId)
+      .then((res) => {
+        setResponse({ data: res, loading: false, error: null })
+        config?.onSuccess && config.onSuccess(res)
+      })
+      .catch((error) => {
+        setResponse({ data: {}, loading: false, error: error })
+        config?.onError && config.onError(error)
+      })
   }, [fundId])
 
-  return data
+  return response
 }
 
 export default useJsonP

@@ -1,14 +1,18 @@
-import { KeyboardEventHandler, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
-import { Input } from 'antd'
+import { Alert, Input } from 'antd'
+import BigNumber from 'bignumber.js'
+import { useLiveQuery } from 'dexie-react-hooks'
+
 import useJsonP from 'src/fund/useJsonp'
 import FundResponse from 'src/fund/api.response'
-import BigNumber from 'bignumber.js'
+import style from './index.module.css'
+import { db } from 'src/db'
 
 const filterDataMin = (data: FundResponse['Data_netWorthTrend']) => {}
 
-const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
+const Chart = ({ data, loading }: { data?: FundResponse['Data_netWorthTrend']; loading: boolean }) => {
   const ref = useRef<HTMLDivElement>(null!)
 
   useEffect(() => {
@@ -22,11 +26,11 @@ const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
       },
       xAxis: {
         type: 'time',
-        minInterval: 1
+        minInterval: 1,
       },
       dataZoom: [
         {
-          type: 'slider',
+          type: 'inside',
           start: 95,
           end: 100,
           minValueSpan: 3600 * 24 * 1000 * 7,
@@ -39,7 +43,9 @@ const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
       },
       tooltip: {
         trigger: 'axis',
-        formatter: (params: any) => { `${params[0].seriesName}: ${params[0].value.y};\n 日期: ${params[0].value.x}` }, 
+        formatter: (params: any) => {
+          ;`${params[0].seriesName}: ${params[0].value.y};\n 日期: ${params[0].value.x}`
+        },
       },
       series: [
         {
@@ -54,6 +60,12 @@ const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
           type: 'line',
           name: '净值',
           areaStyle: {},
+          markPoint: {
+            data: [{
+              name: 'wtf',
+              coord: data.map((item) => ({ ...item, x: dayjs(item.x).format('YYYY/MM/DD') }))[100]
+            }],
+          },
         },
       ],
     }
@@ -62,56 +74,49 @@ const Chart = ({ data }: { data?: FundResponse['Data_netWorthTrend'] }) => {
     myChart.setOption(option)
   }, [data])
 
-  return (
-    <>
-      <div style={{ width: '100%', height: '300px' }} ref={ref}></div>
-    </>
-  )
+  return <>{loading ? 'loading...' : <div style={{ width: '100%', height: '300px' }} ref={ref}></div>}</>
 }
 
-const useIndexedDB = () => {
-  const [db, setDB] = useState()
+const SideBar = () => {
+  const funds = useLiveQuery(async () => await db.fund.toArray())
 
-  useEffect(() => {
-    const request = window.indexedDB.open('fund', 2)
-    request.onerror = (event) => {
-      console.log('数据库打开报错')
-    }
-    request.onsuccess = (event) => {
-      console.log('数据库打开成功')
-    }
-    request.onupgradeneeded = (event) => {
-      const _db = event.target.result
-      const objectStore = _db.createObjectStore('fund', { keyPath: 'id', autoIncrement: true })
-      objectStore.createIndex('id', 'id', { unique: true })
-      objectStore.createIndex('code', 'code', { unique: true })
-      objectStore.createIndex('name', 'name', { unique: false })
+  console.log(funds)
 
-      setDB(db)
-    }
-  }, [])
-
-  return db
+  return (
+    <>
+      {funds?.map((item) => (
+        <p key={item.fS_code}>
+          {item.fS_name} {item.fS_code}
+        </p>
+      ))}
+    </>
+  )
 }
 
 export default function Fund() {
   const [fundId, setFundId] = useState('002708')
 
-  const data = useJsonP(fundId)
+  const { data, error, loading } = useJsonP(fundId, {
+    onSuccess: (data) => {
+      addFund(data)
+    },
+  })
 
-  console.log({ data })
-
-  const db = useIndexedDB()
+  async function addFund(data: FundResponse) {
+    await db.fund.put(data)
+  }
 
   return (
-    <div>
-      <Input
-        defaultValue={fundId}
-        onPressEnter={(e) => {
-          setFundId(e.target.value)
-        }}
-      />
-      <Chart data={data?.Data_netWorthTrend} />
+    <div className={style.fundWrap}>
+      <div className={style.side}>
+        <Input defaultValue={fundId} onPressEnter={(e) => setFundId((e.target as HTMLInputElement).value)} />
+        <SideBar />
+      </div>
+      {!error ? (
+        <Chart data={(data as FundResponse).Data_netWorthTrend} loading={loading} />
+      ) : (
+        <Alert message={error.message} type="error" />
+      )}
     </div>
   )
 }

@@ -1,94 +1,85 @@
 import { useEffect, useRef, useState } from 'react'
-import * as echarts from 'echarts'
-import dayjs from 'dayjs'
-import { Alert, Input } from 'antd'
-import BigNumber from 'bignumber.js'
+import { Alert, Button, DatePicker, Drawer, Input, InputNumber, Tooltip } from 'antd'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import useJsonP from 'src/fund/useJsonp'
 import FundResponse from 'src/fund/api.response'
 import style from './index.module.css'
 import { db } from 'src/db'
+import Chart from 'src/fund/chart'
 
-const filterDataMin = (data: FundResponse['Data_netWorthTrend']) => {}
+// 基金持仓信息详情
+const AddFundDetail = ({ fund }: { fund: FundResponse }) => {
+  const onChange = () => {}
+  if (Object.keys(fund).length === 0) return <></>
+  return (
+    <>
+      <p>基金名称：{fund.fS_name} </p>
+      <p>基金代码： {fund.fS_code}</p>
 
-const Chart = ({ data, loading }: { data?: FundResponse['Data_netWorthTrend']; loading: boolean }) => {
-  const ref = useRef<HTMLDivElement>(null!)
-
-  useEffect(() => {
-    if (!data) return
-    const myChart = echarts.init(ref.current)
-
-    // 指定图表的配置项和数据
-    const option = {
-      dataset: {
-        source: data.map((item) => ({ ...item, x: dayjs(item.x).format('YYYY/MM/DD') })),
-      },
-      xAxis: {
-        type: 'time',
-        minInterval: 1,
-      },
-      dataZoom: [
-        {
-          type: 'inside',
-          start: 95,
-          end: 100,
-          minValueSpan: 3600 * 24 * 1000 * 7,
-        },
-      ],
-      yAxis: {
-        type: 'value',
-        min: (value: { min: number; max: number }) => new BigNumber(value.min).minus(0.01).toNumber(),
-        // max: 'dataMax',
-      },
-      tooltip: {
-        trigger: 'axis',
-        formatter: (params: any) => {
-          ;`${params[0].seriesName}: ${params[0].value.y};\n 日期: ${params[0].value.x}`
-        },
-      },
-      series: [
-        {
-          itemStyle: {
-            opacity: 0,
-          },
-          emphasis: {
-            label: {
-              show: true,
-            },
-          },
-          type: 'line',
-          name: '净值',
-          areaStyle: {},
-          markPoint: {
-            data: [{
-              name: 'wtf',
-              coord: data.map((item) => ({ ...item, x: dayjs(item.x).format('YYYY/MM/DD') }))[100]
-            }],
-          },
-        },
-      ],
-    }
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option)
-  }, [data])
-
-  return <>{loading ? 'loading...' : <div style={{ width: '100%', height: '300px' }} ref={ref}></div>}</>
+      <table>
+        <thead>
+          <tr>
+            <th>买入日期</th>
+            <th>买入净值</th>
+            <th>买入金额</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>
+              <DatePicker format={'YYYY/MM/DD'} onChange={onChange} />
+            </th>
+            <th>
+              <InputNumber stringMode />
+            </th>
+            <th>
+              <InputNumber />
+            </th>
+          </tr>
+        </tbody>
+      </table>
+      {/* <p>
+        买入日期: <DatePicker format={'YYYY/MM/DD'} onChange={onChange} />
+      </p>
+      <p>
+        买入净值: <InputNumber stringMode />{' '}
+      </p>
+      <p>
+        买入金额: <InputNumber />
+      </p> */}
+    </>
+  )
 }
 
 const SideBar = () => {
-  const funds = useLiveQuery(async () => await db.fund.toArray())
+  const funds = useLiveQuery(async () => await db.fund.toArray()) || []
 
-  console.log(funds)
+  const [open, setOpen] = useState(false)
+  const [fundId, setFundId] = useState('')
 
   return (
     <>
       {funds?.map((item) => (
         <p key={item.fS_code}>
           {item.fS_name} {item.fS_code}
+          <Tooltip title="买入/卖出记录">
+            <Button
+              type="link"
+              onClick={() => {
+                setOpen(true)
+                setFundId(item.fS_code)
+              }}
+              style={{ fontSize: '22px' }}
+            >
+              +
+            </Button>
+          </Tooltip>
         </p>
       ))}
+      <Drawer title="设置基金持仓详细" placement="left" onClose={() => setOpen(false)} open={open}>
+        <AddFundDetail fund={funds.find((item) => item.fS_code === fundId)!} />
+      </Drawer>
     </>
   )
 }
@@ -113,7 +104,11 @@ export default function Fund() {
         <SideBar />
       </div>
       {!error ? (
-        <Chart data={(data as FundResponse).Data_netWorthTrend} loading={loading} />
+        <Chart
+          title={(data as FundResponse).fS_name}
+          data={(data as FundResponse).Data_netWorthTrend}
+          loading={loading}
+        />
       ) : (
         <Alert message={error.message} type="error" />
       )}

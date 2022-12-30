@@ -4,14 +4,29 @@ import * as echarts from 'echarts'
 import { useRef, useEffect } from 'react'
 import FundResponse from './api.response'
 
+type DateString = string
+type Net = number
+type Amount = number
+
 const Chart = ({
   title = '',
   data,
   loading,
+  markPointData = [],
 }: {
   title: string
   data?: FundResponse['Data_netWorthTrend']
   loading: boolean
+  markPointData: [DateString, Net, Amount][]
+  //  {
+  //   coord: [string, number]
+  //   name?: string
+  //   symbol: 'circle'
+  //   symbolSize: 10
+  //   itemStyle: {
+  //     color: '#00ff00'
+  //   }
+  // }[]
 }) => {
   const ref = useRef<HTMLDivElement>(null!)
 
@@ -21,7 +36,6 @@ const Chart = ({
     const source = data.map((item) => ({ ...item, x: dayjs(item.x).format('YYYY/MM/DD') }))
     const myChart = echarts.init(ref.current)
 
-    console.log(source)
     const option = {
       dataset: {
         source,
@@ -49,7 +63,7 @@ const Chart = ({
       },
       yAxis: {
         type: 'value',
-        min: (value: {min: number, max: number}) => value.min,
+        min: (value: { min: number; max: number }) => value.min,
       },
       dataZoom: [
         {
@@ -73,34 +87,24 @@ const Chart = ({
             color: 'rgb(181, 213, 255)',
           },
           markPoint: {
-            data: [
-              {
-                name: 'wtf',
-                coord: ['2022/10/10', 2.149],
-                symbol: 'circle',
-                symbolSize: 10,
-                itemStyle: {
-                  color: '#00ff00',
-                },
+            label: '买入',
+            data: markPointData?.map(([date, net, amount]) => ({
+              name: amount > 0 ? '买入' : '卖出',
+              coord: [date, net],
+              symbol: 'circle',
+              symbolSize: 10,
+              itemStyle: {
+                color: amount < 0 ? '#00ff00' : '#ff0000',
               },
-              {
-                name: 'wtf',
-                coord: ['2022/01/14', 3.113],
-                symbol: 'circle',
-                symbolSize: 10,
-                itemStyle: {
-                  color: '#ff0000',
-                },
-              },
-            ],
+            })),
           },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
                 color: 'rgb(181, 213, 255)',
-            },
-            {
+              },
+              {
                 offset: 1,
                 color: 'rgb(36, 172, 242)',
               },
@@ -112,7 +116,7 @@ const Chart = ({
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option)
-  }, [data])
+  }, [data, markPointData])
 
   return <>{loading ? 'loading...' : <div style={{ width: '100%', height: '300px' }} ref={ref}></div>}</>
 }

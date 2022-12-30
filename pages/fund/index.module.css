@@ -1,6 +1,16 @@
 .fundWrap {
-    display: flex;
+  display: flex;
 }
 .side {
-    width: 20vw;
+  width: 20vw;
+}
+
+.FundDetailForm {
+  display: flex;
+}
+.FundDetailForm > div,
+.FundDetailForm > input {
+  display: inline-flex;
+  width: 20%;
+  margin: 0 5px;
 }

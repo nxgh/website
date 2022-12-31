@@ -15,9 +15,6 @@ const AddFundDetailTable = ({ fundId }: { fundId: string }) => {
   dataSource?.sort(({ date: dateA }: FundDetail, { date: dateB }: FundDetail) =>
     dayjs(dateA).isBefore(dayjs(dateB), 'day') ? -1 : dayjs(dateA).isSame(dayjs(dateB), 'day') ? 0 : 1
   )
-
-  console.log(dataSource)
-
   const columns = [
     {
       title: '日期',
@@ -130,7 +127,7 @@ const AddFundDetail = ({ fund }: { fund: FundResponse }) => {
   )
 }
 
-const SideBar = () => {
+const SideBar = ({ onClick }: { onClick: (id: string) => void }) => {
   const funds = useLiveQuery(async () => await db.fund.toArray()) || []
 
   const [open, setOpen] = useState(false)
@@ -139,8 +136,14 @@ const SideBar = () => {
   return (
     <>
       {funds?.map((item) => (
-        <p key={item.fS_code}>
-          {item.fS_name} {item.fS_code}
+        <div key={item.fS_code} className={style.SideBarItem}>
+          <span
+            onClick={() => {
+              onClick(item.fS_code)
+            }}
+          >
+            {item.fS_name} ({item.fS_code})
+          </span>
           <Tooltip title="买入/卖出记录">
             <Button
               type="link"
@@ -153,7 +156,7 @@ const SideBar = () => {
               +
             </Button>
           </Tooltip>
-        </p>
+        </div>
       ))}
       <Drawer size="large" title="设置基金持仓详细" placement="left" onClose={() => setOpen(false)} open={open}>
         <AddFundDetail fund={funds.find((item) => item.fS_code === fundId)!} />
@@ -172,8 +175,6 @@ export default function Fund() {
 
   const { data, error, loading } = useJsonP(fundId, {
     onSuccess: (data) => {
-      console.log(data)
-
       addFund(data)
     },
   })
@@ -185,8 +186,8 @@ export default function Fund() {
   return (
     <div className={style.fundWrap}>
       <div className={style.side}>
-        <Input defaultValue={fundId} onPressEnter={(e) => setFundId((e.target as HTMLInputElement).value)} />
-        <SideBar />
+        <Input value={fundId} onPressEnter={(e) => setFundId((e.target as HTMLInputElement).value)} />
+        <SideBar onClick={(id) => setFundId(id)} />
       </div>
       {!error ? (
         <Chart

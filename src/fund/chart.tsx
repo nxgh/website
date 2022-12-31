@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
 import { useRef, useEffect } from 'react'
@@ -18,15 +17,6 @@ const Chart = ({
   data?: FundResponse['Data_netWorthTrend']
   loading: boolean
   markPointData: [DateString, Net, Amount][]
-  //  {
-  //   coord: [string, number]
-  //   name?: string
-  //   symbol: 'circle'
-  //   symbolSize: 10
-  //   itemStyle: {
-  //     color: '#00ff00'
-  //   }
-  // }[]
 }) => {
   const ref = useRef<HTMLDivElement>(null!)
 

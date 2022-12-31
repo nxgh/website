@@ -14,3 +14,17 @@
   width: 20%;
   margin: 0 5px;
 }
+
+.SideBarItem {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 30px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.SideBarItem > button {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}

@@ -2,6 +2,19 @@
   --ch-scrollycoding-sticker-width: 100%;
   --ch-scrollycoding-code-min-height: 40vh;
 
+  .ch-scrollycoding-content {
+    .ch-scrollycoding-step-content {
+      min-height: 300px;
+      width: 45vw;
+      max-width: 45vw;
+      p code {
+        background-color: var(--ant-primary-2);
+        border-radius: 4px;
+        padding: 2px 3px;
+      }
+    }
+  }
+
   .ch-scrollycoding-sticker {
     top: 2vh;
     height: 90vh;
@@ -14,17 +27,6 @@
   .ch-codegroup.not-prose {
     height: 40vh;
     flex: auto;
-  }
-}
-
-.ch-scrollycoding-content .ch-scrollycoding-step-content {
-  min-height: 300px;
-  width: 45vw;
-  max-width: 45vw;
-  p code {
-    background-color: var(--ant-primary-2);
-    border-radius: 4px;
-    padding: 2px 3px;
   }
 }
 

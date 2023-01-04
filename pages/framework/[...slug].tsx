@@ -1,12 +1,12 @@
 import React, { PropsWithChildren } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 
-import { getStaticPathsResult, getStaticPropsResult } from 'src/mdx-helper/getDir'
+import { getStaticPropsResult, getStaticPathsResult } from 'src/mdx-helper/getDir'
 import { MDXComponent } from 'src/mdx-helper/MDXComponent'
 import { useRouter } from 'next/router'
 import DocLayout from 'src/Layout/DocLayout'
 
-const basePath = '/docs'
+const basePath = '/doc-framework'
 
 export const getStaticPaths: GetStaticPaths = async () => await getStaticPathsResult(basePath)
 
@@ -23,7 +23,7 @@ export default function Layout({
   const router = useRouter()
 
   return (
-    <DocLayout route={router.asPath} postsData={allPostsData} onClick={(key) => router.push(`/docs/${key}`)}>
+    <DocLayout postsData={allPostsData} onClick={(key) => router.push(`/docs/${key}`)}>
       <MDXComponent code={previewSource} />
     </DocLayout>
   )

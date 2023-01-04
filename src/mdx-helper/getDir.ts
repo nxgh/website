@@ -1,6 +1,7 @@
 import fs from 'fs'
+import matter from 'gray-matter'
 import path from 'path'
-// import matter from 'gray-matter'
+import renderMDX from './renderMDX'
 
 export function getFiles(dirname: string) {
   const postsDirectory = path.join(process.cwd(), dirname)
@@ -38,6 +39,53 @@ export async function getFile(_path: string) {
   )
 
   return files
+}
+
+export async function getStaticPropsResult(
+  basePath: string,
+  slug: string[],
+  config: {
+    toc: boolean
+  } = { toc: true }
+) {
+  const [id] = slug! || ['']
+
+  const files = await getFiles(basePath)
+  const allPostsData = files.map((item) => ({
+    id: item.filename,
+    title: matter(item.content).data?.title || item.filename,
+  }))
+  if (!id) {
+    return {
+      props: {
+        previewSource: '',
+        allPostsData,
+        id,
+      },
+    }
+  }
+  const mdxSource = files.find((item) => item.filename === id)
+  const result = await renderMDX(mdxSource?.content!, { toc: config.toc })
+
+  return {
+    props: {
+      previewSource: result.code || '',
+      allPostsData,
+      id,
+    },
+  }
+}
+
+export async function getStaticPathsResult(basePath: string) {
+  const files = await getFiles(basePath)
+  const paths = files.map((item) => ({
+    params: { slug: [item.filename] },
+  }))
+
+  return {
+    paths,
+    fallback: false,
+  }
 }
 
 export default getFiles

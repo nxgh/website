@@ -19,7 +19,9 @@ async function renderMDX(mdxSource: string, config: IRenderMDXConfig): ReturnTyp
   })
   const loadedTheme = await import(`shiki/themes/nord.json`).then((module) => module.default)
 
-  const previewSource = await bundleMDX({
+  const frontmatter = matter(mdxSource).data
+
+  const result = await bundleMDX({
     source: matter(mdxSource).content,
     files,
     esbuildOptions(options) {
@@ -36,7 +38,8 @@ async function renderMDX(mdxSource: string, config: IRenderMDXConfig): ReturnTyp
     },
   })
 
-  return previewSource
+  
+  return {...result, frontmatter}
 }
 
 export default renderMDX

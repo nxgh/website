@@ -16,10 +16,16 @@ header.ant-layout-header.link-group {
 }
 
 .docs-layout {
-//   overflow: auto;
-//   height: 100vh;
-//   position: fixed;
-//   left: 0;
-//   top: 0;
-//   bottom: 0;
+  .ch-scrollycoding.ch-scrollycoding-with-preview {
+    .ch-scrollycoding-content {
+      width: 50%;
+      .ch-scrollycoding-step-content {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.three-layout {
+  padding: 0 30px;
 }

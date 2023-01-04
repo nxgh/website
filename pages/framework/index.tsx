@@ -2,15 +2,22 @@ import React from 'react'
 import { GetStaticProps } from 'next'
 
 import { getStaticPropsResult } from 'src/mdx-helper/getDir'
-import router from 'next/router';
+import router from 'next/router'
 
-const basePath = '/doc-three'
+const basePath = '/doc-framework'
 
 export default function Index({ allPostsData }: { allPostsData: { id: string; title: string }[] }) {
   return (
     <>
       {allPostsData.map((item) => (
-        <div key={item.id} onClick={() => {router.push(`/three/${item.id}`)}}>{item.title}</div>
+        <div
+          key={item.id}
+          onClick={() => {
+            router.push(`/framework/${item.id}`)
+          }}
+        >
+          {item.title}
+        </div>
       ))}
     </>
   )

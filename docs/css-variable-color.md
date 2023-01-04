@@ -1,5 +1,6 @@
 ---
 title: css 变量、颜色
+index: 2
 ---
 ## CSS 变量
 

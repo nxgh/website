@@ -51,10 +51,15 @@ export async function getStaticPropsResult(
   const [id] = slug! || ['']
 
   const files = await getFiles(basePath)
-  const allPostsData = files.map((item) => ({
+  const allPostsData: {id: string, title: string, index: number}[] = files.map((item) => ({
     id: item.filename,
     title: matter(item.content).data?.title || item.filename,
+    index: matter(item.content).data?.index || Infinity,
   }))
+
+  allPostsData.sort(({index: indexA}, {index: indexB}) => {
+    return indexA > indexB ?  1 : indexA === indexB ? 0 : -1
+  })
   if (!id) {
     return {
       props: {

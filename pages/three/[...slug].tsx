@@ -4,11 +4,11 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import renderMDX from 'src/mdx-helper/renderMDX'
 import getDir from 'src/mdx-helper/getDir'
 import { MDXComponent } from 'src/components/MDXComponent'
-import { useRouter } from 'next/router'
-import DocLayout from 'src/Layout/DocLayout'
+import { Row, Col } from 'antd'
+import SideBar from 'src/components/SideBar'
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const docsFile = await getDir('/docs')
+  const docsFile = await getDir('/doc-three')
   const paths = docsFile.map((item) => ({
     params: { slug: [item.filename] },
   }))
@@ -21,11 +21,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const [id] = context.params!.slug!
-  const files = await getDir('/docs')
+  const files = await getDir('/doc-three')
   const mdxSource = files.find((item) => item.filename === id)
   const allPostsData = files.map((item) => ({ id: item.filename, title: item.filename }))
 
-  const previewSource = await renderMDX(mdxSource?.content!, { toc: true })
+  const previewSource = await renderMDX(mdxSource?.content!, { toc: false })
   return {
     props: {
       previewSource: previewSource.code,
@@ -42,11 +42,5 @@ export default function Layout({
   previewSource: string
   allPostsData: { id: string; title: string }[]
 }>) {
-  const router = useRouter()
-
-  return (
-    <DocLayout postsData={allPostsData} onClick={(key) => router.push(`/docs/${key}`)}>
-      <MDXComponent code={previewSource} />
-    </DocLayout>
-  )
+  return <MDXComponent code={previewSource} />
 }

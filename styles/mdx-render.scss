@@ -1,0 +1,29 @@
+.mdx-render {
+  @for $i from 1 through 6 {
+    h#{$i} {
+      font-size: 26px - $i * 2px;
+    }
+    h#{$i}::before {
+      content: '$';
+      margin-right: 10px;
+      color: #40ad41;
+      font-weight: 300;
+    }
+  }
+  .toc {
+    position: fixed;
+    right: 2vw;
+    top: 10vh;
+    width: 16vw;
+    z-index: 10;
+  }
+  .toc-link-active {
+    border-bottom: 1px solid #40ad41;
+    color: #40ad41;
+  }
+  .toc > ol,
+  li,
+  menu {
+    padding-left: 10px;
+  }
+}

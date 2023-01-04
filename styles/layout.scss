@@ -1,0 +1,25 @@
+.base-layout {
+  overflow: auto;
+}
+
+header.ant-layout-header.link-group {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .ant-btn {
+    font-size: large;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.docs-layout {
+//   overflow: auto;
+//   height: 100vh;
+//   position: fixed;
+//   left: 0;
+//   top: 0;
+//   bottom: 0;
+}

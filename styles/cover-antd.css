@@ -12,21 +12,6 @@ header.ant-layout-header {
   padding: 0;
 }
 
-header.ant-layout-header .link-group {
-  display: flex;
-  /* background-color: red; */
-  height: 100%;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-header.ant-layout-header .link-group .ant-btn {
-  font-size: large;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .ant-menu {
   background-color: #f0f2f5;
 }

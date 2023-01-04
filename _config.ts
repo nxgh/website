@@ -1,6 +1,6 @@
 const MenuConfig = [
   { name: 'Three.js', path: '/three' },
-  { name: 'Docs', path: '/docs/index' },
+  { name: 'Docs', path: '/docs' },
   { name: 'fund', path: '/fund' },
 ]
 

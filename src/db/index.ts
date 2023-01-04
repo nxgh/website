@@ -1,5 +1,5 @@
 import Dexie, { Table } from 'dexie'
-import { FundResponse } from './fund/api.response'
+import { FundResponse } from '../fund/api.response'
 
 export interface FundDetail {
   fS_code: string

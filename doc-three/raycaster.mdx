@@ -20,7 +20,7 @@ THREE.js 提供了 RayCaster 类来做这些事情。现在我们来创建一个
 首先我们来搭建基础的场景
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s1.js
+// from  ../data/three/raycaster/s1.js
 ```
 
 ---
@@ -45,7 +45,7 @@ raycaster.set(rayOrigin, rayDirOrigin)
 </CH.Section>
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s2.js
+// from  ../data/three/raycaster/s2.js
 ```
 
 ---
@@ -65,7 +65,7 @@ scene.add(line)
 </CH.Section>
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s3.js
+// from  ../data/three/raycaster/s3.js
 ```
 
 ---
@@ -96,7 +96,7 @@ intersects.forEach((item) => item.object.material.color.set('#00ff00'))
 </CH.Section>
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s4.js
+// from  ../data/three/raycaster/s4.js
 ```
 
 ---
@@ -123,7 +123,7 @@ pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
 再使用 `intersectObjects` 检测与射线相交的物体, 并使之更改为一个随机颜色(生成颜色时会出现 5 位的 16 进制颜色)
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s5.js
+// from  ../data/three/raycaster/s5.js
 ```
 
 ---
@@ -140,7 +140,7 @@ raycaster 看起来效果不错，而且能处理很多用户场景，但是也�
 这时，我们需要使用 GPU 拾取
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s6.js
+// from  ../data/three/raycaster/s6.js
 ```
 
 ---
@@ -195,7 +195,7 @@ function createPickingCube(id, cube) {
 </CH.Section>
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s7.js
+// from  ../data/three/raycaster/s7.js
 ```
 
 ---
@@ -241,7 +241,7 @@ camera.setViewOffset(drawingBufferWidth, drawingBufferHeight, rectX, rectY, 1, 1
 </CH.Section>
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s8.js
+// from  ../data/three/raycaster/s8.js
 ```
 
 ---
@@ -270,7 +270,7 @@ renderer.readRenderTargetPixels(pickingTexture, 0, 0, 1, 1, pixelBuffer)
 </CH.Section>
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s9.js
+// from  ../data/three/raycaster/s9.js
 ```
 
 ---
@@ -287,7 +287,7 @@ const intersectedObject = idToObject[id]
 </CH.Section>
 
 ```js src/index.js
-// from  ../../data/three/raycaster/s10.js
+// from  ../data/three/raycaster/s10.js
 ```
 
 </CH.Scrollycoding>

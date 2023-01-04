@@ -1,14 +1,14 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 
 import renderMDX from 'src/mdx-helper/renderMDX'
 import getDir from 'src/mdx-helper/getDir'
 import { MDXComponent } from 'src/components/MDXComponent'
-import { Row, Col } from 'antd'
-import SideBar from 'src/components/SideBar'
+
+const basePath = '/doc-three'
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const docsFile = await getDir('/doc-three')
+  const docsFile = await getDir(basePath)
   const paths = docsFile.map((item) => ({
     params: { slug: [item.filename] },
   }))
@@ -21,7 +21,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const [id] = context.params!.slug!
-  const files = await getDir('/doc-three')
+  const files = await getDir(basePath)
   const mdxSource = files.find((item) => item.filename === id)
   const allPostsData = files.map((item) => ({ id: item.filename, title: item.filename }))
 

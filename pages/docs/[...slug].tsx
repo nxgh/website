@@ -7,8 +7,10 @@ import { MDXComponent } from 'src/components/MDXComponent'
 import { useRouter } from 'next/router'
 import DocLayout from 'src/Layout/DocLayout'
 
+const basePath = '/docs'
+
 export const getStaticPaths: GetStaticPaths = async () => {
-  const docsFile = await getDir('/docs')
+  const docsFile = await getDir(basePath)
   const paths = docsFile.map((item) => ({
     params: { slug: [item.filename] },
   }))
@@ -21,7 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const [id] = context.params!.slug!
-  const files = await getDir('/docs')
+  const files = await getDir(basePath)
   const mdxSource = files.find((item) => item.filename === id)
   const allPostsData = files.map((item) => ({ id: item.filename, title: item.filename }))
 

@@ -1,4 +1,5 @@
 import { Menu } from 'antd'
+import { useRouter } from 'next/router'
 import { PropsWithChildren } from 'react'
 
 import style from './DocLayout.module.scss'
@@ -10,8 +11,6 @@ type IDocLayout = PropsWithChildren<{
 }>
 
 export default function Layout({ children, postsData, onClick, route }: IDocLayout) {
-  console.log(route)
-
   return (
     <div className={style.wrap}>
       <div style={{ width: '16vw' }}>
@@ -26,6 +25,30 @@ export default function Layout({ children, postsData, onClick, route }: IDocLayo
       <div style={{ width: '66vw' }}>
         <main className={`${style.mainContent} mdx-render`}>{children}</main>
       </div>
+    </div>
+  )
+}
+
+export function DocLayoutMenu({
+  postsData,
+  basePath,
+}: {
+  postsData: { id: string; title: string }[]
+  basePath: string
+}) {
+  const router = useRouter()
+  return (
+    <div className={style.docLayoutMenu}>
+      {postsData.map((item) => (
+        <div
+          key={item.id}
+          onClick={() => {
+            router.push(`/${basePath}/${item.id}`)
+          }}
+        >
+          {item.title}
+        </div>
+      ))}
     </div>
   )
 }

@@ -1,19 +1,13 @@
 import React from 'react'
 import { GetStaticProps } from 'next'
 
+import { DocLayoutMenu } from 'src/Layout/DocLayout'
 import { getStaticPropsResult } from 'src/mdx-helper/getDir'
-import router from 'next/router';
 
 const basePath = '/doc-three'
 
 export default function Index({ allPostsData }: { allPostsData: { id: string; title: string }[] }) {
-  return (
-    <>
-      {allPostsData.map((item) => (
-        <div key={item.id} onClick={() => {router.push(`/three/${item.id}`)}}>{item.title}</div>
-      ))}
-    </>
-  )
+  return <DocLayoutMenu postsData={allPostsData} basePath="three" />
 }
 
 export const getStaticProps: GetStaticProps = async (context) =>

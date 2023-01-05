@@ -3,3 +3,182 @@ title: 属性绑定
 index: 5
 date: 2023/01/05
 ---
+
+# 属性绑定
+
+## Property 和 Attribute
+
+- property: DOM 中的属性，是 JavaScript 里的对象
+- Attribute: HTML 标签上的特性，值只能为字符串
+
+## 基础
+
+### Vue
+
+```vue
+<template>
+  <div v-bind:id="dynamicId">a</div>
+  <!-- 简写形式 -->
+  <div :id="dynamicId"></div>
+</template>
+
+<script setup>
+const dynamicId = 'app'
+</script>
+```
+
+### React
+
+```javascript
+function App() {
+  const dynamicId = 'app'
+  return <div id={dynamicId}></div>
+}
+```
+
+### Angular
+
+```javascript
+import { Component } from '@angular/core'
+
+@Component({
+  selector: 'app',
+  template: '<div bind-id="dynamicId"></div>',
+  // 或者
+  // template: '<div [id]="dynamicId"></div>'
+})
+export class AppComponent {
+  dynamicId = 'app'
+}
+```
+
+**注意:**
+
+angular 中设置 attr 属性时需要通过 [attr.xxx] 的形式，如：
+
+```html
+<button ariaLabel="actionName">{{actionName}}</button>
+
+<!-- OR -->
+<tr>
+  <td [attr.colspan]="1 + 1">One-Two</td>
+</tr>
+```
+
+而 JSX 支持所有 `aria-*` HTML 属性, 并可以使用连字符命名 参
+照[wai-aria](https://zh-hans.reactjs.org/docs/accessibility.html#wai-aria)
+
+vue 可以直接使用
+
+## 绑定多个值
+
+### Vue
+
+```vue
+<template>
+  <div v-bind="objectOfAttrs"></div>
+</template>
+
+<script setup>
+const objectOfAttrs = {
+  id: 'container',
+  class: 'wrapper',
+}
+</script>
+```
+
+### React
+
+```javascript
+function App() {
+  const objectOfAttrs = {
+    id: 'container',
+    className: 'wrapper',
+  }
+  return <div {...objectOfAttrs}></div>
+}
+```
+
+### Angular 目前未找到语法糖
+
+```typescript
+import { Component } from '@angular/core'
+
+@Component({
+  selector: 'app',
+  template: '<div [id]="objectOfAttrs.id" [class]="objectOfAttrs.class"></div>',
+})
+export class AppComponent {
+  objectOfAttrs = {
+    id: 'container',
+    class: 'wrapper',
+  }
+}
+```
+
+## 布尔值
+
+### Vue
+
+```vue
+<template>
+  <button :disabled="isButtonDisabled">Button</button>
+</template>
+
+<script setup>
+const isButtonDisabled = true
+</script>
+```
+
+### React
+
+```javascript
+function App() {
+  const isButtonDisabled = true
+  return <button disabled={isButtonDisabled}>Button</button>
+}
+```
+
+### Angular
+
+```typescript
+import { Component } from '@angular/core'
+
+@Component({
+  selector: 'app',
+  template: '<button [disabled]="isButtonDisabled">Button</button>',
+})
+export class AppComponent {
+  isButtonDisabled = true
+}
+```
+
+## 动态绑定
+
+### Vue
+
+```vue
+<template>
+  <a :[attributeName]="url"> ... </a>
+</template>
+
+<script setup>
+const attributeName = 'href'
+const url = 'https://'
+</script>
+```
+
+### React
+
+```javascript
+function App() {
+  const attributeName = {
+    href: 'https://',
+  }
+  return <a {...attributeName}> ... </a>
+}
+```
+
+### Angular
+
+未找到

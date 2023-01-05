@@ -1,0 +1,62 @@
+---
+title: 原始 HTML
+date: 2023/01/05
+index: 4
+---
+
+# 原始 HTML
+
+## React
+
+```javascript
+function App() {
+  const rawHTML = `Lorem <b>Ipsum</b>`
+  return <div dangerouslySetInnerHTML={{ __html: rawHTML }}></div>
+}
+```
+
+## Vue
+
+```vue
+<template>
+  <div v-html="rawHTML"></div>
+</template>
+
+<script setup>
+const rawHTML = `Lorem <b>Ipsum</b>`
+</script>
+```
+
+## Angular
+
+```typescript
+import { Component } from '@angular/core'
+
+@Component({
+  selector: 'my-app',
+  template: '<div [innerHTML]="rawHTML"></div>',
+})
+export class AppComponent {
+  name = 'Angular ' + VERSION.major
+  rawHTML = `Lorem <b>Ipsum</b>`
+}
+```
+
+## Svelte
+
+```html
+<script>
+  let rawHTML = `Lorem <b>Ipsum</b>`
+</script>
+
+<div>{@html rawHTML}</div>
+```
+
+## Solid
+
+```typescript
+function App() {
+  const rawHTML = `Lorem <b>Ipsum</b>`
+  return <div innerHTML={rawHTML}></div>
+}
+```

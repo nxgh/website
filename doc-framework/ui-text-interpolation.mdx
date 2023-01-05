@@ -1,0 +1,63 @@
+---
+title: 文本插值
+index: 3
+date: 2023/01/05
+---
+
+# 文本插值
+
+## Vue
+
+```vue
+<template>
+  <div>Hello: {{ msg }}</div>
+</template>
+
+<script setup>
+const msg = 'World'
+</script>
+```
+
+## React
+
+```javascript
+function App() {
+  const msg = 'World'
+  return <div>Hello: {msg}</div>
+}
+```
+
+## Angular
+
+```javascript
+import { Component } from '@angular/core'
+
+@Component({
+  selector: 'app',
+  template: '<div>Hello: {{ msg }}</div>',
+})
+export class AppComponent {
+  msg = 'World'
+}
+```
+
+## Sevlte
+
+```html
+<script>
+  let msg = 'world'
+</script>
+
+<div>Hello {msg}!</div>
+```
+
+## Solid
+
+```javascript
+function App() {
+  const msg = 'World'
+  return <div>Hello {msg}!</div>
+}
+```
+
+## 属性绑定

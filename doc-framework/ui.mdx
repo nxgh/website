@@ -1,0 +1,36 @@
+---
+title: 组件基础:UI 的表现形式
+index: 2
+date: 2023/01/05
+---
+
+# UI 的表现形式
+
+目前主流框架描述 UI 的方式有两种: template 和 JSX。
+
+|         | template | JSX |
+| :------ | :------- | :-- |
+| react   |          | ✅  |
+| vue     | ✅       | ✅  |
+| angular | ✅       |     |
+| solidjs |          | ✅  |
+| svelte  | ✅       |     |
+
+- template 与 JSX 没有本质区别，都是一种描述 UI 的方式，只是语法不同。
+- 相对来说, JSX 灵活性更强。
+- 在 vue 中, template 相对于 JSX 会有性能优势
+- react 中的 JSX 和 vue 的 template 都会被 babel 编译为一个渲染函数
+- vue2 和 Angular 通过 「管道」和 「指令」来增强 template 的能力
+
+主要内容
+
+- 文本插值
+- 原始 HTML
+- 属性绑定
+- class 和 style 绑定
+- JavaScript 表达式
+- 条件渲染
+- 列表渲染 & Key
+- 事件处理
+- 表单输入绑定
+- DOM 引用

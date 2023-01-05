@@ -23,7 +23,7 @@ export default function Layout({
   const router = useRouter()
 
   return (
-    <DocLayout route={router.asPath} postsData={allPostsData} onClick={(key) => router.push(`/docs/${key}`)}>
+    <DocLayout postsData={allPostsData} onClick={(key) => router.push(`/docs/${key}`)}>
       <MDXComponent code={previewSource} />
     </DocLayout>
   )

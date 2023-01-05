@@ -1,0 +1,1 @@
+export { compareDate } from './date'

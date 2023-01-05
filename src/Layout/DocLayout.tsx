@@ -7,10 +7,9 @@ import style from './DocLayout.module.scss'
 type IDocLayout = PropsWithChildren<{
   postsData: { id: string; title: string }[]
   onClick: (key: string) => void
-  route: string
 }>
 
-export default function Layout({ children, postsData, onClick, route }: IDocLayout) {
+export default function Layout({ children, postsData, onClick }: IDocLayout) {
   return (
     <div className={style.wrap}>
       <div style={{ width: '16vw' }}>

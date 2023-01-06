@@ -51,14 +51,14 @@ export async function getStaticPropsResult(
   const [id] = slug! || ['']
 
   const files = await getFiles(basePath)
-  const allPostsData: {id: string, title: string, index: number}[] = files.map((item) => ({
+  const allPostsData: { id: string; title: string; index: number }[] = files.map((item) => ({
     id: item.filename,
     title: matter(item.content).data?.title || item.filename,
     index: matter(item.content).data?.index || Infinity,
   }))
 
-  allPostsData.sort(({index: indexA}, {index: indexB}) => {
-    return indexA > indexB ?  1 : indexA === indexB ? 0 : -1
+  allPostsData.sort(({ index: indexA }, { index: indexB }) => {
+    return indexA > indexB ? 1 : indexA === indexB ? 0 : -1
   })
   if (!id) {
     return {
@@ -70,7 +70,8 @@ export async function getStaticPropsResult(
     }
   }
   const mdxSource = files.find((item) => item.filename === id)
-  const result = await renderMDX(mdxSource?.content!, { toc: config.toc })
+
+  const result = await renderMDX(replaceSpecialSymbol(mdxSource?.content!), { toc: config.toc })
 
   return {
     props: {
@@ -94,3 +95,7 @@ export async function getStaticPathsResult(basePath: string) {
 }
 
 export default getFiles
+
+function replaceSpecialSymbol(str: string) {
+  return str.replaceAll(/「(.*?)」/g, '<span class="corner-bracket">「$1」</span>')
+}

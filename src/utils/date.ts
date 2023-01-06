@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 
 type DayProps = string | number | Date | Dayjs | null | undefined
 

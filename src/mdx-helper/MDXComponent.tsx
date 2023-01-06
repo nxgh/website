@@ -11,9 +11,13 @@ export function SideBySide({ children }: PropsWithChildren) {
   )
 }
 
+function CodeSection({ children }: PropsWithChildren) {
+  return <code className="inline-code">{children}</code>
+}
+
 export function MDXComponent({ code }: { code: string }) {
   const Component = React.useMemo(() => getMDXExport(code).default, [code])
-  return <Component components={{ SideBySide }} />
+  return <Component components={{ SideBySide, code: CodeSection }} />
 }
 
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */

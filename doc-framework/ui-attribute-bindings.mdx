@@ -43,16 +43,34 @@ import { Component } from '@angular/core'
 
 @Component({
   selector: 'app',
-  template: '<div bind-id="dynamicId"></div>',
-  // 或者
-  // template: '<div [id]="dynamicId"></div>'
+  template: `
+    <div bind-id="dynamicId"></div>
+    <div [id]="dynamicId"></div>
+    <div id="{{ dynamicId }}"></div>
+  `,
 })
 export class AppComponent {
   dynamicId = 'app'
 }
 ```
 
-**注意:**
+**注意**
+
+第三种写法 `<div id="{{dynamicId}}"></div>`
+
+在渲染视图之前， Angular 会翻译成相应的属性绑定, 但当 property 数据类型不是字符串时，会产生问题
+
+```html
+<button [disabled]="isDisabled">Save</button>
+<button bind-disabled="isDisabled">Save</button>
+<button disabled="{{isDisabled}}">Save</button>
+```
+
+- 当 `isDisabled` 为 `true` 时，没有问题
+- 当 `isDisabled` 为 `false` 时，第三种写法会将 `disabled` 属性设置为 `false` 字符串，而不是移除 `disabled` 属性, 结果为
+  `<button disabled>Save</button>`
+
+#### 设置 attr 属性
 
 angular 中设置 attr 属性时需要通过 [attr.xxx] 的形式，如：
 

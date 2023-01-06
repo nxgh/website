@@ -1,0 +1,104 @@
+---
+title: 条件渲染
+index: 7
+date: 2023/01/06
+---
+
+# 条件渲染
+
+|         | if-else                                                  | switch                                                    |
+| ------- | -------------------------------------------------------- | --------------------------------------------------------- |
+| Vue     | `v-if` <br /> `v-else` <br /> `v-else-if` <br />`v-show` | `<component :is="" />`                                    |
+| React   | `? :`                                                    |                                                           |
+| Angular | `ngIf` <br /> `ngIfElse`                                 | `ngSwitch` <br /> `ngSwitchCase` <br /> `ngSwitchDefault` |
+
+
+## Vue
+
+```vue
+<script setup>
+const type = 'A'
+</script>
+
+<template>
+  <div v-if="type === 'A'">A</div>
+  <div v-else-if="type === 'B'">B</div>
+  <div v-else-if="type === 'C'">C</div>
+  <div v-else>Not A/B/C</div>
+</template>
+```
+
+- `v-if` & `<template>`
+
+在一个 `<template>` 元素上使用 `v-if`, 最后渲染的结果并不会包含这个 `<template>` 元素
+
+```vue
+<template v-if="ok">
+  <h1>Title</h1>
+  <p>Paragraph 1</p>
+  <p>Paragraph 2</p>
+</template>
+```
+
+- `v-show`
+
+`v-show` 是通过 `display: none` 来控制元素的显示与隐藏，而 `v-if` 是通过移除元素来控制元素的显示与隐藏。
+
+```html
+<h1 v-show="ok">Hello!</h1>
+```
+
+- `v-show` 有更高的初始渲染开销, 但是在切换时开销更小, 适用于频繁切换时
+- `v-show` 不支持在 `<template>` 元素上使用
+
+[`v-show` 与 `v-if` 的区别](https://cn.vuejs.org/guide/essentials/conditional.html#v-if-vs-v-show)
+
+## React
+
+```jsx
+function App() {
+  const type = 'A'
+
+  return (
+    <>
+      {type === 'A' ? <div>A</div> : type === 'B' ? <div>B</div> : type === 'C' ? <div>C</div> : <div>Not A/B/C</div>}
+    </>
+  )
+}
+```
+
+## Angular
+
+### `ngSwitch` & `ngSwitchCase`
+
+```html
+<div [ngSwitch]="type">
+  <div *ngSwitchCase="'A'">A</div>
+  <div *ngSwitchCase="'B'">B</div>
+  <div *ngSwitchCase="'C'">C</div>
+  <div *ngSwitchDefault>Not A/B/C</div>
+</div>
+```
+
+### `ngIf` & `ngIfElse`
+
+```html
+<div *ngIf="type === 'A'">A</div>
+
+<div *ngIf="type === 'B'; then thenBlock; else elseBlock"></div>
+<ng-template #thenBlock>B</ng-template>
+<ng-template #elseBlock>Not B</ng-template>
+
+<div *ngIf="type as value; else elseBlock">{{ value }}</div>
+<ng-template #elseBlock>Not B</ng-template>
+
+<ng-template [ngIf]="type === 'A'" [ngIfElse]="notA">
+  <div>A</div>
+</ng-template>
+<ng-template #notA>
+  <div>Not A</div>
+</ng-template>
+```
+
+TODO: 
+- 把条件结果保存在变量中

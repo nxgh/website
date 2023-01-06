@@ -60,4 +60,44 @@ function App() {
 }
 ```
 
-## 属性绑定
+## 使用 javascript 表达式
+
+### Vue
+
+Vue 实际上在所有的数据绑定中都支持完整的 JavaScript 表达式
+
+- 模板中的表达仅能够访问到有限的全局对象列表式
+
+```vue
+<template>
+  <div>{{ number + 1 }}</div>
+  <div>{{ ok ? 'YES' : 'NO' }}</div>
+  <div>{{ message.split('').reverse().join('') }}</div>
+  <div :id="`list-${id}`"></div>
+</template>
+```
+
+### React
+
+```jsx
+function App() {
+  return (
+    <>
+      <div>{number + 1}</div>
+      <div>{ok ? 'YES' : 'NO'}</div>
+      <div>{message.split('').reverse().join('')}</div>
+      <div id={`list-${id}`}></div>
+    </>
+  )
+}
+```
+
+### Angular
+
+```html
+<div>{{ number + 1 }}</div>
+<div>{{ ok ? 'YES' : 'NO' }}</div>
+<div>{{ message.split('').reverse().join('') }}</div>
+<div [id]="'list-' + message">wtf</div>
+<div id="list-{{message}}">wtf</div>
+```

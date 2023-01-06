@@ -100,6 +100,38 @@ function App() {
 <div [class]="errorClass" [class.active]="isActive"></div>
 ```
 
+#### ngClass
+
+`ngClass` 可以从 HTML 元素上添加和移除 CSS 类。
+
+<CH.Code>
+
+```html demo.component.html
+<div class="a-class" [ngClass]="'foo bar'">xxx</div>
+<div class="a-class" [ngClass]="['foo','bar']">xxx</div>
+<div class="a-class" [ngClass]="{'active': isActive,'text-danger': hasError}">xxx</div>
+<div class="a-class" [ngClass]="{'foo bar':condtion}">xxx</div>
+```
+
+```ts demo.component.ts
+import { Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  templateUrl: './demo.component.html',
+  imports: [CommonModule],
+})
+export class HelloComponent {
+  isActive = true
+  hasError = false
+  condtionCD = true
+}
+```
+
+</CH.Code>
+
 ## 绑定 style
 
 ### Vue
@@ -151,9 +183,41 @@ function App() {
 | 多重样式绑定         | `[style]="styleExpression"` | `"width: 100px; height: 100px"`     |
 | 多重样式绑定         | `[style]="styleExpression"` | `{width: '100px', height: '100px'}` |
 
-
-```html 
+```html
 <div [style.width]="width"></div>
 <div [style.width.px]="width"></div>
 <div [style]="styleExpression"></div>
 ```
+
+#### NgStyle
+
+同样，Angular 也提供了 `NgStyle` 指令, 用于更新容器元素的样式
+
+<CH.Code>
+
+```html demo.component.html
+<div [ngStyle]="{ width: '100px' }">xxx</div>
+<div [ngStyle]="{ width: ok ? '100px' : '0' }">xxx</div>
+<div [ngStyle]="styleObject">xxx</div>
+<div [ngStyle]="{ 'font-size.px' : fontSize } ">xxx</div>
+```
+
+```ts demo.component.ts
+import { Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  templateUrl: './demo.component.html',
+  imports: [CommonModule],
+})
+export class HelloComponent {
+  ok = true
+  width = '100px'
+  fontSize = 20
+  styleObject = { width: '100px', height: '100px' }
+}
+```
+
+</CH.Code>

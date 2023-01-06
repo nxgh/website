@@ -1,0 +1,97 @@
+---
+title: 列表渲染
+index: 8
+date: 2023/01/06
+---
+
+# 列表渲染
+
+|         |                    |                                                              |     |
+| ------- | ------------------ | ------------------------------------------------------------ | --- |
+| Vue     | `v-for`            | `v-for="item in items" :key="item.id"`                       |     |
+| React   | `array.map`        | `{ items.map(item => <div key={item.id}>{item.name}</div>)}` |     |
+| Angular | `*ngFor、*ngForOf` | `*ngFor="let item of items; let i=index"`                    |     |
+
+- key 和 trackBy
+
+## Vue
+
+```vue
+<script setup>
+const items = [...Array(10).keys()].map((i) => ({ name: `name-${i}`, id: i }))
+</script>
+
+<template>
+  <div v-for="(item, index) in items" :key="item.id">
+    <p>{{ item.name }} {{ index }}</p>
+  </div>
+  <template v-for="item in items" :key="item.id">
+    <p>{{ item.name }}</p>
+  </template>
+</template>
+```
+
+## React
+
+```jsx
+function App() {
+  return (
+    <>
+      {items.map((item, index) => (
+        <p key={item.id}>
+          {item.name} {index}
+        </p>
+      ))}
+    </>
+  )
+}
+```
+
+## Angular
+
+<CH.Code>
+
+```html
+<ng-container
+  *ngFor="
+    let item of items;
+    let i = index;
+    let f = first;
+    let l = last;
+    let e = even;
+    let o = odd;
+    trackBy: trackById
+  "
+>
+  <p>{{ item.name }} {{ i }} {{ f }} {{ l }} {{ e }} {{ o }}</p>
+</ng-container>
+```
+
+```ts
+export class AppComponent {
+  items = [...Array(10).keys()].map((i) => ({ name: `name-${i}`, id: i }))
+  trackById = (index: number, item: any) => item.id
+}
+```
+
+</CH.Code>
+
+内置变量，必须要在 `ngFor` 内显示声明
+
+- `index(number)` 引索
+- `first(boolean)` 是否第一行
+- `last(boolean)` 是否第二行
+- `even(boolean)` 引索是否是偶数，不是指是否偶数行
+- `odd(boolean)` 引索是否是奇数，不是指是否奇数行
+
+### trackBy
+
+- 类似 `key`，用于提升性能，提高元素的复用性，避免将所有列表单元重绘
+- 需要指定一个 `function`
+
+ngFor 的内容并不是模板表达式，而是 Angular 中的微语法, 下面 2 个写法等价
+
+```js
+let item of list; index as i;first as f;last as l;even as e;odd as o;
+let item of list; let i=index;let f=first;let l=last;let e=even;let o=odd;
+```

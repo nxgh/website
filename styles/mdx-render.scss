@@ -2,6 +2,7 @@
   @for $i from 1 through 6 {
     h#{$i} {
       font-size: 26px - $i * 2px;
+      margin-bottom: 1em;
     }
     h#{$i}::before {
       content: '$';

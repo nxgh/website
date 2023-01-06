@@ -30,3 +30,53 @@ header.ant-layout-header.link-group {
 .three-layout {
   padding: 0 30px;
 }
+
+.framework-layout,
+.blog-layout {
+  table {
+    width: 100%;
+    thead {
+      width: 100%;
+    }
+    tbody > tr {
+      td {
+        padding: 5px;
+      }
+    }
+  }
+  .inline-code {
+    background: #e9e9e9;
+    color: rgb(236, 113, 183);
+    padding: 3px 4px;
+    border-radius: 5px;
+  }
+
+  table tr:nth-child(2n),
+  thead {
+    background-color: #e4e4e4;
+  }
+  table th,
+  table td {
+    padding: 8px;
+    line-height: 1.25rem;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+  }
+
+  table thead th {
+    vertical-align: middle;
+  }
+  table tr th {
+    border-bottom: 0;
+  }
+  table th {
+    font-weight: bold;
+  }
+}
+
+
+span.corner-bracket {
+  color: var(--ant-primary-5);
+  border-radius: 3px;
+  padding: 2px 3px;
+}

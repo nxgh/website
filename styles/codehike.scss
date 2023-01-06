@@ -29,22 +29,3 @@
     flex: auto;
   }
 }
-
-.framework-layout,
-.blog-layout {
-  table {
-    width: 100%;
-    thead {
-      width: 100%;
-      tr {
-        border-bottom: 2px solid var(--ant-primary-8);
-      }
-    }
-    tbody > tr {
-      border-bottom: 1px solid var(--ant-primary-8);
-      td {
-        padding: 5px;
-      }
-    }
-  }
-}

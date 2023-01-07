@@ -34,19 +34,75 @@ date: 2023/01/05
 - 表单输入绑定
 - DOM 引用
 
+## 标签的不同特性
 
-
-- 大小写区分
+- 大小写敏感
 
 HTML 标签和属性名称是不分大小写的，所以浏览器会把任何大写的字符解释为小写
 
 - 闭合标签
 
-
-
 - 根元素数量
 
-Vue2 中**每个组件必须只有一个根元素**
-Vue3 可以存在多个根元素
-React 中每个组件必须只有一个根元素, 一般使用 `Fragment(<></>)` 来解决这个问题
-Angular 可以存在多个根元素
+Vue2 中**每个组件必须只有一个根元素** Vue3 可以存在多个根元素 React 中每个组件必须只有一个根元素, 一般使用
+`Fragment(<></>)` 来解决这个问题 Angular 可以存在多个根元素
+
+## 一些特殊的标签/组件
+
+### Angular
+
+- `<ng-container>`
+  - 逻辑容器，对节点进行分组，不会渲染到 DOM 中
+  - 可以理解为 react 的 `<Fragment />` 或者 vue 的 `<template>`
+- `<ng-template>`
+  - 结构型指令，用于定义模板渲染 HTML
+  - 可以理解为 vue 的 `<template>`
+- `<ng-content>`
+  - 可以理解为 vue 的 `<slot>` 或者 react 的 `props.children`
+  - 具有的 `select` 属性可以用来选择插槽的内容(vue 「具名插槽」、react `render props`)
+
+### React
+
+- `<Fragment />`
+  - 理解为一个空标签，允许你将子节点分组，而无需向 DOM 添加额外节点
+  - 唯一的属性是 `key`
+- `<StrictMode />`
+  - 严格模式，用于检测不符合规范的代码
+- `<Profiler />`
+  - 性能分析工具
+- `<Suspense />`
+  - 懒加载组件
+- `<SuspenseList />`
+  - 懒加载组件列表
+- `<ErrorBoundary />`
+  - 错误边界，用于捕获子组件的错误
+
+### Vue
+
+- `<template>`
+  - 每个 `.vue` 文件最多可以包含一个顶层 `<template>` 块
+  - 一个不可见的包装器元素， 不会渲染到 DOM 中
+- `<slot />`
+  - 用于组件的插槽
+- `<component>`
+  - 动态组件
+- `<Transition>` & `<TransitionGroup>`
+  - 动画组件
+- `<KeepAlive>`
+  - 缓存组件
+- `<Teleport>`
+  - 用于将组件渲染到 DOM 中的其他位置
+- `<Suspense>`
+  - 懒加载组件
+
+## 特殊语法
+
+Angular 中模板语句
+
+- 支持基本赋值 `=` 和带有分号 `;` 的串联表达式
+- Angular 中模板语句不允许使用以下 JavaScript 和模板表达式语法：
+  - `new`
+  - 递增和递减运算符 `++` 、 `--` 、
+  - 赋值运算符`+=` 、 `-=` 、 `*=` 、 `/=` 、 `%=` 、 `**=`
+  - 按位运算符，比如 | 和 &
+  - 管道操作符

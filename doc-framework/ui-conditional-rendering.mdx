@@ -12,7 +12,6 @@ date: 2023/01/06
 | React   | `? :`                                                    |                                                           |
 | Angular | `ngIf` <br /> `ngIfElse`                                 | `ngSwitch` <br /> `ngSwitchCase` <br /> `ngSwitchDefault` |
 
-
 ## Vue
 
 ```vue
@@ -61,6 +60,8 @@ function App() {
 
   return (
     <>
+      {type === 'A' && <div>A</div>}
+      {type === 'A' ? <div>A</div> : <div>Not A</div>}
       {type === 'A' ? <div>A</div> : type === 'B' ? <div>B</div> : type === 'C' ? <div>C</div> : <div>Not A/B/C</div>}
     </>
   )
@@ -100,5 +101,6 @@ function App() {
 </ng-template>
 ```
 
-TODO: 
+TODO:
+
 - 把条件结果保存在变量中

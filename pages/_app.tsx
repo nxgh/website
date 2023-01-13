@@ -1,12 +1,15 @@
-import React from 'react'
-
-import '../styles/globals.scss'
-import type { AppProps } from 'next/app'
+import { ConfigProvider } from 'antd'
+import dayjs from 'dayjs'
 import Layout from 'src/Layout'
 
-import '@code-hike/mdx/dist/index.css'
+import type { AppProps } from 'next/app'
 
-import { ConfigProvider } from 'antd'
+import '@code-hike/mdx/dist/index.css'
+import 'dayjs/locale/zh-cn'
+
+import '../styles/globals.scss'
+
+dayjs.locale('zh-cn')
 
 ConfigProvider.config({
   theme: {

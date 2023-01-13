@@ -29,3 +29,34 @@ header.ant-layout-header {
   margin: 0 10px;
   border-radius: 5px;
 }
+
+html[data-style-cover='true'] {
+  /* --n-primary-color */
+  .ant-picker,
+  .ant-input[disabled],
+  .ant-input-number,
+  .ant-table-empty .ant-table-tbody > tr.ant-table-placeholder,
+  .ant-table-thead > tr > th,
+  .ant-picker-panel-container,
+  .ant-drawer-content {
+    // background-color: var(--n-primary-color);
+    // color: var(--n-primary-5);
+  }
+  .ant-table-tbody > tr.ant-table-placeholder:hover > td {
+    // background-color: var(--n-primary-color);
+    // color: var(--n-primary-5);
+  }
+  .ant-btn[disabled],
+  .ant-btn[disabled]:active,
+  .ant-btn[disabled]:focus,
+  .ant-btn[disabled]:hover {
+    // background-color: var(--n-primary-color);
+    // color: var(--n-primary-5);
+  }
+  .ant-drawer-header {
+    .ant-drawer-close,
+    .ant-drawer-title {
+    //   color: var(--n-primary-5);
+    }
+  }
+}

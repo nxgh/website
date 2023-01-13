@@ -1,10 +1,33 @@
-/* @import '~antd/dist/antd.css'; */
 @import 'antd/dist/antd.variable.min.css';
 @import './mdx-render';
-@import url('./cover-antd.css');
+@import './cover-antd';
 @import './codehike.scss';
 @import url('./atom.css');
 @import './layout.scss';
+
+html {
+  --枫原万叶-1: #211817;
+  --枫原万叶-2: #631a10;
+  --枫原万叶-3: #c5382a;
+  --枫原万叶-4: #e7d9cc;
+  --枫原万叶-5: #aaddd5;
+  --雷电将军-1: #34265f;
+  --雷电将军-2: #553b93;
+  --雷电将军-3: #9971ca;
+  --雷电将军-4: #f6e7ec;
+  --雷电将军-5: #612140;
+  --珊瑚宫心海-1: #2e2d69;
+  --珊瑚宫心海-2: #46499c;
+  --珊瑚宫心海-3: #8c8cc5;
+  --珊瑚宫心海-4: #f6e3dc;
+  --珊瑚宫心海-5: #d8a498;
+
+  --n-primary-color: var(--枫原万叶-1);
+  --n-primary-2: var(--枫原万叶-2);
+  --n-primary-3: var(--枫原万叶-3);
+  --n-primary-4: var(--枫原万叶-4);
+  --n-primary-5: var(--枫原万叶-5);
+}
 
 html,
 body {
@@ -43,4 +66,3 @@ a {
   height: 100%;
   width: 100%;
 }
-

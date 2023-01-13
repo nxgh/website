@@ -27,3 +27,11 @@
 .overflow-auto {
   overflow: auto;
 }
+
+.text {
+  color: var(--n-primary-5);
+}
+
+.font-fangsong {
+  font-family: fangsong;
+}

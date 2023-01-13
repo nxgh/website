@@ -1,7 +1,8 @@
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
-import { useRef, useEffect } from 'react'
-import FundResponse from './api.response'
+import { useEffect, useRef } from 'react'
+
+import type { FundResponse } from 'src/fund'
 
 type DateString = string
 type Net = number
@@ -96,7 +97,8 @@ const Chart = ({
               },
               {
                 offset: 1,
-                color: 'rgb(36, 172, 242)',
+                // color: 'rgb(36, 172, 242)',
+                color: '#aaddd5'
               },
             ]),
           },

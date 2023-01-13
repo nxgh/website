@@ -1,11 +1,12 @@
 import Dexie, { Table } from 'dexie'
-import { FundResponse } from '../fund/api.response'
+import { FundResponse } from 'src/fund/'
 
 export interface FundDetail {
   fS_code: string
   date: string
   net: number
   amount: number
+  remark: string
 }
 
 export class MySubClassedDexie extends Dexie {

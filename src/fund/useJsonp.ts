@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { WindowFundResponse, FundResponse } from './api.response.d'
+import { FundResponse, WindowFundResponse } from './api.response.d'
 
 const FormatFundResponse = (w: WindowFundResponse): FundResponse => ({
   fS_name: w.fS_name,
@@ -63,7 +63,7 @@ export const useJsonP = (
     error: Error | null
   }>({
     data: {},
-    loading: true,
+    loading: false,
     error: null,
   })
 

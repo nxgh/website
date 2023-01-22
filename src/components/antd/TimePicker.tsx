@@ -1,4 +1,4 @@
-import { PickerTimeProps } from 'antd/es/date-picker/generatePicker'
+import { PickerTimeProps } from 'antd/lib/date-picker/generatePicker'
 import { Dayjs } from 'dayjs'
 import * as React from 'react'
 import DatePicker from './DatePicker'

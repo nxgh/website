@@ -49,9 +49,9 @@ export const FundDetail = ({ fund }: { fund: FundResponse }) => {
   const fundDetail = Form.useWatch('fundDetail', form)
 
   function checkDate(_: any, dateString: ConfigType) {
-    if (!dateString) Promise.reject(new Error('日期不能为空'))
+    if (!dateString) return Promise.reject(new Error('日期不能为空'))
     const dateNet = fund.Data_netWorthTrend.find((item) => formatDate(item.x) === formatDate(dateString))?.y
-    if (!dateNet) Promise.reject(new Error('非交易日，请重新选择'))
+    if (!dateNet) return Promise.reject(new Error('非交易日，请重新选择'))
     form.setFieldValue('fundDetail', { ...form.getFieldsValue().fundDetail, net: dateNet })
     return Promise.resolve()
   }
@@ -87,23 +87,21 @@ export const FundDetail = ({ fund }: { fund: FundResponse }) => {
           label="日期"
           rules={[{ required: true, type: 'date', validator: checkDate }]}
         >
-          <DatePicker placeholder="日期" format={'YYYY/MM/DD'} />
+          <DatePicker className="w-full" placeholder="日期" format={'YYYY/MM/DD'} />
         </Form.Item>
         <Form.Item name={['fundDetail', 'net']} label="净值">
           <Input disabled />
         </Form.Item>
         <Form.Item name={['fundDetail', 'amount']} label="金额" rules={[{ required: true }]}>
-          <InputNumber />
+          <InputNumber className="w-full" />
         </Form.Item>
         <Form.Item name={['fundDetail', 'remark']} label="备注">
           <Input />
         </Form.Item>
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 4 }}>
-          <Show when={fundDetail.amount > 0}>
-            <Button style={{ marginRight: '10px' }} type="primary" onClick={() => setAmount(HandleButton.BUYIN)}>
-              买入
-            </Button>
-          </Show>
+          <Button style={{ marginRight: '10px' }} type="primary" onClick={() => setAmount(HandleButton.BUYIN)}>
+            买入
+          </Button>
           <Button
             type="default"
             style={{ background: 'var(--n-primary-3)', color: '#fff' }}

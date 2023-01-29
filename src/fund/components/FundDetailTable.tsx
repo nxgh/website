@@ -49,7 +49,7 @@ const FundDetailTable = ({ fundId }: { fundId: string }) => {
     },
   ]
 
-  return <Table size="small" dataSource={dataSource} columns={columns} />
+  return <Table style={{ padding: '0 5vw'}} size="small" dataSource={dataSource} columns={columns} />
 }
 
 export default FundDetailTable

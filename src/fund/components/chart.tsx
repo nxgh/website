@@ -39,15 +39,15 @@ const Chart = ({
         text: `『${title}』历史净值`,
       },
 
-      toolbox: {
-        feature: {
-          dataZoom: {
-            yAxisIndex: 'none',
-          },
-          restore: {},
-          saveAsImage: {},
-        },
-      },
+      // toolbox: {
+      // feature: {
+      //   dataZoom: {
+      //     yAxisIndex: 'none',
+      //   },
+      //   restore: {},
+      //   saveAsImage: {},
+      // },
+      // },
       xAxis: {
         type: 'category',
         boundaryGap: false,
@@ -98,7 +98,7 @@ const Chart = ({
               {
                 offset: 1,
                 // color: 'rgb(36, 172, 242)',
-                color: '#aaddd5'
+                color: '#aaddd5',
               },
             ]),
           },

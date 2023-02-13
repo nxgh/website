@@ -1,9 +1,11 @@
-import { remarkCodeHike } from '@code-hike/mdx'
-import theme from "shiki/themes/github-dark.json" assert { type: "json" }
+import { remarkCodeHike } from '@code-hike/mdx';
+import theme from "shiki/themes/github-dark.json" assert { type: "json" };
 
-import remarkGfm from 'remark-gfm'
 import nextMdx from '@next/mdx';
-import stringWidth from 'string-width'
+import remarkGfm from 'remark-gfm';
+import stringWidth from 'string-width';
+
+import UnoCSS from "@unocss/webpack";
 
 const withMDX = nextMdx({
   extension: /\.mdx?$/,
@@ -19,6 +21,15 @@ export default withMDX({
   // webpack5: true,
   webpack: (config) => {
     config.resolve.fallback = { fs: false, path: false };
+
+    config.plugins.push(UnoCSS());
+
+    // if (context.buildId !== "development") {
+    //   // * disable filesystem cache for build
+    //   // * https://github.com/unocss/unocss/issues/419
+    //   // * https://webpack.js.org/configuration/cache/
+    //   config.cache = false;
+    // }
 
     return config;
   },

@@ -1,10 +1,10 @@
-import React, { PropsWithChildren } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { PropsWithChildren } from 'react'
 
-import { getStaticPathsResult, getStaticPropsResult } from 'src/mdx-helper/getDir'
-import { MDXComponent } from 'src/mdx-helper/MDXComponent'
 import { useRouter } from 'next/router'
 import DocLayout from 'src/Layout/DocLayout'
+import { getStaticPathsResult, getStaticPropsResult } from 'src/mdx-helper'
+import { MDXComponent } from 'src/mdx-helper/MDXComponent'
 
 const basePath = '/docs'
 

@@ -1,8 +1,9 @@
-import { ConfigProvider } from 'antd'
 import dayjs from 'dayjs'
 import Layout from 'src/Layout'
 
 import type { AppProps } from 'next/app'
+
+import 'uno.css'
 
 import '@code-hike/mdx/dist/index.css'
 import 'dayjs/locale/zh-cn'
@@ -10,12 +11,6 @@ import 'dayjs/locale/zh-cn'
 import '../styles/globals.scss'
 
 dayjs.locale('zh-cn')
-
-ConfigProvider.config({
-  theme: {
-    primaryColor: '#25b864',
-  },
-})
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

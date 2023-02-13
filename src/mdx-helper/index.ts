@@ -3,7 +3,11 @@ import matter from 'gray-matter'
 import path from 'path'
 import renderMDX from './renderMDX'
 
-export function getFiles(dirname: string) {
+import { filePaths as _filePaths } from '_config'
+
+const filePaths = Object.keys(_filePaths)
+
+export default function _getFiles(dirname: string) {
   const postsDirectory = path.join(process.cwd(), dirname)
 
   const fileNames = fs.readdirSync(postsDirectory)
@@ -22,22 +26,18 @@ export function getFiles(dirname: string) {
   return Files
 }
 
-export async function getFile(_path: string) {
-  let filenames = []
-  try {
-    filenames = await fs.promises.readdir(_path)
-  } catch (e) {
-    return undefined
+function replaceSpecialSymbol(str: string) {
+  return str.replaceAll(/「(.*?)」/g, '<span class="corner-bracket">「$1」</span>')
+}
+
+const getFiles = async () => {
+  const files = []
+
+  for (let index = 0; index < filePaths.length; index++) {
+    const element = filePaths[index]
+    const file = await _getFiles(element)
+    files.push(...file.map((i) => ({ ...i, category: element.replace('/', '') })))
   }
-
-  const files = filenames.reduce(
-    async (acc, filename) => ({
-      ...acc,
-      [filename]: await fs.promises.readFile(`${_path}/${filename}`, 'utf8'),
-    }),
-    {}
-  )
-
   return files
 }
 
@@ -50,11 +50,13 @@ export async function getStaticPropsResult(
 ) {
   const [id] = slug! || ['']
 
-  const files = await getFiles(basePath)
+  const files = await getFiles()
+
   const allPostsData: { id: string; title: string; index: number }[] = files.map((item) => ({
     id: item.filename,
     title: matter(item.content).data?.title || item.filename,
     index: matter(item.content).data?.index || Infinity,
+    category: item.category,
   }))
 
   allPostsData.sort(({ index: indexA }, { index: indexB }) => {
@@ -83,7 +85,7 @@ export async function getStaticPropsResult(
 }
 
 export async function getStaticPathsResult(basePath: string) {
-  const files = await getFiles(basePath)
+  const files = await getFiles()
   const paths = files.map((item) => ({
     params: { slug: [item.filename] },
   }))
@@ -94,8 +96,3 @@ export async function getStaticPathsResult(basePath: string) {
   }
 }
 
-export default getFiles
-
-function replaceSpecialSymbol(str: string) {
-  return str.replaceAll(/「(.*?)」/g, '<span class="corner-bracket">「$1」</span>')
-}

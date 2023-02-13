@@ -1,8 +1,7 @@
-import React from 'react'
 import { GetStaticProps } from 'next'
 
-import { getStaticPropsResult } from 'src/mdx-helper/getDir'
 import { DocLayoutMenu } from 'src/Layout/DocLayout'
+import { getStaticPropsResult } from 'src/mdx-helper'
 
 const basePath = '/docs'
 

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import Layout from 'src/Layout'
+import Layout from 'src/layout'
 
 import type { AppProps } from 'next/app'
 

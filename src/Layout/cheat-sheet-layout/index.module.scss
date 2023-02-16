@@ -1,0 +1,18 @@
+.cheatSheet {
+  background-color: var(--n-primary-color);
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  height: 200vh;
+  :global {
+    .toc {
+      display: none;
+    }
+    section {
+      h1 {
+        background-color: var(--n-primary-2);
+        color: var(--n-primary-5);
+      }
+    }
+  }
+}

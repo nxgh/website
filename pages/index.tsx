@@ -24,16 +24,18 @@ type IProps = {
 const Home: NextPage<IProps> = ({ files }) => {
   const router = useRouter()
   return (
-    <div>
+    <div className="full flex justify-between bg-dark p-20">
       {files.map((item) => {
         return (
-          <div key={item.title}>
-            <h2 onClick={() => router.push(`${item.path}`)}>{item.title}</h2>
-            <ul>
+          <div key={item.title} className="bg-green-300/50 w-[30vw] m-5 p-5 white">
+            <h2 className="color-white cursor-pointer" onClick={() => router.push(`${item.path}`)}>
+              {item.title}
+            </h2>
+            <ul className="list-none">
               {item.files.map((file) => {
                 const path = `${item.path}/${file.replace(/\.(mdx|md|tsx|ts)$/, '')}`
                 return (
-                  <li key={path}>
+                  <li className="color-white text-xl font-mono cursor-pointer my-2" key={path}>
                     <a onClick={() => router.push(path)}>{file.replace(/\.(mdx|md)$/, '')}</a>
                   </li>
                 )
@@ -66,9 +68,7 @@ export const getStaticProps: GetStaticProps = async () => {
   ]
 
   const files = paths.map((item) => {
-    const files = fs
-      .readdirSync(path.join(process.cwd(), item.resource))
-      .filter((f) => isEndWith(f, ['.mdx', '.md', '.tsx', '.ts']))
+    const files = fs.readdirSync(path.join(process.cwd(), item.resource)).filter((f) => isEndWith(f, ['.mdx', '.md']))
 
     return {
       ...item,

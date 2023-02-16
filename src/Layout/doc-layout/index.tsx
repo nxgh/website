@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { PropsWithChildren } from 'react'
 
-import style from './doc-layout.module.scss'
+import style from './index.module.scss'
 
 const filePaths = {}
 

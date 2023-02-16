@@ -10,7 +10,7 @@ interface IRenderMDXConfig {
   files?: Record<string, string>
 }
 
-async function renderMDX(mdxSource: string, config: IRenderMDXConfig): ReturnType<typeof bundleMDX> {
+async function renderMDX(mdxSource: string, config: IRenderMDXConfig = {}): ReturnType<typeof bundleMDX> {
   const { files = {}, toc = true } = config
 
   const shiki = await import('shiki')
@@ -38,8 +38,7 @@ async function renderMDX(mdxSource: string, config: IRenderMDXConfig): ReturnTyp
     },
   })
 
-  
-  return {...result, frontmatter}
+  return { ...result, frontmatter }
 }
 
 export default renderMDX

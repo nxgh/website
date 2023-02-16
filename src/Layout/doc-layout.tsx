@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router'
 import { PropsWithChildren } from 'react'
 
-import { filePaths } from '_config'
-import style from './DocLayout.module.scss'
+import style from './doc-layout.module.scss'
+
+const filePaths = {}
 
 type IDocLayout = PropsWithChildren<{
   postsData: { id: string; title: string }[]

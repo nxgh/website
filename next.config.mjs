@@ -18,11 +18,30 @@ const withMDX = nextMdx({
 export default withMDX({
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 
+
   // webpack5: true,
   webpack: (config) => {
-    config.resolve.fallback = { fs: false, path: false };
+    // config.resolve.fallback = {
+
+    //   ...config.resolve.fallback,
+    //   fs: false, path: false,
+    //   'builtin-modules': false,
+    //   'child_process': false,
+    //   worker_threads: false,
+    // };
+
 
     config.plugins.push(UnoCSS());
+
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      loader: 'esbuild-loader',
+      options: {
+        loader: 'tsx', // Or 'ts' if you don't need tsx
+        target: 'es2015'
+      }
+    })
+
 
     // if (context.buildId !== "development") {
     //   // * disable filesystem cache for build

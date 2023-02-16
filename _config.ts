@@ -7,3 +7,12 @@ export const filePaths = {
 }
 
 export default MenuConfig
+
+
+const defaultConfig = {
+
+  '/docs': {
+    layout: 'DocsLayout',
+  
+  }
+}

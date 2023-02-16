@@ -28,25 +28,13 @@ const Home: NextPage<IProps> = ({ files }) => {
       {files.map((item) => {
         return (
           <div key={item.title}>
-            <h2
-              onClick={() => {
-                router.push(`${item.path}/index`)
-              }}
-            >
-              {item.title}
-            </h2>
+            <h2 onClick={() => router.push(`${item.path}`)}>{item.title}</h2>
             <ul>
               {item.files.map((file) => {
                 const path = `${item.path}/${file.replace(/\.(mdx|md|tsx|ts)$/, '')}`
                 return (
                   <li key={path}>
-                    <a
-                      onClick={() => {
-                        router.push(path)
-                      }}
-                    >
-                      {path}
-                    </a>
+                    <a onClick={() => router.push(path)}>{file.replace(/\.(mdx|md)$/, '')}</a>
                   </li>
                 )
               })}
@@ -59,29 +47,32 @@ const Home: NextPage<IProps> = ({ files }) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const paths: Record<string, { title: string; path: string }> = {
-    '/pages/three-js': {
+  const paths: { title: string; path: string; resource: string }[] = [
+    {
       title: 'Three.js 交互式指南',
+      resource: '/pages/three-js',
       path: '/three-js',
     },
-    '/notes/cheat-sheet': {
+    {
       title: '速查表',
       path: '/cheat-sheet',
+      resource: '/notes/cheat-sheet',
     },
-    '/notes/docs': {
+    {
       title: '笔记本',
       path: '/notes',
+      resource: '/notes/docs',
     },
-  }
+  ]
 
-  const files = Object.keys(paths).map((item) => {
+  const files = paths.map((item) => {
     const files = fs
-      .readdirSync(path.join(process.cwd(), item))
+      .readdirSync(path.join(process.cwd(), item.resource))
       .filter((f) => isEndWith(f, ['.mdx', '.md', '.tsx', '.ts']))
 
     return {
-      ...paths[item],
-      files: files.slice(files.length - 10),
+      ...item,
+      files: files,
     }
   })
 

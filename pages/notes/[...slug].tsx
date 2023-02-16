@@ -27,8 +27,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const id = (context.params!.slug as string[]).join('/')
-  const filename = path.join(process.cwd(), `/notes/docs/${id}.md`)
+
+  
+  const dir = fs.readdirSync(path.join(process.cwd(), `/notes/docs`)).find((i) => i.startsWith(id))
+  const filename = path.join(process.cwd(), `/notes/docs/${dir}`)
+
   const content = fs.readFileSync(filename, 'utf8')
+
   const { code } = await renderMDX(content)
 
   return {

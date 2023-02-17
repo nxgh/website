@@ -5,18 +5,20 @@ import InteractiveLayout from './interactive-layout'
 import DocLayout from './doc-layout'
 import CheatSheetLayout from './cheat-sheet-layout'
 
+const DefaultLayout = ({ children }: PropsWithChildren<unknown>): ReactElement => <main className='w-full h-full'>{children}</main>
+
 const layoutMap: Record<string, FC<PropsWithChildren<any>>> = {
   'three-js': InteractiveLayout,
-  'notes': DocLayout,
+  notes: DocLayout,
   'cheat-sheet': CheatSheetLayout,
 }
 
 const Layout: FC<PropsWithChildren> = (props) => {
   const router = useRouter()
 
-  const Layout = layoutMap[router.asPath.split('/')[1]] || InteractiveLayout
+  const Layout = layoutMap[router.asPath.split('/')[1]] || DefaultLayout
 
-  return <Layout className="layout bg-red full overflow-auto">{props.children}</Layout>
+  return <Layout>{props.children}</Layout>
 }
 
 export default Layout

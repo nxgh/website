@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import path from 'path'
 import { FC, PropsWithChildren } from 'react'
 import { isEndWith } from 'src/utils'
+import Image from 'next/image'
 
 const Menu = [
   {
@@ -24,18 +25,18 @@ type IProps = {
 const Home: NextPage<IProps> = ({ files }) => {
   const router = useRouter()
   return (
-    <div className="full flex justify-between bg-dark p-20">
+    <div className="w-full h-full flex justify-between bg-dark p-20">
       {files.map((item) => {
         return (
           <div key={item.title} className="bg-green-300/50 w-[30vw] m-5 p-5 white">
-            <h2 className="color-white cursor-pointer" onClick={() => router.push(`${item.path}`)}>
+            <h2 className="font-fangsong color-white cursor-pointer" onClick={() => router.push(`${item.path}`)}>
               {item.title}
             </h2>
             <ul className="list-none">
               {item.files.map((file) => {
                 const path = `${item.path}/${file.replace(/\.(mdx|md|tsx|ts)$/, '')}`
                 return (
-                  <li className="color-white text-xl font-mono cursor-pointer my-2" key={path}>
+                  <li className="font-fangsong color-white text-xl cursor-pointer my-2" key={path}>
                     <a onClick={() => router.push(path)}>{file.replace(/\.(mdx|md)$/, '')}</a>
                   </li>
                 )
@@ -44,6 +45,7 @@ const Home: NextPage<IProps> = ({ files }) => {
           </div>
         )
       })}
+ 
     </div>
   )
 }

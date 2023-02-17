@@ -19,17 +19,7 @@ export default withMDX({
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 
 
-  // webpack5: true,
   webpack: (config) => {
-    // config.resolve.fallback = {
-
-    //   ...config.resolve.fallback,
-    //   fs: false, path: false,
-    //   'builtin-modules': false,
-    //   'child_process': false,
-    //   worker_threads: false,
-    // };
-
 
     config.plugins.push(UnoCSS());
 
@@ -41,11 +31,6 @@ export default withMDX({
         target: 'es2015'
       }
     })
-
-
-    if (context.buildId !== "development") {
-      config.cache = false;
-    }
 
     return config;
   },

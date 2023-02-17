@@ -14,7 +14,7 @@ type IProps = PropsWithChildren<{
 }>
 
 const Split = ({ children }: PropsWithChildren<{}>) => {
-  return <section className="bg-dark color-white w-[20vw]">{children}</section>
+  return <section className="bg-dark color-white w-[20vw] m-5">{children}</section>
 }
 export default function Layout(props: IProps) {
   return (

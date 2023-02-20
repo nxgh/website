@@ -14,13 +14,19 @@ type IProps = PropsWithChildren<{
 }>
 
 const Split = ({ children }: PropsWithChildren<{}>) => {
-  return <section className="bg-dark color-white w-[20vw] m-5">{children}</section>
+  if (!children) return <></>
+  return (
+    <section style={{ width: 'fit-content' }} className="bg-dark color-white w-[20vw] m-5">
+      {children}
+    </section>
+  )
 }
+
 export default function Layout(props: IProps) {
   return (
-    <>
+    <div className="overflow-auto w-full  flex flex-wrap h-[4000px] p-10">
       <MDXComponent code={props.code} components={{ Split }} />
-    </>
+    </div>
   )
 }
 
@@ -40,7 +46,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const filename = path.join(process.cwd(), `/notes/cheat-sheet/${id}.md`)
   const content = fs.readFileSync(filename, 'utf8')
 
-  const data = parseMarkdown(content).map((item) => `\n<Split>\n${item}\n</Split>\n`).join('')
+  const maxLength = (arr: string[]) =>
+    arr.reduce((maxLength: number, item: string) => (maxLength = item.length > maxLength ? item.length : maxLength), 0)
+
+  const data = parseMarkdown(content)
+    .map((item) => `<Split len="${maxLength(item)}">\n${item.join('')}\n</Split>\n`)
+    .join('')
 
   const { code } = await renderMDX(data)
 

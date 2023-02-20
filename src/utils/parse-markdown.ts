@@ -1,13 +1,13 @@
 export default function splitMarkdownBlockByHeader(markdown: string) {
   const lines = markdown.split(/\r?\n/g)
-  const data = ['']
+  const data = [['']]
 
   function handleLine(line: string, isOutsideCodeArea = true) {
     const isHeader = line.match(/^#+\s+(.*)/)
     if (isHeader && isHeader.input && isOutsideCodeArea) {
-      data.push(isHeader.input)
+      data.push([isHeader.input])
     } else {
-      data[data.length - 1] += `${line}\n`
+      data[data.length - 1].push(`${line}\n`)
     }
   }
 

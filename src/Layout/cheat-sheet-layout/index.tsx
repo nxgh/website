@@ -1,5 +1,5 @@
 import style from './index.module.scss'
 export default function Layout(props) {
 
-  return <div className={`${style.cheatSheet} full overflow-auto`}>{props.children}</div>
+  return <div className={`${style.cheatSheet} w-full h-full`}>{props.children}</div>
 }

@@ -10,9 +10,26 @@
       display: none;
     }
     section {
-      h1 {
+      position: relative;
+      padding: 15px 10px 5px 10px;
+      width: fit-content;
+      min-width: 10vw;
+      font-family: monospace, fangsong;
+      h1,
+      h2,
+      h3 {
         background-color: var(--n-primary-2);
         color: var(--n-primary-5);
+        font-size: 15px;
+        font-family: monospace, fangsong;
+        display: inline;
+        align-self: end;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 5px 10px;
+        margin: 0;
+        border-radius: 0 10px;
       }
     }
   }

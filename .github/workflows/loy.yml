@@ -16,13 +16,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn
+          # cache: pnpm
+          submodules: 'true'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Build website
-        run: yarn build
-      - run: yarn export
+        run: pnpm build
+      - run: pnpm export
       - run: touch out/.nojekyll
 
       # Popular action to deploy to GitHub Pages:

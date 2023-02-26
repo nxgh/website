@@ -6,7 +6,7 @@ import { PropsWithChildren, useState } from 'react'
 
 import renderMDX from 'src/utils/render-mdx'
 import { MDXComponent } from 'src/components/mdx-component'
-import { commentFilter, filterMeta, readFileFn } from 'src/utils/read-file'
+import { commentFilter, filterMeta, readFileFn } from 'src/utils'
 import parseMarkdown from 'src/utils/parse-markdown'
 
 type IProps = PropsWithChildren<{

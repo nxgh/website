@@ -1,13 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 
-import { FC, PropsWithChildren,  useState } from 'react'
+import { FC, PropsWithChildren, useState } from 'react'
 import type { GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import { FileReturnType } from 'src/utils'
-import color from 'src/utils/color'
-import { filterMeta, readFileFn } from 'src/utils/read-file'
+import { filterMeta, readFileFn, color } from 'src/utils'
 
 const Search: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [search, setSearch] = useState('')

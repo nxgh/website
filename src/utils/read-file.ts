@@ -33,7 +33,7 @@ export function filterMeta(content: string) {
 type B = { dir: string; filename: string; __path: string; [key: string]: any }
 type EmptyType = null | undefined | void | false
 
-export function readFileFn(dir: string, fn?: (params: B) => Partial<B> | EmptyType) {
+export default function readFileFn(dir: string, fn?: (params: B) => Partial<B> | EmptyType) {
   let arr: Partial<B>[] = []
   const _fn = (dir: string) => {
     const PATH = path.join(process.cwd(), dir)

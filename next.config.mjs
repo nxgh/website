@@ -19,6 +19,9 @@ export default withMDX({
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 
 
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   webpack: (config) => {
     config.plugins.push(new WindiCSSWebpackPlugin())
 

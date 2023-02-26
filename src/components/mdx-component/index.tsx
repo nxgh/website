@@ -5,7 +5,7 @@ function CodeSection({ children }: PropsWithChildren) {
   return <code className="inline-code">{children}</code>
 }
 
-export function MDXComponent({ code, components }: { code: string; components?: Record<string, React.ReactNode> }) {
+export function MDXComponent({ code, components }: { code: string; components?: Record<string, any> }) {
   const Component = React.useMemo(() => getMDXComponent(code), [code])
   return <Component components={{ code: CodeSection, ...components }} />
 }

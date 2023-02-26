@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-import Layout from 'src/layouts'
 
 import type { AppProps } from 'next/app'
 
@@ -12,11 +11,7 @@ import '../styles/globals.scss'
 dayjs.locale('zh-cn')
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <Layout>
-      <Component {...pageProps} className="w-full h-full" />
-    </Layout>
-  )
+  return <Component {...pageProps} className="w-full h-full" />
 }
 
 export default MyApp

@@ -4,8 +4,8 @@ import theme from "shiki/themes/github-dark.json" assert { type: "json" };
 import nextMdx from '@next/mdx';
 import remarkGfm from 'remark-gfm';
 import stringWidth from 'string-width';
+import WindiCSSWebpackPlugin from 'windicss-webpack-plugin'
 
-import UnoCSS from "@unocss/webpack";
 
 const withMDX = nextMdx({
   extension: /\.mdx?$/,
@@ -20,8 +20,10 @@ export default withMDX({
 
 
   webpack: (config) => {
+    config.plugins.push(new WindiCSSWebpackPlugin())
 
-    config.plugins.push(UnoCSS());
+    config.resolve.fallback = { fs: false };
+
 
     config.module.rules.push({
       test: /\.tsx?$/,

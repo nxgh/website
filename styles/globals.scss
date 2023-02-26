@@ -1,27 +1,34 @@
+
+
 @import './mdx-render';
 
-html {
-  --枫原万叶-1: #211817;
-  --枫原万叶-2: #631a10;
-  --枫原万叶-3: #c5382a;
-  --枫原万叶-4: #e7d9cc;
-  --枫原万叶-5: #aaddd5;
-  --雷电将军-1: #34265f;
-  --雷电将军-2: #553b93;
-  --雷电将军-3: #9971ca;
-  --雷电将军-4: #f6e7ec;
-  --雷电将军-5: #612140;
-  --珊瑚宫心海-1: #2e2d69;
-  --珊瑚宫心海-2: #46499c;
-  --珊瑚宫心海-3: #8c8cc5;
-  --珊瑚宫心海-4: #f6e3dc;
-  --珊瑚宫心海-5: #d8a498;
-
-  --n-primary-color: var(--枫原万叶-1);
-  --n-primary-2: var(--枫原万叶-2);
-  --n-primary-3: var(--枫原万叶-3);
-  --n-primary-4: var(--枫原万叶-4);
-  --n-primary-5: var(--枫原万叶-5);
+@font-face {
+  font-family: "AliceInWonderland";
+  src: url('/fonts/AliceInWonderland-1GzL0-2.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'loveisfree';
+  src: url('/fonts/Love-is-free-2.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'LoveQueen';
+  src: url('/fonts/LOVE-Queen-2.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'MissalUncialeBricks';
+  src: url('/fonts/MissalUncialeBricks-1.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'MissalUncialeMaster';
+  src: url('/fonts/MissalUncialeMaster-2.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Potra';
+  src: url('/fonts/Potra-2.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'TravelerTypeface';
+  src: url('/fonts/Traveler-s-Typeface-2.ttf') format('truetype');
 }
 
 html,
@@ -34,8 +41,6 @@ body {
   width: 100vw;
   height: 100vh;
   font-size: 16px;
-
-  /* --ant-primary-color: #3BC1FF; */
 }
 
 a {

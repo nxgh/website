@@ -3,10 +3,9 @@ import Layout from 'src/layout'
 
 import type { AppProps } from 'next/app'
 
-import 'uno.css'
-
 import '@code-hike/mdx/dist/index.css'
 import 'dayjs/locale/zh-cn'
+import 'windi.css'
 
 import '../styles/globals.scss'
 

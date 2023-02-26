@@ -1,8 +1,38 @@
+:root {
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --blockquote-color: #252b3a;
+  --blockquote-bg: #f2f5fc;
+  --inline-code-bg: #ffeeed;
+  --inline-code-color: #c73636;
+  // --strong-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
+  // --strong-color: transparent;
+  --header-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
+  --header-color: transparent;
+
+  --mesh-bg: #eeeeee7a;
+  --mesh-size: 30px;
+  --mesh-width: 1px;
+}
 .mdx-render {
+  .mesh {
+    background: linear-gradient(to right, var(--mesh-bg) var(--mesh-width), transparent var(--mesh-width)),
+      linear-gradient(to bottom, var(--mesh-bg) var(--mesh-width), transparent var(--mesh-width));
+    background-repeat: repeat; /* 默认为 repeat */
+    background-size: var(--mesh-size) var(--mesh-size);
+  }
   @for $i from 1 through 6 {
     h#{$i} {
       font-size: 26px - $i * 2px;
-      margin-bottom: 1em;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eaecef;
+      font-family: LoveQueen, cursive;
+      // color: ;
+      background: var(--header-bg);
+      color: var(--header-color);
+      background-clip: text;
     }
     h#{$i}::before {
       content: '$';
@@ -11,18 +41,58 @@
       font-weight: 300;
     }
   }
+  blockquote {
+    color: var(--blockquote-color);
+    padding: 5px 23px;
+    margin: 22px 0;
+    border-left: 4px solid #5e7ce0;
+    background-color: var(--blockquote-bg);
+  }
+  code.inline-code {
+    background-color: var(--inline-code-bg);
+    padding: 1px 5px;
+    color: var(--inline-code-color);
+    border-radius: 5px;
+    display: inline-flex;
+    font-size: 14px;
+    font-family: var(--font-mono);
+  }
+  strong {
+    color: var(--strong-color, inherit);
+    background: var(--strong-bg, inherit);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-family: loveisqueen, fangsong;
+    font-size: 1em;
+  }
+  a {
+    color: #40ad41;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  ul {
+    // list-style-type: upper-roman;
+  }
+}
+
+.toc-hidden {
+  .toc {
+    display: none;
+  }
+}
+.toc-render {
   .toc {
     position: fixed;
     right: 2vw;
     top: 10vh;
     width: 16vw;
     z-index: 10;
-  }
-  .toc-link-active {
-    border-bottom: 1px solid #40ad41;
-    color: #40ad41;
-  }
-  .toc {
+    .toc-link-active {
+      border-bottom: 1px solid #40ad41;
+      color: #40ad41;
+    }
     ol {
       list-style-type: none;
       padding-left: 10px;

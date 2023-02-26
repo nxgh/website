@@ -2,18 +2,59 @@ import fs from 'fs'
 import path from 'path'
 
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useState } from 'react'
 
 import renderMDX from 'src/utils/render-mdx'
 import { MDXComponent } from 'src/components/mdx-component'
 import { commentFilter, filterMeta, readFileFn } from 'src/utils/read-file'
+import parseMarkdown from 'src/utils/parse-markdown'
 
 type IProps = PropsWithChildren<{
   filename: string
   code: string
 }>
+
+const Split = ({ children }: PropsWithChildren<{}>) => {
+  if (!children) return <></>
+  return (
+    <section style={{ width: 'fit-content' }} className="bg-dark color-white w-[20vw] m-5">
+      {children}
+    </section>
+  )
+}
+
+const refsComponent = { Split }
+
 export default function Layout(props: IProps) {
-  return <MDXComponent code={props.code} />
+  const [layout, setLayout] = useState('Default')
+
+  const [tocVisiable, setTocVisiable] = useState(false)
+  return (
+    <div className={`${tocVisiable ? 'toc-render' : 'toc-hidden'} mdx-render px-20 pb-50 relative`}>
+      <header>
+        <span className="toc-switch" onClick={() => setTocVisiable(!tocVisiable)}>
+          Toc
+        </span>
+        {['refs', 'Default'].map((i) => (
+          <button key={i} onClick={() => setLayout(i)}>
+            {i}
+          </button>
+        ))}
+      </header>
+      {layout === 'refs' && (
+        <div className="overflow-auto w-full  flex flex-wrap h-[4000px] p-10">
+          <MDXComponent code={props.code} components={refsComponent} />
+        </div>
+      )}
+      <div className="px-[15%]">
+        <div className="px-[5%] bg-red-100 mesh">
+          <MDXComponent code={props.code} />
+        </div>
+      </div>
+
+      <footer className="absolute bottom-20 left-[35%]">我是有底线的</footer>
+    </div>
+  )
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -44,14 +85,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
   })
 
-  console.log(file)
+  const maxLength = (arr: string[]) =>
+    arr.reduce((maxLength: number, item: string) => (maxLength = item.length > maxLength ? item.length : maxLength), 0)
 
-  // const dir = fs.readdirSync(path.join(process.cwd(), `/notes/docs`)).find((i) => i.startsWith(id))
-  // const filename = path.join(process.cwd(), `/notes/docs/${dir}`)
+  const data =
+    // file[0].content
 
-  // const content = fs.readFileSync(filename, 'utf8')
+    parseMarkdown(file[0].content)
+      .map((item) => `<section len="${maxLength(item)}">\n${item.join('')}\n</section>\n`)
+      .join('')
 
-  const { code } = await renderMDX(file[0].content)
+  const { code } = await renderMDX(data)
 
   return {
     props: { code },

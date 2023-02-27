@@ -22,6 +22,8 @@ jobs:
           # cache: pnpm
           submodules: 'true'
 
+      - name: update submodules
+          run: git submodule update --init --remote
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build website

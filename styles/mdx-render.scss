@@ -13,6 +13,9 @@
   --mesh-bg: #eeeeee7a;
   --mesh-size: 30px;
   --mesh-width: 1px;
+  
+  --background: #eee;
+  --text-color: #252b3a;
 }
 .mdx-render {
   &:has(> .layout-refs) {

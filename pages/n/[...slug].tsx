@@ -57,7 +57,7 @@ const DefaultLayoutWrapper = (props: PropsWithChildren) => (
 )
 
 const RefsLayoutWrapper = (props: PropsWithChildren) => (
-  <div className="layouts-refs overflow-auto w-full  flex flex-wrap h-[4000px] p-10">{props.children}</div>
+  <div className="layout-refs">{props.children}</div>
 )
 
 const LayoutMap = {

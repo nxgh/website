@@ -15,6 +15,10 @@
   --mesh-width: 1px;
 }
 .mdx-render {
+  &:has(> .layout-refs) {
+    --mesh-bg: rgba(255, 72, 72, 0.478);
+    background-color: #252b3a;
+  }
   .mesh {
     background: linear-gradient(to right, var(--mesh-bg) var(--mesh-width), transparent var(--mesh-width)),
       linear-gradient(to bottom, var(--mesh-bg) var(--mesh-width), transparent var(--mesh-width));

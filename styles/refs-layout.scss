@@ -1,9 +1,10 @@
 .mdx-render:has(.layout-refs) {
   --mesh-bg: rgba(255, 72, 72, 0.478);
 
-  background-color: #252b3a;
+  background-color: var(--background);
   color: #eee;
   height: fit-content !important;
+
   .layout-refs {
     overflow: auto;
     width: 100%;
@@ -12,18 +13,18 @@
     padding: 1rem;
     section {
       position: relative;
-      background-color: #0d1e1a;
-      //   border: 1px solid #696969;
+      background-color: var(--section-bg);
+      color: var(--text-color);
       border-radius: 10px;
       padding: 0 5px;
       margin: 5px;
       height: -moz-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
       //   min-width: 20vw;
       //   max-width: 35vw;
-    //   width: 20vw;
-    //   max-width: 40vw;
+      //   width: 20vw;
+      //   max-width: 40vw;
       min-height: 15vh;
       h1,
       h2,

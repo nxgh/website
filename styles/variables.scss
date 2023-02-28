@@ -2,12 +2,11 @@
 
   /*** Colors ***/
   --background: #eee;
-  --text-color: #252b3a;
   --link-color: #40ad41;
-  --text-color: red;
+  --text-color: #252b3a;
 
   /*** Mesh ***/
-  --mesh-bg: #eeeeee7a;
+  --mesh-bg: #fa737322;
   --mesh-size: 30px;
   --mesh-width: 1px;
 
@@ -23,11 +22,20 @@
   --strong-color: transparent;
   --header-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
   --header-color: transparent;
+
+  /*** Section ***/
+
+  --section-bg: #fff;
+
 }
 
 html[data-theme="dark"] , html.dark{
   --text-color: #fff;
-  --background: rgb(158, 158, 255);
+  --background: #000;
+  --section-bg: #252b3a;
+
+  --blockquote-color: #f2f5fc;
+  --blockquote-bg: #252b3a;
 }
 
 body {

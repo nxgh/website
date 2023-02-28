@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { PropsWithChildren, useState } from 'react'
+import { PropsWithChildren, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import type { GetStaticPaths, GetStaticProps } from 'next'
@@ -9,7 +9,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next'
 import renderMDX from 'src/utils/render-mdx'
 import { MDXComponent } from 'src/components/mdx-component'
 import { useTheme, commentFilter, filterMeta, readFileFn, parseMarkdown } from 'src/utils'
-import Header, { useHeader } from 'src/components/header'
+import Header, { addDataset, useHeader } from 'src/components/header'
 
 type IProps = PropsWithChildren<{
   filename: string
@@ -34,15 +34,34 @@ const LayoutMap = {
 export default function Layout(props: IProps) {
   const headerProps = useHeader()
 
+  const ref = useRef<HTMLDivElement>(null)
   const LayoutWrapper = LayoutMap[headerProps.layout]
 
+  const [maskvisible, setMaskVisible] = useState(false)
+
+  const showToc = () => {
+    if (!ref.current) return
+    // ref.current?.dataset?.toc === 'show'
+    // ? addDataset(ref.current!, { toc: 'hide' })
+    addDataset(ref.current!, { toc: 'show' })
+    setMaskVisible(true)
+  }
+
   return (
-    <div className={`mdx-render px-20 pb-5 relative text-primary`}>
-      <Header {...headerProps} />
+    <div className={`mdx-render lg:px-10 xl:px-20 <sm:px-2 pb-5 relative text-primary`} ref={ref}>
+      <Header {...headerProps} changeToc={showToc} />
       <LayoutWrapper>
         <MDXComponent code={props.code} />
       </LayoutWrapper>
       <footer id="footer" className="absolute bottom-[3vh] left-[10vw] right-[10vw]  border-b-3 "></footer>
+      <div
+        className="mask fixed top-0 bottom-0 left-0 right-0  z-2 backdrop-filter backdrop-blur-2 bg-gray-200 bg-opacity-5"
+        style={{ display: maskvisible ? 'block' : 'none' }}
+        onClick={() => {
+          addDataset(ref.current!, { toc: 'hide' })
+          setMaskVisible(false)
+        }}
+      />
     </div>
   )
 }

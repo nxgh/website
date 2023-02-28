@@ -37,16 +37,28 @@ function LayoutChangeComponent(props: { layout: LayoutType; changeLayout: (layou
   )
 }
 
-export default function Header(props: { layout: LayoutType; changeLayout: (layout: LayoutType) => void }) {
+export default function Header(props: {
+  layout: LayoutType
+  changeLayout: (layout: LayoutType) => void
+  changeToc: () => void
+}) {
   return (
-    <header className="flex items-center justify-between border-b-1 py-2 sticky top-0">
-      <span className="toc-switch font-missaluncialemaster cursor-pointer">Toc</span>
-      <div className='flex'>
+    <header className="header flex items-center justify-between border-b-1 py-2 sticky top-0">
+      <span onClick={() => props.changeToc()} className="toc-switch font-missaluncialemaster cursor-pointer">
+        Toc
+      </span>
+      <div className="flex">
         <LayoutChangeComponent {...props} />
         <ThemeComponent />
       </div>
     </header>
   )
+}
+
+export function addDataset(el: HTMLElement, data: Record<string, any>) {
+  for (const key in data) {
+    el.dataset[key] = data[key]
+  }
 }
 
 export function useHeader() {
@@ -55,9 +67,5 @@ export function useHeader() {
   return {
     layout,
     changeLayout: setLayout,
-    //     layout,
-    //     Header: (props: any) => <Header layout={layout} changeLayout={setLayout} />,
   }
 }
-
-// const { Header, layout } = useHeader()

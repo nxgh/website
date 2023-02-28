@@ -7,6 +7,11 @@
     background-repeat: repeat; /* 默认为 repeat */
     background-size: var(--mesh-size) var(--mesh-size);
   }
+  header.header {
+    background-color: var(--background);
+    color: var(--text-color);
+    z-index: 1;
+  }
   @for $i from 1 through 6 {
     h#{$i} {
       font-size: 26px - $i * 2px;
@@ -60,24 +65,36 @@
   ul {
     // list-style-type: upper-roman;
   }
-}
+  &[data-toc='hidden'] > .toc {
+    display: none !important;
+  }
 
-.toc-render {
-  .toc {
-    position: fixed;
-    right: 2vw;
-    top: 10vh;
-    width: 16vw;
-    z-index: 10;
-    .toc-link-active {
-      border-bottom: 1px solid #40ad41;
-      color: #40ad41;
-    }
-    ol {
-      list-style-type: none;
-      padding-left: 10px;
-      li {
+  &[data-toc='show'] {
+    .toc {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: -moz-fit-content;
+      width: fit-content;
+      min-width: 20vw;
+      height: 100%;
+      background-color: rgb(93, 93, 93);
+      z-index: 10;
+      font-size: 1.5rem;
+      .toc-link-active {
+        border-bottom: 1px solid var(--link-color);
+        color: var(--link-color);
+      }
+      ol {
+        list-style-type: none;
         padding-left: 10px;
+        li {
+          padding-left: 10px;
+          a {
+            font-family: loveisqueen, fangsong;
+            font-weight: 900;
+          }
+        }
       }
     }
   }

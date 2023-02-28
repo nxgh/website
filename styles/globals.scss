@@ -1,8 +1,9 @@
+@import './variables';
 @import './mdx-render';
 @import './refs-layout';
 
 @font-face {
-  font-family: "AliceInWonderland";
+  font-family: 'AliceInWonderland';
   src: url('/fonts/AliceInWonderland-1GzL0-2.ttf') format('truetype');
 }
 @font-face {
@@ -29,6 +30,8 @@
   font-family: 'TravelerTypeface';
   src: url('/fonts/Traveler-s-Typeface-2.ttf') format('truetype');
 }
+
+
 
 html,
 body {

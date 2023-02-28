@@ -1,27 +1,6 @@
-:root {
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-
-  --blockquote-color: #252b3a;
-  --blockquote-bg: #f2f5fc;
-  --inline-code-bg: #ffeeed;
-  --inline-code-color: #c73636;
-  // --strong-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
-  // --strong-color: transparent;
-  --header-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
-  --header-color: transparent;
-
-  --mesh-bg: #eeeeee7a;
-  --mesh-size: 30px;
-  --mesh-width: 1px;
-  
-  --background: #eee;
-  --text-color: #252b3a;
-}
 .mdx-render {
-  &:has(> .layout-refs) {
-    --mesh-bg: rgba(255, 72, 72, 0.478);
-    background-color: #252b3a;
-  }
+  width: 100%;
+  min-height: 100%;
   .mesh {
     background: linear-gradient(to right, var(--mesh-bg) var(--mesh-width), transparent var(--mesh-width)),
       linear-gradient(to bottom, var(--mesh-bg) var(--mesh-width), transparent var(--mesh-width));
@@ -36,7 +15,6 @@
       padding-bottom: 1rem;
       border-bottom: 1px solid #eaecef;
       font-family: LoveQueen, cursive;
-      // color: ;
       background: var(--header-bg);
       color: var(--header-color);
       background-clip: text;
@@ -44,7 +22,7 @@
     h#{$i}::before {
       content: '$';
       margin-right: 10px;
-      color: #40ad41;
+      color: var(--link-color);
       font-weight: 300;
     }
   }
@@ -73,7 +51,7 @@
     font-size: 1em;
   }
   a {
-    color: #40ad41;
+    color: var(--link-color);
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -84,11 +62,6 @@
   }
 }
 
-.toc-hidden {
-  .toc {
-    display: none;
-  }
-}
 .toc-render {
   .toc {
     position: fixed;

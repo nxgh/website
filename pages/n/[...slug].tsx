@@ -8,8 +8,8 @@ import type { GetStaticPaths, GetStaticProps } from 'next'
 
 import renderMDX from 'src/utils/render-mdx'
 import { MDXComponent } from 'src/components/mdx-component'
-import { commentFilter, filterMeta, readFileFn } from 'src/utils'
-import parseMarkdown from 'src/utils/parse-markdown'
+import { useTheme, commentFilter, filterMeta, readFileFn, parseMarkdown } from 'src/utils'
+import Header, { useHeader } from 'src/components/header'
 
 type IProps = PropsWithChildren<{
   filename: string
@@ -17,48 +17,13 @@ type IProps = PropsWithChildren<{
   layout: 'default' | 'refs' | 'ppt'
 }>
 
-type LayoutType = 'default' | 'refs' | 'ppt'
-
-const Header = (props: {
-  setTocVisiable: (visiable: boolean) => void
-  tocVisiable: boolean
-  layout: LayoutType
-  changeLayout: (layout: LayoutType) => void
-}) => {
-  return (
-    <header className="flex items-center justify-between border-b-1 py-2">
-      <span className="toc-switch font-missaluncialemaster" onClick={() => props.setTocVisiable(!props.tocVisiable)}>
-        Toc
-      </span>
-      <div>
-        {(['default', 'refs', 'ppt'] as const).map((i) => {
-          return (
-            <span
-              onClick={() => props.changeLayout(i)}
-              key={i}
-              className={`${
-                props.layout === i ? 'font-missaluncialebricks' : 'font-missaluncialemaster'
-              } inline-flex text-2xl px-1 cursor-pointer`}
-              title={i}
-            >
-              {i[0]}
-            </span>
-          )
-        })}
-      </div>
-    </header>
-  )
-}
-
 const DefaultLayoutWrapper = (props: PropsWithChildren) => (
-  <div className="px-[15%]">
+  <div className="layout-default px-[15%]">
     <div className="px-[5%] bg-red-100 mesh">{props.children}</div>
   </div>
 )
 
-const RefsLayoutWrapper = (props: PropsWithChildren) => (
-  <div className="layout-refs">{props.children}</div>
-)
+const RefsLayoutWrapper = (props: PropsWithChildren) => <div className="layout-refs">{props.children}</div>
 
 const LayoutMap = {
   default: DefaultLayoutWrapper,
@@ -67,18 +32,17 @@ const LayoutMap = {
 }
 
 export default function Layout(props: IProps) {
-  const [layout, setLayout] = useState(props.layout)
-  const [tocVisiable, setTocVisiable] = useState(false)
+  const headerProps = useHeader()
 
-  const LayoutWrapper = LayoutMap[layout]
+  const LayoutWrapper = LayoutMap[headerProps.layout]
 
   return (
-    <div className={`${tocVisiable ? 'toc-render' : 'toc-hidden'} mdx-render px-20 pb-50 relative`}>
-      <Header layout={layout} changeLayout={setLayout} tocVisiable={tocVisiable} setTocVisiable={setTocVisiable} />
+    <div className={`mdx-render px-20 pb-5 relative text-primary`}>
+      <Header {...headerProps} />
       <LayoutWrapper>
         <MDXComponent code={props.code} />
       </LayoutWrapper>
-      <footer className="absolute bottom-20 left-[35%]">我是有底线的</footer>
+      <footer id="footer" className="absolute bottom-[3vh] left-[10vw] right-[10vw]  border-b-3 "></footer>
     </div>
   )
 }

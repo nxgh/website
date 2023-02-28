@@ -11,7 +11,7 @@ import '../styles/globals.scss'
 dayjs.locale('zh-cn')
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} className="w-full h-full" />
+  return <Component {...pageProps} className="w-full h-full text-primary" />
 }
 
 export default MyApp

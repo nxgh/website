@@ -2,7 +2,7 @@ import { defineConfig } from 'windicss/helpers'
 
 export default defineConfig({
   extract: {
-    include: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+    include: ['./pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
     exclude: ['node_modules', '.git', '.next'],
   },
   theme: {
@@ -16,5 +16,8 @@ export default defineConfig({
       travelertypeface: ['TravelerTypeface', 'fangsong'],
     },
     extends: {},
+    textColor: {
+        primary: 'var(--text-color)',
+    }
   },
 })

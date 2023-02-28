@@ -1,0 +1,36 @@
+:root {
+
+  /*** Colors ***/
+  --background: #eee;
+  --text-color: #252b3a;
+  --link-color: #40ad41;
+  --text-color: red;
+
+  /*** Mesh ***/
+  --mesh-bg: #eeeeee7a;
+  --mesh-size: 30px;
+  --mesh-width: 1px;
+
+  /*** Fonts ***/
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  /*** Markdown ***/
+  --blockquote-color: #252b3a;
+  --blockquote-bg: #f2f5fc;
+  --inline-code-bg: #ffeeed;
+  --inline-code-color: #c73636;
+  --strong-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
+  --strong-color: transparent;
+  --header-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
+  --header-color: transparent;
+}
+
+html[data-theme="dark"] , html.dark{
+  --text-color: #fff;
+  --background: rgb(158, 158, 255);
+}
+
+body {
+  color: var(--text-color);
+  background: var(--background);
+}

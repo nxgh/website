@@ -21,9 +21,9 @@
       height: -moz-fit-content;
       width: -moz-fit-content;
       width: fit-content;
-      //   min-width: 20vw;
-      //   max-width: 35vw;
-      //   width: 20vw;
+      // min-width: 20vw;
+      // max-width: 20vw;
+      width: 20vw;
       //   max-width: 40vw;
       min-height: 15vh;
       h1,
@@ -39,6 +39,22 @@
         &::before {
           content: '';
         }
+      }
+    }
+  }
+  @media screen and (max-width: 1024px) {
+    .layout-refs {
+      section {
+        width: 30%;
+        min-height: 15vh;
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .layout-refs {
+      section {
+        width: 100%;
+        min-height: 15vh;
       }
     }
   }

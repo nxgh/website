@@ -14,8 +14,8 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   /*** Markdown ***/
-  --blockquote-color: #252b3a;
-  --blockquote-bg: #f2f5fc;
+  --blockquote-color: #000000;
+  --blockquote-bg: #dbdbdc;
   --inline-code-bg: #ffeeed;
   --inline-code-color: #c73636;
   --strong-bg: linear-gradient(to right, rgb(255, 154, 154), rgb(158, 158, 255));
@@ -35,7 +35,9 @@ html[data-theme="dark"] , html.dark{
   --section-bg: #252b3a;
 
   --blockquote-color: #f2f5fc;
-  --blockquote-bg: #252b3a;
+  --blockquote-bg: #435071;
+
+  
 }
 
 body {

@@ -77,8 +77,8 @@ export function addDataset(el: HTMLElement, data: Record<string, any>) {
   }
 }
 
-export function useHeader() {
-  const [layout, setLayout] = useState<LayoutType>('default')
+export function useHeader(props: LayoutType = 'default') {
+  const [layout, setLayout] = useState<LayoutType>(props)
 
   return {
     layout,

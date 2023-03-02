@@ -52,7 +52,7 @@ function Preview(props: PropsWithChildren<{ data: string; type: 'HTML' | 'JSX' }
 }
 
 export default function Layout(props: IProps) {
-  const headerProps = useHeader()
+  const headerProps = useHeader(props.layout)
 
   const ref = useRef<HTMLDivElement>(null)
   const LayoutWrapper = LayoutMap[headerProps.layout]

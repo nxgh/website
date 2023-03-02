@@ -7,17 +7,18 @@ import { useRouter } from 'next/router'
 
 import { FileReturnType } from 'src/utils'
 import { filterMeta, readFileFn, color } from 'src/utils'
+import { ThemeComponent } from 'src/components/header'
 
 const Search: FC<PropsWithChildren<{}>> = ({ children }) => {
   const [search, setSearch] = useState('')
   return (
-    <div className="flex text-2xl shadow font-200 focus-within:shadow-lg">
+    <div className="flex text-2xl shadow font-200 focus-within:shadow-lg dark:shadow-blue-100">
       <input
         aria-label="Type to explore"
         placeholder="Search..."
         type="text"
         autoComplete="off"
-        className="!outline-none text-2xl px-6 py-4 w-full border-none bg-transparent "
+        className="!outline-none text-3xl px-6 py-4 w-full border-none bg-transparent font-loveisfree "
         onChange={(e) => setSearch(e.target.value)}
         value={search}
       />
@@ -87,6 +88,7 @@ const Home: NextPage<{ files: FileReturnType[] }> = ({ files }) => {
   return (
     <div className="w-full h-full flex p-5 overflow-hidden">
       <section className="flex flex-col w-[50%] h-full px-4 pt-5">
+        <div className='flex justify-end'><ThemeComponent /></div>
         <Search />
         <WordCloud words={getWorldloud(files)} onClick={(e) => setSelectedFiles(e)} />
       </section>
@@ -96,7 +98,7 @@ const Home: NextPage<{ files: FileReturnType[] }> = ({ files }) => {
             const title = i.title.replace(/\.mdx?/, '')
             return (
               <div
-                className="font-loveisfree tracking-wide text-3xl p-3 border-b-1 cursor-pointer hover:bg-gray-100"
+                className="font-loveisfree tracking-wide text-3xl p-3 border-b-1 cursor-pointer light:hover:bg-gray-100 dark:hover:bg-gray-800"
                 key={`${i.dir}-${i.title}-${index}`}
                 onClick={() => router.push(`/n/${title}`)}
               >

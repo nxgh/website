@@ -8,7 +8,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next'
 
 import renderMDX from 'src/utils/render-mdx'
 import { MDXComponent } from 'src/components/mdx-component'
-import { useTheme, commentFilter, filterMeta, readFileFn, parseMarkdown } from 'src/utils'
+import { useTheme, commentFilter, filterMeta, readFileFn, parseMarkdown, pipe } from 'src/utils'
 import Header, { addDataset, useHeader } from 'src/components/header'
 
 type IProps = PropsWithChildren<{
@@ -43,6 +43,14 @@ function Section(props: PropsWithChildren<{ className?: string; id?: string }>) 
   )
 }
 
+function Preview(props: PropsWithChildren<{ data: string; type: 'HTML' | 'JSX' }>) {
+  const normalize = `<link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet"></link>`
+  const defaultStyle = `<style>html,body{ width: 100vw; height: 100vh}</style>` + normalize
+  if (props.type === 'HTML')
+    return <iframe srcDoc={`${defaultStyle}\n` + props.data} sandbox="allow-scripts" className="w-full h-full" />
+  // if (props.type === 'JSX') return ()
+}
+
 export default function Layout(props: IProps) {
   const headerProps = useHeader()
 
@@ -58,7 +66,7 @@ export default function Layout(props: IProps) {
     <div className={`mdx-render lg:px-10 xl:px-20 <sm:px-2 pb-5 relative text-primary`} data-toc="hide" ref={ref}>
       <Header {...headerProps} changeToc={showToc} />
       <LayoutWrapper onClick={() => addDataset(ref.current!, { toc: 'hide' })}>
-        <MDXComponent code={props.code} components={{ Section }} />
+        <MDXComponent code={props.code} components={{ Section, Preview }} />
       </LayoutWrapper>
       <footer id="footer" className="absolute bottom-[3vh] left-[10vw] right-[10vw]  border-b-3 "></footer>
     </div>
@@ -92,18 +100,32 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
   })
 
-  const data = parseMarkdown(file[0].content)
-    .map((item) => {
-      const isHeader = (str: string) => str.match(/^(#*?)\s/)?.[1].length || 0
-      if (item.every((i) => i === '' || i === '\n')) return ''
-      if (isHeader(item[0]) === 1) {
-        return `<Section className="section" id="section-h1">\n${item.join('')}\n</Section>\n`
-      }
-      return `<Section className="section">\n${item.join('')}\n</Section>\n`
-    })
-    .join('')
+  function splitFileBySection(file: string) {
+    return parseMarkdown(file)
+      .map((item) => {
+        const isHeader = (str: string) => str.match(/^(#*?)\s/)?.[1].length || 0
+        if (item.every((i) => i === '' || i === '\n')) return ''
+        if (isHeader(item[0]) === 1) {
+          return `<Section className="section" id="section-h1">\n${item.join('')}\n</Section>\n`
+        }
+        return `<Section className="section">\n${item.join('')}\n</Section>\n`
+      })
+      .join('')
+  }
 
-  const { code } = await renderMDX(data)
+  function replacePreview(file: string) {
+    const regex = /<!-- <Preview\.(.*?)> -->([\s\S]*?)<!-- <\/Preview\..*?> -->/gm
+    return file.replaceAll(regex, (match, p1, p2) => {
+      const data: string = p2.replaceAll(/```.*?\n/g, '')
+      return `<div className="ch-scroll-coding-with-preview">\n<CH.Scrollycoding>\n\n<Preview type="${p1}" data={${JSON.stringify(
+        data
+      )}} />\n${p2}\n</CH.Scrollycoding>\n</div>\n`
+    })
+  }
+
+  const data = pipe(splitFileBySection, replacePreview)(file[0].content)
+
+  const { code } = await renderMDX(replacePreview(data))
 
   return {
     props: { code, data, layout: file[0]?.meta?.layout || 'default' },

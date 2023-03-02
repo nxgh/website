@@ -4,13 +4,11 @@ export default function useTheme() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
 
   function __setTheme() {
-    const __theme = document.querySelector('html')!.dataset.theme
+    const html = document.querySelector('html')
+    const __theme = html!.dataset.theme
+    html?.className === 'dark' ? html!.classList.remove('dark') : html!.classList.add('dark')
     setTheme(__theme === 'dark' ? 'light' : 'dark')
   }
-
-  useEffect(() => {
-    document.querySelector('html')!.dataset.theme = theme
-  }, [theme])
 
   return { setTheme: __setTheme }
 }

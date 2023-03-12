@@ -1,5 +1,17 @@
 import dayjs, { Dayjs } from 'dayjs'
 
+export const random = (min: number, max: number) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min) + min)
+}
+
+export const pipe =
+  (...fns: any[]) =>
+  (x: any) =>
+    fns.reduce((v, f) => f(v), x)
+
+
 type DayProps = string | number | Date | Dayjs | null | undefined
 
 /**

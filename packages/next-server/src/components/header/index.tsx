@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useTheme } from 'src/utils'
+import useTheme from 'src/utils/use-theme'
+import Modal from 'src/components/modal'
+import Search from '../search'
 
 export type LayoutType = 'default' | 'refs' | 'ppt'
 
@@ -44,6 +46,9 @@ export default function Header(props: {
   changeToc: () => void
 }) {
   const router = useRouter()
+
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
     <header className="header flex items-center justify-between border-b-1 py-2 sticky top-0">
       <div>
@@ -57,15 +62,32 @@ export default function Header(props: {
         <span
           title="Home"
           onClick={() => router.push('/')}
-          className="toc-switch font-missaluncialemaster cursor-pointer"
+          className="toc-switch font-missaluncialemaster cursor-pointer mr-5"
         >
           Home
+        </span>
+        <span
+          title="search"
+          onClick={() => setModalVisible(true)}
+          className="toc-switch font-missaluncialemaster cursor-pointer mr-5 text-gray-100"
+        >
+          Search
         </span>
       </div>
 
       <div className="flex">
         <LayoutChangeComponent {...props} />
         <ThemeComponent />
+        <Modal
+          visible={modalVisible}
+          onCancel={() => {
+            setModalVisible(false)
+          }}
+        >
+          <div className="px-5 py-5 w-full h-full">
+            <Search onChange={() => {}} size="large" />
+          </div>
+        </Modal>
       </div>
     </header>
   )

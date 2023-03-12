@@ -5,6 +5,7 @@ import { remarkCodeHike } from '@code-hike/mdx'
 import { bundleMDX } from 'mdx-bundler'
 import matter from 'gray-matter'
 import stringWidth from 'string-width'
+
 interface IRenderMDXConfig {
   toc?: boolean
   files?: Record<string, string>
@@ -17,7 +18,7 @@ async function renderMDX(mdxSource: string, config: IRenderMDXConfig = {}): Retu
   const highlighter = await shiki.getHighlighter({
     theme: 'nord',
   })
-  const loadedTheme = await import(`shiki/themes/nord.json`).then((module) => module.default)
+  const loadedTheme = await import(`shiki/themes/nord.json`).then(module => module.default)
 
   const frontmatter = matter(mdxSource).data
 

@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm -F \"next-server\" run dev",
-    "build": "pnpm -F \"next-server\" run build",
-    "export": "pnpm -F \"next-server\" run export"
+    "dev": "pnpm --filter \"next-server\" run dev",
+    "build": "pnpm --filter \"next-server\" run build",
+    "export": "pnpm --filter \"next-server\" run export"
   },
   "keywords": [],
   "author": "",

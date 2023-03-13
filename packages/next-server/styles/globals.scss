@@ -31,8 +31,6 @@
   src: url('/fonts/Traveler-s-Typeface-2.ttf') format('truetype');
 }
 
-
-
 html,
 body {
   padding: 0;
@@ -53,6 +51,24 @@ a {
 
 * {
   box-sizing: border-box;
+  ::-webkit-scrollbar {
+    width: 1px;
+    background-color: #eee;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+
+    &:hover {
+      background-color: #a8a8a8;
+    }
+
+    &:active {
+      background-color: #787878;
+    }
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #eee;
 }
 
 #__next {

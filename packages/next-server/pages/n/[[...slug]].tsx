@@ -1,54 +1,34 @@
-import { PropsWithChildren, useState } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 
 import { getStaticPathsFiles, getStaticPropsFileDetail, getStaticPropsFiles } from 'src/utils/getStaticFile'
-import { useRouter } from 'next/router'
+
 import { MarkdownHelper } from 'mdx'
 import renderMDX from 'src/utils/render-mdx'
 import MDXComponent from 'src/components/mdx-component'
-import createLayout from 'src/components/layout'
+import Layout from 'src/components/layout'
 
-type IProps = PropsWithChildren<{
+export type IProps = PropsWithChildren<{
   filename: string
   code: string
   layout: 'default' | 'refs' | 'ppt'
   meta: any
-  fileList: { title: string; dir: string; meta: string[] }[]
+  fileList: {
+    title: string
+    dir: string
+    meta: {
+      tags?: string[]
+      key?: string[]
+      search?: string[]
+      date?: string
+    }
+  }[]
 }>
 
-const { Layout, Header, Aside, Main } = createLayout()
-
 export default function Index(props: IProps) {
-  const [selected, setSelected] = useState([...props.fileList])
-
-  const router = useRouter()
   return (
     <>
-      <Layout>
-        <Header></Header>
-        <Aside>
-          <section className="h-full overflow-auto">
-            <div>
-              {selected.map((i, index) => {
-                const title = i.title.replace(/\.mdx?/, '')
-                return (
-                  <div
-                    className="font-loveisfree tracking-wide text-xl border-b-1 cursor-pointer light:hover:bg-gray-100 dark:hover:bg-gray-800"
-                    key={`${i.dir}-${i.title}-${index}`}
-                    onClick={() => router.push(`/n/${title}`)}
-                  >
-                    {title}
-                  </div>
-                )
-              })}
-            </div>
-          </section>
-        </Aside>
-        <Main>
-
-        </Main>
-        {props.code && <MDXComponent code={props.code} />}
-      </Layout>
+      <Layout fileList={props.fileList}>{props.code && <MDXComponent code={props.code} />}</Layout>
     </>
   )
 }

@@ -66,7 +66,8 @@
     // list-style-type: upper-roman;
   }
   .toc {
-    position: fixed;
+    // position: fixed;
+    display: none;
     top: 0;
     width: -moz-fit-content;
     width: fit-content;
@@ -114,4 +115,5 @@
       }
     }
   }
+
 }

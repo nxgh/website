@@ -8,24 +8,9 @@ import renderMDX from 'src/utils/render-mdx'
 import MDXComponent from 'src/components/mdx-component'
 import Layout from 'src/components/layout'
 
-export type IProps = PropsWithChildren<{
-  filename: string
-  code: string
-  layout: 'default' | 'refs' | 'ppt'
-  meta: any
-  fileList: {
-    title: string
-    dir: string
-    meta: {
-      tags?: string[]
-      key?: string[]
-      search?: string[]
-      date?: string
-    }
-  }[]
-}>
+import type { IndexProps } from 'src/components/files'
 
-export default function Index(props: IProps) {
+export default function Index(props: IndexProps) {
   return (
     <>
       <Layout fileList={props.fileList}>{props.code && <MDXComponent code={props.code} />}</Layout>

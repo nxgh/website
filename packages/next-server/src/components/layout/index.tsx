@@ -1,9 +1,8 @@
-import { IProps } from 'pages/n/[[...slug]]'
 import { createContext, PropsWithChildren, ReactNode, useState, createElement } from 'react'
 import Aside from './aside'
 import style from './index.module.scss'
 
-export type FileList = IProps['fileList']
+import type { FileList } from 'src/components/files'
 
 const LayoutContext = createContext({})
 

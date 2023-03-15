@@ -1,0 +1,22 @@
+/* import type { NextPage } from 'next'
+
+const Home: NextPage = () => {
+  return <div>hello</div>
+}
+
+export async function getStaticProps() {
+  const content = null
+  if (!content) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/n',
+      },
+    }
+  }
+  return {
+    props: {},
+  }
+}
+
+export default Home */

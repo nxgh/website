@@ -25,7 +25,7 @@ const Layout = (props: PropsWithChildren<{ fileList: FileList }>) => {
           <header className="h-[3vh] border-b"></header>
           <div className="w-full flex h-[97vh] ">
             <Aside fileList={props.fileList} />
-            <main className="mdx-render w-full overflow-auto px-10 pt-10 pb-20">{props.children}</main>
+            <main className="mdx-render w-full overflow-auto px-10 pt-10 pb-20 leading-loose">{props.children}</main>
           </div>
         </div>
       </div>

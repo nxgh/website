@@ -38,6 +38,14 @@
     border-left: 4px solid #5e7ce0;
     background-color: var(--blockquote-bg);
   }
+  section {
+    line-height: 1.5;
+    font-size: 18px;
+    li,
+    p {
+      margin: 10px 0;
+    }
+  }
   code.inline-code {
     background-color: var(--inline-code-bg);
     padding: 1px 5px;
@@ -97,11 +105,27 @@
   }
 
   .ch-scroll-coding-with-preview {
-    .ch-scrollycoding-content {
-      .ch-scrollycoding-step-content {
-        height: 100%;
-      }
+    display: flex;
+    .ch-codegroup,
+    .ch-codeblock {
+      min-width: 50%;
+      width: 60%;
+    }
+
+    code.ch-code-scroll-parent {
+      width: 100% !important;
+    }
+    .preview {
+      width: 40%;
+      min-width: 30%;
+      margin: 1.25rem;
+      padding: 0.25rem;
+      background-color: #eee;
+      border: 1px solid #000;
+      border-radius: 10px;
+      // background: linear-gradient(45deg, #fff7145b, #fb386f33);
+      opacity: 0.9;
+      border-radius: 10px;
     }
   }
-
 }

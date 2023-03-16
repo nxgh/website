@@ -11,20 +11,9 @@ const style = {
 }
 
 function Preview({ srcDoc }: { srcDoc: string }) {
-  const [show, setShow] = React.useState(false)
-
   return (
-    <div>
-      <button onClick={() => setShow(!show)}>{show ? '收起' : '展开'}</button>
-      <div
-        style={{
-          height: show ? '100%' : '0',
-          background: '#fff',
-          border: show ? '1px solid #eee' : 'none',
-          borderRadius: '4px',
-        }}>
-        <iframe style={style} sandbox='allow-scripts' title='preview' srcDoc={srcDoc} />
-      </div>
+    <div className='preview'>
+      <iframe style={style} sandbox='allow-scripts' title='preview' srcDoc={srcDoc} />
     </div>
   )
 }

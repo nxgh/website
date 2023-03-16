@@ -1,7 +1,7 @@
 import { PropsWithChildren, useState } from 'react'
 import style from './index.module.scss'
 import { useRouter } from 'next/router'
-import type { FileList } from './index'
+import type { FileList } from 'src/components/files'
 
 const Menu = (props: { fileList: FileList }) => {
   const router = useRouter()
@@ -15,7 +15,7 @@ const Menu = (props: { fileList: FileList }) => {
             <div
               className="font-loveisfree tracking-wide text-xl cursor-pointer light:hover:bg-gray-100 dark:hover:bg-gray-800 hover:border-b"
               key={`${i.dir}-${i.title}-${index}`}
-              onClick={() => router.push(`/n/${title}`)}
+              onClick={() => router.push(`${title}`)}
             >
               {title}
             </div>

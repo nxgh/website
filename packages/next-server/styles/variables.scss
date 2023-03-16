@@ -1,9 +1,8 @@
-:root {
-
+html {
   /*** Colors ***/
-  --background: #eee;
-  --link-color: #40ad41;
-  --text-color: #252b3a;
+  --n-background: theme('colors.gray.100');
+  --n-link-color: #40ad41;
+  --n-text-color: #252b3a;
 
   /*** Mesh ***/
   --mesh-bg: #fa737322;
@@ -26,10 +25,10 @@
   /*** Section ***/
 
   --section-bg: #fff;
-
 }
 
-html[data-theme="dark"] , html.dark{
+html[data-theme='dark'],
+html.dark {
   --text-color: #fff;
   --background: #000;
   --section-bg: #252b3a;
@@ -38,11 +37,6 @@ html[data-theme="dark"] , html.dark{
   --blockquote-bg: #435071;
 
   --tw-ring-offset-shadow: 0 0 #fff;
-  --tw-ring-shadow : 0 0 #fff;
-  --tw-shadow: 0 1px 3px 0 rgb(255 255 255/0.1),0 1px 2px -1px rgb(255 255 255/0.1);
-}
-
-body {
-  color: var(--text-color);
-  background: var(--background);
+  --tw-ring-shadow: 0 0 #fff;
+  --tw-shadow: 0 1px 3px 0 rgb(255 255 255/0.1), 0 1px 2px -1px rgb(255 255 255/0.1);
 }

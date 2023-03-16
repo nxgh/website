@@ -18,7 +18,7 @@ async function renderMDX(mdxSource: string, config: IRenderMDXConfig = {}): Retu
   const highlighter = await shiki.getHighlighter({
     theme: 'nord',
   })
-  const loadedTheme = await import(`shiki/themes/nord.json`).then(module => module.default)
+  const loadedTheme = await import(`shiki/themes/one-dark-pro.json`).then(module => module.default)
 
   const frontmatter = matter(mdxSource).data
 

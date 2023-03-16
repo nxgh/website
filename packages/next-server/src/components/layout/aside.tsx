@@ -13,7 +13,7 @@ const Menu = (props: { fileList: FileList }) => {
           const title = i.title.replace(/\.mdx?/, '')
           return (
             <div
-              className="font-loveisfree tracking-wide text-xl cursor-pointer light:hover:bg-gray-100 dark:hover:bg-gray-800 hover:border-b"
+              className="font-loveisfree tracking-wide text-xl cursor-pointer"
               key={`${i.dir}-${i.title}-${index}`}
               onClick={() => router.push(`${title}`)}
             >
@@ -129,11 +129,11 @@ const Aside = ({
 
   return (
     <aside
-      className={`h-full flex transition-all duration-150 border-r border-gray-700 ${
+      className={`h-full flex transition-all duration-150 ${
         sideBarVisible ? 'w-[30vw] max-w-[30vw]' : 'w-[3vw]'
       }`}
     >
-      <div className="w-[3vw] min-w-[3vw] h-full flex flex-col justify-start items-center pt-5 border-r">
+      <div className="w-[3vw] min-w-[3vw] h-full flex flex-col justify-start items-center pt-5">
         {SIDE_VALUE.map((item) => {
           return (
             <span key={item} className={baseClassName} onClick={() => itemOnClick(item)}>

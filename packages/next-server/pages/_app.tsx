@@ -7,6 +7,7 @@ import 'dayjs/locale/zh-cn'
 import 'windi.css'
 
 import '../styles/globals.scss'
+import '../styles/variables.scss'
 import { createContext, useState } from 'react'
 
 dayjs.locale('zh-cn')

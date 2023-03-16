@@ -1,4 +1,4 @@
-.mdx-render {
+@mixin mdx-render {
   width: 100%;
   min-height: 100%;
   .mesh {
@@ -66,7 +66,6 @@
     // list-style-type: upper-roman;
   }
   .toc {
-    // position: fixed;
     display: none;
     top: 0;
     width: -moz-fit-content;
@@ -94,17 +93,6 @@
           font-weight: 900;
         }
       }
-    }
-  }
-  &[data-toc='hide'] {
-    .toc {
-      left: -100%;
-    }
-  }
-
-  &[data-toc='show'] {
-    .toc {
-      left: 0;
     }
   }
 

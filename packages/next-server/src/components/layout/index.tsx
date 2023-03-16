@@ -21,7 +21,7 @@ const Layout = (props: PropsWithChildren<{ fileList: FileList }>) => {
   return (
     <LayoutContext.Provider value={{}}>
       <div className={`${style.layout} w-full h-full relative`}>
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full bg-$background">
           <header className="h-[3vh] border-b"></header>
           <div className="w-full flex h-[97vh] ">
             <Aside fileList={props.fileList} />

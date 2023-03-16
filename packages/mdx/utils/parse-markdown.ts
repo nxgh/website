@@ -51,9 +51,13 @@ export function replacePreview(file: string) {
   const regex = /<!-- <Preview\.(.*?)> -->([\s\S]*?)<!-- <\/Preview\..*?> -->/gm
   return file.replaceAll(regex, (match, p1, p2) => {
     const data: string = p2.replaceAll(/```.*?\n/g, '')
-    return `<div className="ch-scroll-coding-with-preview">\n<CH.Scrollycoding>\n\n<Preview type="${p1}" data={${JSON.stringify(
-      data
-    )}} />\n${p2}\n</CH.Scrollycoding>\n</div>\n`
+    return `
+  <div className="ch-scroll-coding-with-preview">
+  <CH.Code>
+  ${p2}
+  </CH.Code>
+  <Preview.${p1} code={${JSON.stringify(data)}} />
+  </div>`
   })
 }
 

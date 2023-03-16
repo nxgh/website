@@ -1,4 +1,5 @@
-import { MarkdownHelper, readFileFn } from 'mdx'
+import { MarkdownHelper } from './parse-markdown'
+import readFileFn from './read-file-with-callback'
 
 import path from 'path'
 import fs from 'fs'

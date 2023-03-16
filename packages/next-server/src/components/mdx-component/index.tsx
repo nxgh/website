@@ -1,7 +1,7 @@
 import { getMDXComponent } from 'mdx-bundler/client'
 import React, { PropsWithChildren } from 'react'
 
-import Preview from 'mdx/component/preview'
+import Preview from 'src/components/preview'
 
 function CodeSection({ children }: PropsWithChildren) {
   return <code className="inline-code">{children}</code>

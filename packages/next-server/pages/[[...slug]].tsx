@@ -1,9 +1,8 @@
-import { PropsWithChildren, useMemo, useState } from 'react'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 
 import { getStaticPathsFiles, getStaticPropsFileDetail, getStaticPropsFiles } from 'src/utils/getStaticFile'
 
-import { MarkdownHelper } from 'mdx'
+import { MarkdownHelper } from 'src/utils/parse-markdown'
 import renderMDX from 'src/utils/render-mdx'
 import MDXComponent from 'src/components/mdx-component'
 import Layout from 'src/components/layout'
@@ -62,7 +61,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const { code } = await renderMDX(content)
 
   return {
-    // props: { code, data, layout: file[0]?.meta?.layout || 'default', meta },
     props: {
       code,
       fileList,

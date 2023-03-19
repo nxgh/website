@@ -10,7 +10,7 @@ import '../styles/globals.scss'
 import '../styles/variables.scss'
 import { createContext, ReactElement, ReactNode, useMemo, useState } from 'react'
 import { NextPage } from 'next'
-import DcoLayout from 'src/app-layout/doc'
+import DcoLayout from 'src/layout/doc'
 
 dayjs.locale('zh-cn')
 
@@ -23,34 +23,13 @@ type AppPropsWithLayout = AppProps & {
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  console.log('app render')
+  const getLayout = Component.getLayout ?? ((page) => page)
 
-  // const [state, setState] = useState({})
-
-  // const GlobalContext = createContext({})
-
-  // const Layout = useMemo(() => {
-  //   return Component.getLayout || ((page) => page)
-  // }, [Component])
-
-  // return Layout(<Component {...pageProps} />)
-
-  return (
-    <DcoLayout>
-      <Component {...pageProps} />
-    </DcoLayout>
-  )
-
-  // return <Layout {...pageProps}>{<Component {...pageProps} />}</Layout>
+  return getLayout(<Component {...pageProps} />)
   // return (
-  //   <GlobalContext.Provider
-  //   value={{
-  //     store: state,
-  //     setStore: setState,
-  //   }}
-  //   >
-  // <Component {...pageProps}  />
-  // </GlobalContext.Provider>
+  // <DcoLayout>
+  // <Component {...pageProps} />
+  // </DcoLayout>
   // )
 }
 

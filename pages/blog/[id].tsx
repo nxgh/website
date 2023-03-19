@@ -1,23 +1,28 @@
-// import { use } from 'react'
-// import { getPosts } from './api'
 import { useRouter } from 'next/router'
 import { Octokit } from 'octokit'
 import { useEffect, useState } from 'react'
-import { MarkdownHelper } from 'src/utils/parse-markdown'
+import { replaceComment, replaceMetaRule, replacePreviewRule, splitFileBySection } from 'src/utils/parse-markdown'
 import renderMDX from 'src/utils/render-mdx'
 import MDXComponent from 'src/components/mdx-component'
+
+import Layout from 'src/layout/doc'
+import { pipe } from 'src/utils'
+
 const octokit = new Octokit({
   auth: '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',
 })
 
-export default function Index(props) {
+function Post(props) {
   return (
     <>
       <MDXComponent code={props.code} />
-      {/* {props.data} */}
     </>
   )
 }
+
+Post.getLayout = (pages) => <Layout>{pages}</Layout>
+
+export default Post
 
 export async function getServerSideProps(content) {
   const path = content.params.id
@@ -31,11 +36,9 @@ export async function getServerSideProps(content) {
     path,
   })
 
-  const markdownHelper = new MarkdownHelper(data)
-  const {
-    file,
-    meta: { tags, search },
-  } = markdownHelper.parse_meta().split_file_by_section().replace_preview().get()
+  const file = pipe(splitFileBySection, (content: string) =>
+    replaceComment(content, [replacePreviewRule, replaceMetaRule])
+  )(data)
 
   const { code } = await renderMDX(file)
 

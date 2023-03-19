@@ -11,7 +11,6 @@ export const pipe =
   (x: any) =>
     fns.reduce((v, f) => f(v), x)
 
-
 type DayProps = string | number | Date | Dayjs | null | undefined
 
 /**
@@ -19,3 +18,7 @@ type DayProps = string | number | Date | Dayjs | null | undefined
  */
 export const compareDate = (a: DayProps, b: DayProps, unit: dayjs.OpUnitType = 'day') =>
   dayjs(a).isBefore(dayjs(b), unit) ? -1 : dayjs(a).isSame(dayjs(b), unit) ? 0 : 1
+
+export const fileEndWith = (filename: string, type: string[]) => type.some((i) => filename.endsWith(i))
+
+export const isMd = (filename: string) => fileEndWith(filename, ['.md', '.mdx'])

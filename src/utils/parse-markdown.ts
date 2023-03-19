@@ -32,12 +32,21 @@ export function splitMarkdownBlockByHeader(markdown: string) {
 
   return data
 }
+type AnymatchFn = (testString: string) => boolean
+export type AnymatchPattern = string | RegExp | AnymatchFn
+
+export type MDFile = string
+
+export type ReplaceCommentRule = {
+  regex: RegExp
+  replacer: (...args: any[]) => string
+}
 
 /** 处理分割后的 markdown 文件  */
 export function splitFileBySection(file: string) {
   return splitMarkdownBlockByHeader(file)
-    .map(item => {
-      if (item.every(i => i === '' || i === '\n')) return ''
+    .map((item) => {
+      if (item.every((i) => i === '' || i === '\n')) return ''
       // const isHeader = (str: string) => str.match(/^(#*?)\s/)?.[1].length || 0
       // if (isHeader(item[0]) === 1) {
       //   return `<section className="section" id="section-h1">\n${item.join('')}\n</section>\n`
@@ -47,72 +56,31 @@ export function splitFileBySection(file: string) {
     .join('')
 }
 
-export function replacePreview(file: string) {
-  const regex = /<!-- <Preview\.(.*?)> -->([\s\S]*?)<!-- <\/Preview\..*?> -->/gm
-  return file.replaceAll(regex, (match, p1, p2) => {
+export const replaceMetaRule: ReplaceCommentRule = {
+  regex: /^<!--.*\r?\n([\s\S]*?)-->/gm,
+  replacer: () => '',
+}
+
+export const replacePreviewRule: ReplaceCommentRule = {
+  regex: /<!-- <Preview\.(.*?)> -->([\s\S]*?)<!-- <\/Preview\..*?> -->/gm,
+  replacer: (match: string, p1: string, p2: string) => {
     const data: string = p2.replaceAll(/```.*?\n/g, '')
     return `
-  <div className="ch-scroll-coding-with-preview">
-  <CH.Code>
-  ${p2}
-  </CH.Code>
-  <Preview.${p1} code={${JSON.stringify(data)}} />
-  </div>`
-  })
+<div className="ch-scroll-coding-with-preview"> 
+    <CH.Code>
+        ${p2}
+    </CH.Code>
+    <Preview.${p1} code={${JSON.stringify(data)}} />
+</div>`
+  },
 }
 
-export interface FileReturnType {
-  title: string
-  dir: string
-  content: string
-  desc: string
-  meta: Record<string, any>
+export function replaceComment(content: MDFile, rule: ReplaceCommentRule | ReplaceCommentRule[]) {
+  if (Array.isArray(rule)) {
+    return rule.reduce((newContent, cur) => {
+      return newContent.replaceAll(cur.regex, cur.replacer)
+    }, content)
+  }
+  return content.replaceAll(rule.regex, rule.replacer)
 }
 
-export interface FileMeta {
-  tags?: string[]
-  search?: string[]
-  layout?: 'default' | 'refs' | 'ppt'
-}
-
-export const commentsReg = /^<!--.*\r?\n([\s\S]*?)-->/
-
-export class MarkdownHelper {
-  file: string
-  meta: FileMeta
-
-  constructor(file: string) {
-    this.file = file
-    this.meta = {}
-  }
-
-  split_file_by_section() {
-    this.file = splitFileBySection(this.file)
-    return this
-  }
-
-  replace_preview() {
-    this.file = replacePreview(this.file)
-    return this
-  }
-
-  // replace_comment(fn) {}
-
-  parse_meta() {
-    const content = this.file
-    const str = content.startsWith('<!--') && content.match(commentsReg) ? content.match(commentsReg)![1] : ''
-
-    try {
-      const meta: FileMeta = yaml.load(str) || {}
-
-      this.meta = meta
-    } catch (error) {}
-    // this.file = filterMeta(this.file)
-    this.file = this.file.replace(commentsReg, '')
-    return this
-  }
-
-  get() {
-    return this
-  }
-}

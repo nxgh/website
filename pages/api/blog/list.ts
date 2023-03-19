@@ -1,17 +1,31 @@
-import { Octokit } from 'octokit'
+import octokit from 'src/api'
 
-const octokit = new Octokit({
-  auth: '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',
-})
-
-export default async function handler(req, res) {
-  const { data } = await octokit.rest.repos.getContent({
+async function getPosts(path = '', result: unknown[] = []) {
+  const { data } = await octokit.request('GET /repos/{owner}/{repo}/git/trees/{tree_sha}', {
+    owner: 'nxgh',
+    repo: 'notes',
+    tree_sha: 'master',
     mediaType: {
       format: 'raw',
     },
-    owner: 'nxgh',
-    repo: 'notes',
-    path: '',
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
   })
-  res.status(200).json({ data })
+
+  return data
+}
+
+export default async function handler(req, res) {
+  const data = await getPosts()
+  const response = data.tree.reduce((resp, item) => {
+    if (item.path!.endsWith('.md') || item.path!.endsWith('.mdx')) {
+      resp.push({
+        title: item.path!.replace('.md', '').replace('.mdx', ''),
+        path: item.path!,
+      })
+    }
+    return resp
+  }, [] as { title: string; path: string }[])
+  res.status(200).json({ data: response })
 }

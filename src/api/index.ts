@@ -1,7 +1,10 @@
-import { Octokit } from "octokit"
+import { Octokit } from 'octokit'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const octokit = new Octokit({
-  auth: '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',
+  auth: process.env.GITHUB_API_TOKEN,
 })
 
 export default octokit

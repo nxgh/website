@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build website
+        with: 
+          env: 
+            GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm build
       - run: pnpm export
       - run: touch out/.nojekyll

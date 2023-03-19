@@ -16,7 +16,7 @@ async function getPosts(path = '', result: unknown[] = []) {
   return data
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   const data = await getPosts()
   const response = data.tree.reduce((resp, item) => {
     if (item.path!.endsWith('.md') || item.path!.endsWith('.mdx')) {

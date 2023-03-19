@@ -18,6 +18,9 @@ const withMDX = nextMdx({
 export default withMDX({
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 
+  images: {
+    unoptimized: true,
+  },
 
   eslint: {
     ignoreDuringBuilds: true,

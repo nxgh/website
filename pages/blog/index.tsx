@@ -4,4 +4,4 @@ export default function BlogIndex() {
   return <>Index</>
 }
 
-BlogIndex.getLayout = (pages) => <Layout>{pages}</Layout>
+BlogIndex.getLayout = (pages: any) => <Layout>{pages}</Layout>

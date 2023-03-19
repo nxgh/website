@@ -2,8 +2,14 @@ import { defineConfig } from 'windicss/helpers'
 
 export default defineConfig({
   extract: {
-    include: ['./pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
+    include: ['./pages/**/*.{js,ts,jsx,tsx}', './src/**/**/*.{js,ts,jsx,tsx}'],
     exclude: ['node_modules', '.git', '.next'],
+  },
+  shortcuts: {
+    full: 'w-full h-full',
+    'flex-center': 'flex justify-center items-center',
+    'vertical-center': 'flex items-center',
+    'horizontal-center': 'flex justify-center',
   },
   theme: {
     fontFamily: {
@@ -17,7 +23,7 @@ export default defineConfig({
     },
     extends: {},
     textColor: {
-        primary: 'var(--text-color)',
-    }
+      primary: 'var(--text-color)',
+    },
   },
 })

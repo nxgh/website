@@ -1,4 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react'
+import type { PropsWithClassname } from 'src/types'
 
 const LayoutContext = createContext<{
   visable: boolean
@@ -14,25 +15,30 @@ function Provider(props: PropsWithChildren) {
   return <LayoutContext.Provider value={{ visable, setVisable }}>{props.children}</LayoutContext.Provider>
 }
 
-function BaseLayout(props: PropsWithChildren) {
+function BaseLayout(props: PropsWithClassname) {
+  const { className = '' } = props
   return (
     <Provider>
-      <div className="flex">{props.children}</div>
+      <div className={className}>{props.children}</div>
     </Provider>
   )
 }
-function Aside(props: PropsWithChildren) {
+function Aside(props: PropsWithClassname) {
   const { visable } = useContext(LayoutContext)
+  const { className = '' } = props
 
-  return <div className={`${visable ? '' : 'hidden'}`}>{props.children}</div>
+  return <div className={`${className} ${visable ? '' : 'hidden'}`}>{props.children}</div>
 }
 
-function Handler(props: PropsWithChildren) {
+function Handler(props: PropsWithClassname) {
   const { visable, setVisable } = useContext(LayoutContext)
+
+  const { className = '', children } = props
+
   return (
-    <div>
-      <button onClick={() => setVisable(!visable)}>{props.children}</button>
-    </div>
+    <span className={className} onClick={() => setVisable(!visable)}>
+      {visable ? children[0] : children[1]}
+    </span>
   )
 }
 

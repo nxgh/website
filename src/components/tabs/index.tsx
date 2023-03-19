@@ -33,10 +33,10 @@ function Labels(props: PropsWithChildren) {
   return <>{props.children}</>
 }
 function LabelItem(props: PropsWithChildren<{ id: TabKey; className?: string }>) {
-  const { className = '' } = props
-  const { setSelected } = useContext(TabsContext)
+  const { className = '', id } = props
+  const { selected, setSelected } = useContext(TabsContext)
   return (
-    <span className={`${className}`} onClick={() => setSelected(props.id)}>
+    <span className={`p-3 ${selected === id ? 'border bg-gray-100' : ''} ${className}`} onClick={() => setSelected(id)}>
       {props.children}
     </span>
   )

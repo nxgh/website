@@ -1,10 +1,13 @@
 .nav {
   padding-left: 20px;
   a {
-    white-space: nowrap;
     font-family: LoveIsfree, fangsong;
     font-size: large;
+    &:hover {
+      border-bottom: 1px solid red;
+    }
   }
+
   ol {
     padding-left: 20px;
   }
